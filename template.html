@@ -10,10 +10,14 @@
     <meta charset="UTF-8">
 </head>
 <fieldset>
+    <legend>{{ .ContactTitle }}</legend>
+    <ul><li><a class="pagelink" href="https://wills-corner.com/contact" target="_blank">{{ .ContactMe }}</a></li></ul>
+</fieldset>
+<fieldset>
     <legend>{{ .LanguageFieldLabel }}</legend>
     <ul>
-        <li><a class="pagelink" href="http://localhost:8080/conjugator_eng">{{ .English }}</a></li>
-        <li><a class="pagelink" href="http://localhost:8080/conjugator_mkw">{{ .Mikmaw }}</a></li>
+        <li><a class="pagelink" href="/eng">{{ .English }}</a></li>
+        <li><a class="pagelink" href="/mkw">{{ .Mikmaw }}</a></li>
     </ul>
 </fieldset>
 <fieldset>
@@ -30,7 +34,12 @@
 </fieldset>
 <h1>{{ .Title }}</h1>
 <form method="POST">
-    <label for="textinput">{{ .EntryPrompt }}</label><br>
+    <label for="verbinput">{{ .EntryPrompt }}</label><br>
+    <label id="orthographyradiolabel">{{ .OrthographyRadioButtonTitle }}</label>
+    <label for="0">Francis-Smith</label>
+    <input type="radio" class="radiobutton" name="orthographyradiobutton" value="0" checked>
+    <label for="1">Listuguj</label>
+    <input type="radio" class="radiobutton" name="orthographyradiobutton" value="1"><br>
     <input type="text" class="input" name="verbinput">
     {{ .ConjugateButton }}
     <div class="hover-text">i<span class="tooltip-text">{{ .OrthographyTooltip }}</span></div>

@@ -53,6 +53,10 @@ body {
     color: #D6A692;
 }
 
+#orthographyradiolabel {
+    margin-right: 5px;
+}
+
 /* input field */
 .input {
     background: #D6CEAA;

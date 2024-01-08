@@ -36,36 +36,39 @@ type Category struct { // a struct for reading the conjugation dictionary JSON
 }
 
 type Locale struct { // a struct for reading the conjugation dictionary JSON
-	Language                string   `json:"language"`
-	TableTitles             []string `json:"tabletitles"`
-	SubjectPronouns         []string `json:"subjectpronouns"`
-	InanimateObjectPronouns []string `json:"inanobjpronouns"`
-	SubjectObjectSplit      string   `json:"subjobjsplit"` // maybe not self explanatory — holds the "↓subject/object→" locale
-	SubjectPronounsVTA      []string `json:"subjectpronounsvta"`
-	ObjectPronounsVTA       []string `json:"objectpronounsvta"`
-	PageTitle               string   `json:"pagetitle"`
-	OrthographyTooltip      string   `json:"orthographytooltip"`
-	EntryPrompt             string   `json:"entryprompt"`
-	SummaryDetails          string   `json:"summarydetails"`
-	LanguageFieldLabel      string   `json:"languagefieldlabel"`
-	English                 string   `json:"english"`
-	Mikmaw                  string   `json:"mikmaw"`
-	ConjugateButton         string   `json:"conjugatebutton"`
-	OutputConjugation       string   `json:"outputconjugation"`
-	OutputModel             string   `json:"outputmodel"`
-	OutputVerbUnrecognized  string   `json:"outputverbunrecognized"`
-	OutputTitle             string   `json:"outputtitle"`
-	InfoTitle               string   `json:"infotitle"`
-	HelpTitle               string   `json:"helptitle"`
-	HelpField               string   `json:"helpfield"`
-	SourceTitle             string   `json:"sourcetitle"`
-	SourceField             string   `json:"sourcefield"`
-	ElietDisclaimer         string   `json:"elietdisclaimer"`
-	NestikDisclaimer        string   `json:"nestikdisclaimer"`
-	NenkDisclaimer          string   `json:"nenkdisclaimer"`
-	PewaqDisclaimer         string   `json:"pewaqdisclaimer"`
-	PesatlDisclaimer        string   `json:"pesatldisclaimer"`
-	KetukDisclaimer         string   `json:"ketukdisclaimer"`
+	Language                    string   `json:"language"`
+	TableTitles                 []string `json:"tabletitles"`
+	SubjectPronouns             []string `json:"subjectpronouns"`
+	InanimateObjectPronouns     []string `json:"inanobjpronouns"`
+	SubjectObjectSplit          string   `json:"subjobjsplit"` // maybe not self explanatory — holds the "↓subject/object→" locale
+	SubjectPronounsVTA          []string `json:"subjectpronounsvta"`
+	ObjectPronounsVTA           []string `json:"objectpronounsvta"`
+	PageTitle                   string   `json:"pagetitle"`
+	OrthographyTooltip          string   `json:"orthographytooltip"`
+	EntryPrompt                 string   `json:"entryprompt"`
+	SummaryDetails              string   `json:"summarydetails"`
+	LanguageFieldLabel          string   `json:"languagefieldlabel"`
+	English                     string   `json:"english"`
+	Mikmaw                      string   `json:"mikmaw"`
+	ConjugateButton             string   `json:"conjugatebutton"`
+	OutputConjugation           string   `json:"outputconjugation"`
+	OutputModel                 string   `json:"outputmodel"`
+	OutputVerbUnrecognized      string   `json:"outputverbunrecognized"`
+	OutputTitle                 string   `json:"outputtitle"`
+	ContactTitle                string   `json:"contacttitle"`
+	ContactMe                   string   `json:"contactme"`
+	InfoTitle                   string   `json:"infotitle"`
+	HelpTitle                   string   `json:"helptitle"`
+	HelpField                   string   `json:"helpfield"`
+	SourceTitle                 string   `json:"sourcetitle"`
+	SourceField                 string   `json:"sourcefield"`
+	OrthographyRadioButtonTitle string   `json:"orthographyradiobuttontitle"`
+	ElietDisclaimer             string   `json:"elietdisclaimer"`
+	NestikDisclaimer            string   `json:"nestikdisclaimer"`
+	NenkDisclaimer              string   `json:"nenkdisclaimer"`
+	PewaqDisclaimer             string   `json:"pewaqdisclaimer"`
+	PesatlDisclaimer            string   `json:"pesatldisclaimer"`
+	KetukDisclaimer             string   `json:"ketukdisclaimer"`
 }
 
 type Data struct { // for collecting the data of all tables
@@ -84,27 +87,30 @@ type DisclaimerType struct { // this holds whether there is a disclaimer (Define
 }
 
 type MainPage struct { // this is what will be sent to the page
-	Title                  string
-	OrthographyTooltip     string
-	EntryPrompt            string
-	SummaryDetails         string
-	LanguageFieldLabel     string
-	English                string
-	Mikmaw                 string
-	ConjugateButton        string
-	OutputConjugationTitle string
-	OutputConjugation      string
-	OutputModelTitle       string
-	OutputModel            string
-	OutputTitle            string
-	InputString            string
-	InfoTitle              string
-	HelpTitle              string
-	HelpField              string
-	SourceTitle            string
-	SourceField            string
-	Disclaimer             DisclaimerType
-	TableData              Data
+	Title                       string
+	OrthographyTooltip          string
+	EntryPrompt                 string
+	SummaryDetails              string
+	LanguageFieldLabel          string
+	English                     string
+	Mikmaw                      string
+	ConjugateButton             string
+	OutputConjugationTitle      string
+	OutputConjugation           string
+	OutputModelTitle            string
+	OutputModel                 string
+	OutputTitle                 string
+	InputString                 string
+	InfoTitle                   string
+	HelpTitle                   string
+	HelpField                   string
+	SourceTitle                 string
+	SourceField                 string
+	ContactTitle                string
+	ContactMe                   string
+	OrthographyRadioButtonTitle string
+	Disclaimer                  DisclaimerType
+	TableData                   Data
 }
 
 var ConjugationDictionary = []Category{} // define a global conjugation dictionary to hold the readout of the .json file
@@ -158,11 +164,20 @@ func engIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 	var languageChoice string = "ENGL"    // string to get localization in english
 	if reader.Method == http.MethodPost { // if the "submit/conjugate" button is pressed
 		var InputStr string
-		InputStr = reader.FormValue("verbinput") // get the input string
-		var ConjugationArray [][]string          // load a conjugation array
-		var InputVerb Verb                       // load an InputVerb Verb type
-		if InputStr != "" {                      // if the input is not empty
+		InputStr = reader.FormValue("verbinput")                        // get the input string
+		var ConjugationArray [][]string                                 // load a conjugation array
+		var InputVerb Verb                                              // load an InputVerb Verb type
+		orthographyChoice := reader.FormValue("orthographyradiobutton") // a string value correstponding to the orthography chosen by the user
+		// 0 = francis smith
+		// 1 = listuguj
+		if InputStr != "" { // if the input is not empty
+			if orthographyChoice == "1" {
+				InputStr = convertListugujtoFrancisSmith(InputStr) // if the user has chosen listuguj orthography, convert it to francis smith to run the program
+			}
 			ConjugationArray, InputVerb = readoutVerb(InputStr) // fill the conjugation array and input verb structs
+			if orthographyChoice == "1" {
+				ConjugationArray = convertFrancisSmithtoListuguj(ConjugationArray) // if the user has chosen listuguj orthography, convert all tables to listuguj
+			}
 			// make the tables differently for each verb type (VII, VAI, VTI, VTA) — point to a different function each time to do this
 			if InputVerb.Type == VAI {
 				WriteData = makeTablesVAI(ConjugationArray, languageChoice) // make the tables with this array based on localization language
@@ -199,11 +214,20 @@ func mkwIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 	var languageChoice string = "MKMW"    // string to get localization in english
 	if reader.Method == http.MethodPost { // if the "submit/conjugate" button is pressed
 		var InputStr string
-		InputStr = reader.FormValue("verbinput") // get the input string
-		var ConjugationArray [][]string          // load a conjugation array
-		var InputVerb Verb                       // load an InputVerb Verb type
-		if InputStr != "" {                      // if the input is not empty
+		InputStr = reader.FormValue("verbinput")                        // get the input string
+		var ConjugationArray [][]string                                 // load a conjugation array
+		var InputVerb Verb                                              // load an InputVerb Verb type
+		orthographyChoice := reader.FormValue("orthographyradiobutton") // a string value correstponding to the orthography chosen by the user
+		// 0 = francis smith
+		// 1 = listuguj
+		if InputStr != "" { // if the input is not empty
+			if orthographyChoice == "1" {
+				InputStr = convertListugujtoFrancisSmith(InputStr) // if the user has chosen listuguj orthography, convert it to francis smith to run the program
+			}
 			ConjugationArray, InputVerb = readoutVerb(InputStr) // fill the conjugation array and input verb structs
+			if orthographyChoice == "1" {
+				ConjugationArray = convertFrancisSmithtoListuguj(ConjugationArray) // if the user has chosen listuguj orthography, convert all tables to listuguj
+			}
 			// make the tables differently for each verb type (VII, VAI, VTI, VTA) — point to a different function each time to do this
 			if InputVerb.Type == VAI {
 				WriteData = makeTablesVAI(ConjugationArray, languageChoice) // make the tables with this array based on localization language
@@ -264,6 +288,78 @@ func IsPlosive(category string) bool { // returns true if the passed slice is in
 		return true
 	}
 	return false
+}
+
+// converts anything written in listuguj orthography into francis-smith
+func convertListugujtoFrancisSmith(InputStr string) string {
+	OutputStr := strings.ToLower(InputStr)
+	// everything below is just replacing character combinations with others
+	// the output string is in francis-smith
+	if strings.Contains(OutputStr, "g") == true {
+		OutputStr = strings.Replace(OutputStr, "g", "k", -1)
+	}
+	if strings.Contains(OutputStr, "ay") == true {
+		OutputStr = strings.Replace(OutputStr, "ay", "ai", -1)
+	}
+	if strings.Contains(OutputStr, "a'y") == true {
+		OutputStr = strings.Replace(OutputStr, "a'y", "a'i", -1)
+	}
+	if strings.Contains(OutputStr, "ey") == true {
+		OutputStr = strings.Replace(OutputStr, "ey", "ei", -1)
+	}
+	if strings.Contains(OutputStr, "e'y") == true {
+		OutputStr = strings.Replace(OutputStr, "e'y", "e'i", -1)
+	}
+	// replace all apostrophes after consonants as schwas, but use the escape character "*"
+	if strings.Contains(OutputStr, "j'") == true {
+		OutputStr = strings.Replace(OutputStr, "j'", "j*", -1)
+	}
+	if strings.Contains(OutputStr, "k'") == true {
+		OutputStr = strings.Replace(OutputStr, "k'", "k*", -1)
+	}
+	if strings.Contains(OutputStr, "m'") == true {
+		OutputStr = strings.Replace(OutputStr, "m'", "m*", -1)
+	}
+	if strings.Contains(OutputStr, "n'") == true {
+		OutputStr = strings.Replace(OutputStr, "n'", "n*", -1)
+	}
+	if strings.Contains(OutputStr, "p'") == true {
+		OutputStr = strings.Replace(OutputStr, "p'", "p*", -1)
+	}
+	if strings.Contains(OutputStr, "q'") == true {
+		OutputStr = strings.Replace(OutputStr, "q'", "q*", -1)
+	}
+	if strings.Contains(OutputStr, "s'") == true {
+		OutputStr = strings.Replace(OutputStr, "s'", "s*", -1)
+	}
+	if strings.Contains(OutputStr, "t'") == true {
+		OutputStr = strings.Replace(OutputStr, "t'", "t*", -1)
+	}
+	return OutputStr
+}
+
+// converts anything written in francis-smith into listuguj
+func convertFrancisSmithtoListuguj(InputArray [][]string) [][]string {
+	for sliceIndex := range InputArray {
+		for stringIndex, string := range InputArray[sliceIndex] {
+			outputStr := string
+			if strings.Contains(outputStr, "k") == true {
+				outputStr = strings.Replace(outputStr, "k", "g", -1)
+			}
+			if strings.Contains(outputStr, "ɨ") == true {
+				outputStr = strings.Replace(outputStr, "ɨ", "'", -1)
+			}
+			if strings.Contains(outputStr, "y") == true {
+				outputStr = strings.Replace(outputStr, "y", "i", -1)
+			}
+			// converting "y" to "i" in strings of "yi" will lead to "ii"
+			if strings.Contains(outputStr, "ii") == true {
+				outputStr = strings.Replace(outputStr, "ii", "i", -1)
+			}
+			InputArray[sliceIndex][stringIndex] = outputStr
+		}
+	}
+	return InputArray
 }
 
 // this function returns the conjugation number and a model for the verb based off the InputVerb struct
@@ -425,6 +521,9 @@ func localize(page MainPage, languageChoice string) MainPage {
 			page.HelpField = language.HelpField
 			page.SourceTitle = language.SourceTitle
 			page.SourceField = language.SourceField
+			page.OrthographyRadioButtonTitle = language.OrthographyRadioButtonTitle
+			page.ContactTitle = language.ContactTitle
+			page.ContactMe = language.ContactMe
 		}
 	}
 	return page
