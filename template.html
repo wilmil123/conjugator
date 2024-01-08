@@ -1,0 +1,57 @@
+{{ $summarydetails := .SummaryDetails }}
+{{ $disclaimertext := .Disclaimer.DisclaimerText }}
+{{ $isdisclaimer := .Disclaimer.Defined }}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="assets/stylesheet.css">
+    <meta charset="UTF-8">
+</head>
+<fieldset>
+    <legend>{{ .LanguageFieldLabel }}</legend>
+    <ul>
+        <li><a class="pagelink" href="http://localhost:8080/conjugator_eng">{{ .English }}</a></li>
+        <li><a class="pagelink" href="http://localhost:8080/conjugator_mkw">{{ .Mikmaw }}</a></li>
+    </ul>
+</fieldset>
+<fieldset>
+    <legend>{{ .InfoTitle }}</legend>
+    <ul><li>{{ .HelpTitle }} <div class="hover-text">i<span class="tooltip-text" id="left">{{ .HelpField }}</span></div></li>
+        <li>{{ .SourceTitle }} <div class="hover-text">i<span class="tooltip-text" id="left">{{ .SourceField }}</span></div></li>
+    </ul>
+</fieldset>
+<fieldset>
+    <legend>{{ .OutputTitle }} <b>{{ .InputString }}</b></legend>
+    <ul><li>{{ .OutputConjugationTitle }}: <i>{{ .OutputConjugation }}</i></li>
+        <li>{{ .OutputModelTitle }}: <i>{{ .OutputModel }}</i></li>
+    </ul>
+</fieldset>
+<h1>{{ .Title }}</h1>
+<form method="POST">
+    <label for="textinput">{{ .EntryPrompt }}</label><br>
+    <input type="text" class="input" name="verbinput">
+    {{ .ConjugateButton }}
+    <div class="hover-text">i<span class="tooltip-text">{{ .OrthographyTooltip }}</span></div>
+</form>
+{{ range $table := .TableData.Tables }}
+<details class="details">
+    <summary>{{ $summarydetails }} <b>{{ $table.Title }}</b>{{ if $isdisclaimer }}<div class="hover-text" id="disclaimer">i<span class="tooltip-text">{{ $disclaimertext }}</span></div>{{ end }}</summary>
+    <table>
+        {{ range $columnindex, $column := $table.RowsAndColumns }}
+            <tr>
+                {{ range $rowindex, $row := $column }}
+                    {{ if or (eq $rowindex 0) (and (eq $columnindex 0) (or (eq $table.Type 2) (eq $table.Type 3))) }}
+                        <td><i>{{ $row }}</i></td>
+                    {{ else }}
+                        <td>{{ $row }}</td>
+                    {{ end }}
+                {{ end }}
+            </tr>
+        {{ end }}
+    </table>
+</details>
+{{ end }}
+
+</html>
