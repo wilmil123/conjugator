@@ -1,0 +1,159 @@
+@charset "utf-8";
+
+/* making the tables how they should be */
+table {
+    border-collapse: collapse;
+    margin: 5px 10px;
+    table-layout: auto;
+    width: auto;
+}
+
+table th,
+table td {
+    border: 1px solid #D6A692;
+    background-color: #D6CEAA;
+    padding: 10px;
+    height: 15px;
+}
+
+body {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #E2DDC4;
+    color: #77311F;
+}
+
+/* buttons */
+.button {
+    display: inline-block;
+    outline: none;
+    font-size: 14px;
+    border-radius: 6px;
+    margin: 5px;
+    padding: 4px 4px;
+    border: none;
+    background: #77311F;
+    color: #D6A692;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.button:hover {
+    background: #ba985d;
+    color: #ce5e2d;
+    transition: 0.7s;
+}
+
+.button:focus {
+    outline-color: transparent;
+    outline-style: solid;
+    box-shadow: 0 0 0 1px #D6A692;
+}
+
+.button:active {
+    background: #EFD9B4;
+    color: #D6A692;
+}
+
+/* input field */
+.input {
+    background: #D6CEAA;
+    color: #77311F;
+    border: 1px solid #D6A692;
+    padding: 2px 5px;
+    margin: 5px 5px;
+    width: 250px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.input:focus {
+    outline-color: transparent;
+    outline-style: solid;
+    box-shadow: 0 0 0 1px #D6A692;
+}
+
+/* the collapsible table boxes */
+.details {
+    padding: 5px 10px;
+    margin: 5px 5px;
+    background-color: #C1B999;
+    border: 1px solid #D6A692;
+    cursor: pointer;
+}
+
+.details:focus {
+    outline-color: transparent;
+    outline-style: solid;
+    box-shadow: 0 0 0 1px #D6A692;
+}
+
+.details:active {
+    background-color: #ABA380;
+    color: #ce5e2d;
+}
+
+/* for tooltips */
+.hover-text {
+    position: relative;
+    display: inline-block;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: #77311F;
+    color: #D6A692;
+    text-align: center;
+    font-family: monospace;
+    width: 15px;
+    height: 15px;
+}
+
+.hover-text:hover .tooltip-text {
+    opacity: 1;
+    transition: opacity 0.5s;
+    transition-delay: 0.2s;
+}
+
+.tooltip-text {
+    position: absolute;
+    z-index: 2;
+    width: 800%;
+    color: #502114;
+    font-size: 12px;
+    background-color: #D6CEAA;
+    border: 1px solid #D6A692;
+    border-radius: 6px;
+    padding: 4px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-align: left;
+    opacity: 0;
+}
+
+#left {
+    left: -350%;
+}
+
+#disclaimer {
+    left: 1%;
+}
+
+/* language links */
+fieldset {
+    border: 1px solid #D6A692;
+    float: inline-end;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #77311F;
+    width: auto;
+    padding: 0px 20px 0px 5px;
+    align-items: center;
+    height: 100px;
+}
+
+.pagelink,
+.pagelink:link,
+.pagelink:visited {
+    color: #77311F;
+    text-decoration: none;
+}
+
+.pagelink:hover {
+    color: #D6A692;
+    text-decoration: none;
+    transition: 0.7s;
+}
