@@ -109,6 +109,7 @@
         "pewaqdisclaimer": "Some verbs in this conjugation are really conjugation 2 verbs with inanimate subjects only. For these, only look at the inanimate subject forms. Examples of these verbs are <i>toqwa'q, wejkwapa'q, etc</i>.",
         "pesatldisclaimer": "These verbs fall in two categories that cannot be separated by the <i>nekm</i> form alone. Some have stems in <i>-a-</i>, others in <i>-e-</i>. If you know whether the <i>ni'n</i> form ends in <i>-a'q</i> or <i>-e'k</i>, you can know what pattern the verb follows. The <i>-a-</i> stems are listed first, followed by the <i>-e-</i> stems. If the form is the same for both stems, only one form is listed.",
         "ketukdisclaimer": "Some verbs in this conjugation only have inanimate subjects, like those in <i>telamu'k</i> but with a short final vowel. For these verbs, look only at the inanimate subject forms listed here.",
+        "eykdisclaimer": "<i>Eyk</i> is a verb that is now primarily used only for animate subjects. For inanimate subjects, a separate verb is used: <i>etek</i>.",
         "contacttitle": "Have a Suggestion?",
         "contactme": "Contact Me",
         "orthographyradiobuttontitle": "I am writing in:"
@@ -214,7 +215,7 @@
         "outputtitle": "Piskwa'tu'sɨp:",
         "infotitle": "Me' kjitu:",
         "helptitle": "Apoqonmati",
-        "sourcetitle": "Ta'n tel-wjiaqap kina'masuti",
+        "sourcetitle": "Tami wejiaqap kina'masuti",
         "helpfield": "Nmitu, verb piskwa'tu'sɨp tla'sik stɨke' na ulaal tett.<br><br>Waqjuika'tekemkewey nenk verbl ta'n tel-kaqiaql stɨke:<ul><li>Keknukwatasik 1, Tela'sikl stɨke' <i>teluisit, pejila'sit, pekisink, wele'k, wekayk, maqatkwik</i></li><li>Keknukwatasik 2, Tela'sikl stɨke' <i>amalkat, ajipuna't, pesaq</i></li><li>Keknukwatasik 3, Tela'sikl stɨke' <i>ewi'kiket, eliet, teluet, teweket, te'sipunqek</i></li><li>Keknukwatasik 4, Tela'sikl stɨke' <i>nestɨk, ewi'kɨk, nenk, telte'k, ketkwi'k, pewa'q, eyk, telamu'k</i></li><li>Keknukwatasik 5, Tela'sikl stɨke' <i>mena'toq, ketuk</i></li><li>Keknukwatasik 6, Tela'sikl stɨke' <i>kesalatl, nemiatl, pesa'tl</i></li><li>Keknukwatasik 7, Tela'sik stɨke' <i>kisituatl</i></li></ul><br>Waqjuika'tekemkewey mu nennuk, ta'n tel-pilui-tluekl verbl dialectl-iktuk.<br>Msɨt verb-forml mu e'wasinukl ukjit msɨt verbl.<br>Koqoey teluet waqjuika'tekemkewey etukjel apjiw mu telianuk.",
         "sourcefield": "<ul><li>Francis & Hewson 1994, <i>The Mi'kmaw Grammar of Father Pacifique</i></li><li>Dr. Stephanie Inglis' Doctoral Dissertation, 2002</li><li>Dr. Dianne Friesen's Doctoral Dissertation, 2022</li></ul>",
         "elietdisclaimer": "Verbl tel-kaqiaql <i>-iet</i> pilui-tla'sikl ta'n tujiw tapusijik mimajuinu'k elukwejik: e.g. <i>-a'tikw</i> teluen ta'n tujiw ela'tikw maqamikek, aqq <i>-ieyikw</i> teluen ta'n tujiw elieyikw samqwan-iktuk.",
@@ -223,6 +224,7 @@
         "pewaqdisclaimer": "Alt verbl tett waqjuikasikl stɨke keknukwatasik 2, aqq pasɨk ukjit <i>ula, ula'l, etc.</i>. Pasɨk weketu forml ukjit <i>ula, ulaal, etc.<i> ukjit ulaal verbl. Alt ulaal verbl na <i>toqwa'q, wejkwapa'q, etc</i>.",
         "pesatldisclaimer": "Ulaal verbl tela'sikl tapunemi'kl, aqq ta'n tel-tla'sik verb mu kejitɨmmɨk pasɨk ukjit <i>nekm</i>. Alt tela'sikl <i>-a-</i>, ktɨkl tela'sikl <i>-e-</i>. Kjitu'n ta'n tel-kaqiaq form ukjit <i>ni'n</i>, tel-kaqiaq <i>-a'q</i> kisna <i>-e'k</i>, kis-kjittes ta'n tel-tla'sik verb. Forml ukjit <i>-a-</i> na amskwesewe'l, aqq forml ukjit <i>-e-</i> na tapuewe'l. Ta'n tujiw form ukjit kitk na wijey, pasɨk ula form ewi'kasitew.",
         "ketukdisclaimer": "Alt verbl tett waqjuikasikl pasɨk ukjit <i>ula, ula'l, etc.</i>, stɨke <i>telamu'k</i>, katu vowel kiaspiaq na toqwaqji'jk. Pasɨk weketu forml ukjit <i>ula, ulaal, etc.<i> ukjit ulaal verbl.",
+        "eykdisclaimer": "Eweketumk <i>eyk</i> ta'n tujiw <i>ula, ulaal, etc.</i> mu elukwenuk. Ukjit <i>ula, ulaal, etc.</i>, eweketumk <i>etek</i>.",
         "contacttitle": "Pewatmn Aji-klu'sitew?",
         "contactme": "Kluli",
         "orthographyradiobuttontitle": "Wi'katikney:"

@@ -57,6 +57,10 @@ body {
     margin-right: 5px;
 }
 
+.radiobutton {
+    margin-right: 10px;
+}
+
 /* input field */
 .input {
     background: #D6CEAA;

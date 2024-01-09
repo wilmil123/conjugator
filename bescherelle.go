@@ -69,6 +69,7 @@ type Locale struct { // a struct for reading the conjugation dictionary JSON
 	PewaqDisclaimer             string   `json:"pewaqdisclaimer"`
 	PesatlDisclaimer            string   `json:"pesatldisclaimer"`
 	KetukDisclaimer             string   `json:"ketukdisclaimer"`
+	EykDisclaimer               string   `json:"eykdisclaimer"`
 }
 
 type Data struct { // for collecting the data of all tables
@@ -298,17 +299,17 @@ func convertListugujtoFrancisSmith(InputStr string) string {
 	if strings.Contains(OutputStr, "g") == true {
 		OutputStr = strings.Replace(OutputStr, "g", "k", -1)
 	}
-	if strings.Contains(OutputStr, "ay") == true {
-		OutputStr = strings.Replace(OutputStr, "ay", "ai", -1)
+	if strings.Contains(OutputStr, "ai") == true {
+		OutputStr = strings.Replace(OutputStr, "ai", "ay", -1)
 	}
-	if strings.Contains(OutputStr, "a'y") == true {
-		OutputStr = strings.Replace(OutputStr, "a'y", "a'i", -1)
+	if strings.Contains(OutputStr, "a'i") == true {
+		OutputStr = strings.Replace(OutputStr, "a'i", "a'y", -1)
 	}
-	if strings.Contains(OutputStr, "ey") == true {
-		OutputStr = strings.Replace(OutputStr, "ey", "ei", -1)
+	if strings.Contains(OutputStr, "ei") == true {
+		OutputStr = strings.Replace(OutputStr, "ei", "ey", -1)
 	}
-	if strings.Contains(OutputStr, "e'y") == true {
-		OutputStr = strings.Replace(OutputStr, "e'y", "e'i", -1)
+	if strings.Contains(OutputStr, "e'i") == true {
+		OutputStr = strings.Replace(OutputStr, "e'i", "e'y", -1)
 	}
 	// replace all apostrophes after consonants as schwas, but use the escape character "*"
 	if strings.Contains(OutputStr, "j'") == true {
@@ -446,6 +447,8 @@ func localizeOutput(languageChoice string, InputVerb Verb) (string, string, Disc
 				} else if InputVerb.ConjugationVariant == "eyk" {
 					LocalOutputConjugation = "4"
 					LocalOutputModel = "eyk"
+					LocalDisclaimer.Defined = true
+					LocalDisclaimer.DisclaimerText = language.EykDisclaimer // explaining that eyk is animate, etek is inanimate
 				} else if InputVerb.ConjugationVariant == "astem" {
 					LocalOutputConjugation = "4"
 					LocalOutputModel = "pewa'q"
