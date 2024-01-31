@@ -1,6 +1,9 @@
 // a program that conjugates mi'kmaw verbs and outputs them to an html template
 // functions are (somewhat) thoroughly commented and so should be readable with reasonable previous knowledge of go and mi'kmaw grammar
 
+// todo
+// update localization
+
 package main
 
 import (
@@ -50,6 +53,7 @@ type Locale struct { // a struct for reading the conjugation dictionary JSON
 	LanguageFieldLabel          string   `json:"languagefieldlabel"`
 	English                     string   `json:"english"`
 	Mikmaw                      string   `json:"mikmaw"`
+	French                      string   `json:"french"`
 	ConjugateButton             string   `json:"conjugatebutton"`
 	OutputConjugation           string   `json:"outputconjugation"`
 	OutputModel                 string   `json:"outputmodel"`
@@ -70,6 +74,8 @@ type Locale struct { // a struct for reading the conjugation dictionary JSON
 	PesatlDisclaimer            string   `json:"pesatldisclaimer"`
 	KetukDisclaimer             string   `json:"ketukdisclaimer"`
 	EykDisclaimer               string   `json:"eykdisclaimer"`
+	VIIDisclaimer               string   `json:"viidisclaimer"`
+	EwniaqDisclaimer            string   `json:"ewniaqdisclaimer"`
 }
 
 type Data struct { // for collecting the data of all tables
@@ -95,6 +101,7 @@ type MainPage struct { // this is what will be sent to the page
 	LanguageFieldLabel          string
 	English                     string
 	Mikmaw                      string
+	French                      string
 	ConjugateButton             string
 	OutputConjugationTitle      string
 	OutputConjugation           string
@@ -154,8 +161,9 @@ func main() {
 	http.Handle("/assets/", http.StripPrefix("/assets", fileServe)) // no idea what this actually does, but this is from golang example code
 	http.HandleFunc("/eng", engIndexHandler)                        // create a webpage for english
 	http.HandleFunc("/mkw", mkwIndexHandler)                        // create a webpage for mi'kmaw
+	http.HandleFunc("/fre", freIndexHandler)                        // create a webpage for mi'kmaw
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", nil) // listen and serve
 }
 
 // this is the function that handles displaying the webpage for english
@@ -213,6 +221,56 @@ func mkwIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 	var WriteData Data                    // the tables to be sent to the template
 	var page MainPage                     // all the fields that get passed to the template (incl. WriteData)
 	var languageChoice string = "MKMW"    // string to get localization in english
+	if reader.Method == http.MethodPost { // if the "submit/conjugate" button is pressed
+		var InputStr string
+		InputStr = reader.FormValue("verbinput")                        // get the input string
+		var ConjugationArray [][]string                                 // load a conjugation array
+		var InputVerb Verb                                              // load an InputVerb Verb type
+		orthographyChoice := reader.FormValue("orthographyradiobutton") // a string value correstponding to the orthography chosen by the user
+		// 0 = francis smith
+		// 1 = listuguj
+		if InputStr != "" { // if the input is not empty
+			if orthographyChoice == "1" {
+				InputStr = convertListugujtoFrancisSmith(InputStr) // if the user has chosen listuguj orthography, convert it to francis smith to run the program
+			}
+			ConjugationArray, InputVerb = readoutVerb(InputStr) // fill the conjugation array and input verb structs
+			if orthographyChoice == "1" {
+				ConjugationArray = convertFrancisSmithtoListuguj(ConjugationArray) // if the user has chosen listuguj orthography, convert all tables to listuguj
+			}
+			// make the tables differently for each verb type (VII, VAI, VTI, VTA) — point to a different function each time to do this
+			if InputVerb.Type == VAI {
+				WriteData = makeTablesVAI(ConjugationArray, languageChoice) // make the tables with this array based on localization language
+			} else if InputVerb.Type == VTI {
+				WriteData = makeTablesVTI(ConjugationArray, languageChoice) // make the tables with this array based on localization language
+			} else if InputVerb.Type == VTA {
+				WriteData = makeTablesVTA(ConjugationArray, languageChoice) // make the tables with this array based on localization language
+			} else if InputVerb.Type == VII {
+				WriteData = makeTablesVII(ConjugationArray, languageChoice) // make the tables with this array based on localization language
+			}
+		}
+		page.OutputConjugation, page.OutputModel, page.Disclaimer = localizeOutput(languageChoice, InputVerb) // localize the output (get the conjugation, model, and disclaimers)
+		page.InputString = InputStr                                                                           // the input string to be sent to the page (to be displayed as "you entered:")
+	} else { // if the button was not pressed (i.e. on first load of the page without cache)
+		ConjugationArray, InputVerb := readoutVerb("teluisit")                                                // load the conjugation array and InputVerb for "teluisit" as a default (Pacifique's first conjugation model)
+		WriteData = makeTablesVAI(ConjugationArray, languageChoice)                                           // make the tables with this array based on localization language
+		page.OutputConjugation, page.OutputModel, page.Disclaimer = localizeOutput(languageChoice, InputVerb) // localize the output (get the conjugation, model, and disclaimers)
+		page.InputString = "teluisit"                                                                         // the input string is "teluisit"
+	}
+	page = localize(page, languageChoice) // localize everything else in the page (title, buttons, etc.)
+	page.TableData = WriteData            // the tabledata is writedata (load the tables into the struct to be sent to the template)
+
+	template, templateBuildErr := template.ParseFiles("template.html") // parse template.html
+	if templateBuildErr != nil {                                       // if an error is thrown
+		fmt.Println(templateBuildErr)
+	}
+	template.Execute(writer, page) // execute the template
+}
+
+// this is the same as engIndexHandler but with languageChoice FREN (i.e. in french)
+func freIndexHandler(writer http.ResponseWriter, reader *http.Request) {
+	var WriteData Data                    // the tables to be sent to the template
+	var page MainPage                     // all the fields that get passed to the template (incl. WriteData)
+	var languageChoice string = "FREN"    // string to get localization in english
 	if reader.Method == http.MethodPost { // if the "submit/conjugate" button is pressed
 		var InputStr string
 		InputStr = reader.FormValue("verbinput")                        // get the input string
@@ -377,12 +435,19 @@ func localizeOutput(languageChoice string, InputVerb Verb) (string, string, Disc
 				if InputVerb.ConjugationVariant == "asit" {
 					LocalOutputConjugation = "1"
 					LocalOutputModel = "pejila'sit"
+				} else if InputVerb.ConjugationVariant == "asik" {
+					LocalOutputConjugation = "1"
+					LocalOutputModel = "enqa'sik"
+					LocalDisclaimer.Defined = true
+					LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
 				} else if InputVerb.ConjugationVariant == "ink" {
 					LocalOutputConjugation = "1"
 					LocalOutputModel = "pekisink"
 				} else if InputVerb.ConjugationVariant == "inan" {
 					LocalOutputConjugation = "1"
 					LocalOutputModel = "maqatkwik"
+					LocalDisclaimer.Defined = true
+					LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
 				} else if InputVerb.ConjugationVariant == "std" {
 					LocalOutputConjugation = "1"
 					LocalOutputModel = "teluisit"
@@ -394,6 +459,8 @@ func localizeOutput(languageChoice string, InputVerb Verb) (string, string, Disc
 				} else if InputVerb.ConjugationVariant == "inan" {
 					LocalOutputConjugation = "2"
 					LocalOutputModel = "pesaq"
+					LocalDisclaimer.Defined = true
+					LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
 				} else if InputVerb.ConjugationVariant == "diph" {
 					LocalOutputConjugation = "1~2"
 					LocalOutputModel = "wekayk"
@@ -407,6 +474,11 @@ func localizeOutput(languageChoice string, InputVerb Verb) (string, string, Disc
 					LocalOutputModel = "eliet"
 					LocalDisclaimer.Defined = true
 					LocalDisclaimer.DisclaimerText = language.ElietDisclaimer // variant forms for land/water travel in the dual
+				} else if InputVerb.ConjugationVariant == "iaq" {
+					LocalOutputConjugation = "3"
+					LocalOutputModel = "ewniaq"
+					LocalDisclaimer.Defined = true
+					LocalDisclaimer.DisclaimerText = language.EwniaqDisclaimer // variant forms for land/water travel in the dual (inanimate)
 				} else if InputVerb.ConjugationVariant == "uet" {
 					LocalOutputConjugation = "3"
 					LocalOutputModel = "teluet"
@@ -419,6 +491,8 @@ func localizeOutput(languageChoice string, InputVerb Verb) (string, string, Disc
 				} else if InputVerb.ConjugationVariant == "inan" {
 					LocalOutputConjugation = "3"
 					LocalOutputModel = "te'sipunqek"
+					LocalDisclaimer.Defined = true
+					LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
 				} else if InputVerb.ConjugationVariant == "std" {
 					LocalOutputConjugation = "3"
 					LocalOutputModel = "ewi'kiket"
@@ -487,6 +561,9 @@ func localizeOutput(languageChoice string, InputVerb Verb) (string, string, Disc
 					LocalOutputModel = "pesa'tl"
 					LocalDisclaimer.Defined = true
 					LocalDisclaimer.DisclaimerText = language.PesatlDisclaimer // some verbs of this group have -a- stems, some have -e- stems
+				} else if InputVerb.ConjugationVariant == "ibar" {
+					LocalOutputConjugation = "6"
+					LocalOutputModel = "e'natl"
 				} else if InputVerb.ConjugationVariant == "std" {
 					LocalOutputConjugation = "6"
 					LocalOutputModel = "kesalatl"
@@ -515,6 +592,7 @@ func localize(page MainPage, languageChoice string) MainPage {
 			page.LanguageFieldLabel = language.LanguageFieldLabel
 			page.English = language.English
 			page.Mikmaw = language.Mikmaw
+			page.French = language.French
 			page.ConjugateButton = language.ConjugateButton
 			page.OutputConjugationTitle = language.OutputConjugation
 			page.OutputModelTitle = language.OutputModel
@@ -821,6 +899,8 @@ func makeTablesVTA(ConjugationArray [][]string, languageChoice string) Data {
 func makeTablesVII(ConjugationArray [][]string, languageChoice string) Data {
 	// get localization strings
 	var subjectPronounsVII []string                   // subject pronouns
+	var subjectPronounsVIINarrowed []string           // subject pronouns without absentatives
+	var subjectPronounsVIILocal []string              // subjectpronouns that are mobile and build the table
 	var tensesVII []string                            // tense headers (e.g. present, present negative)
 	var tempslice []string                            // a temporary string to store all of the subject pronouns, which will be filtered
 	for _, language := range LocalizationDictionary { // loop through the objects in the localization file (ENGL or MKMW)
@@ -830,15 +910,25 @@ func makeTablesVII(ConjugationArray [][]string, languageChoice string) Data {
 		}
 	}
 
-	for itemIndex, item := range tempslice { // filter only the inanimate subjects out of the total subject pronoun slice
-		if itemIndex == 3 || itemIndex == 12 || itemIndex == 20 { // items 3, 12, and 20 are the inanimate subjects
+	for itemIndex, item := range tempslice { // filter only the inanimate subjects out of the total subject pronoun slice (with absentatives)
+		if itemIndex == 3 || itemIndex == 6 || itemIndex == 12 || itemIndex == 15 || itemIndex == 20 || itemIndex == 23 { // items 3, 6, 12, 15, 20, and 23 are the inanimate subjects
 			subjectPronounsVII = append(subjectPronounsVII, item)
+		}
+		if itemIndex == 3 || itemIndex == 12 || itemIndex == 20 { // items 3, 12, and 20 are the inanimate subjects
+			subjectPronounsVIINarrowed = append(subjectPronounsVIINarrowed, item)
 		}
 	}
 
 	var OutputData Data
 	// for every slice in the conjugation array, make a table
 	for sliceIndex, slice := range ConjugationArray {
+		// in the present, present negative (i.e. slice < 2), use absentative pronouns, otherwise omit them
+		if sliceIndex < 2 {
+			subjectPronounsVIILocal = subjectPronounsVII
+		} else {
+			subjectPronounsVIILocal = subjectPronounsVIINarrowed
+		}
+
 		var CurrentTable Table
 		CurrentTable.Type = VII
 		if sliceIndex >= 23 { // skip the 23rd (attestive conditional, this form does not exist for inanimates)
@@ -846,10 +936,10 @@ func makeTablesVII(ConjugationArray [][]string, languageChoice string) Data {
 		} else {
 			CurrentTable.Title = tensesVII[sliceIndex]
 		}
-		CurrentTable.RowsAndColumns = append(CurrentTable.RowsAndColumns, subjectPronounsVII) // append the subject pronouns as the first row
-		CurrentTable.RowsAndColumns = append(CurrentTable.RowsAndColumns, slice)              // append the current slice in the conjugation array (sliceIndex corresponds to the tense)
-		CurrentTable.RowsAndColumns = transposeRowsAndColumns(CurrentTable.RowsAndColumns)    // switch rows and columns for the html template
-		OutputData.Tables = append(OutputData.Tables, CurrentTable)                           // append each table to the output data table slice
+		CurrentTable.RowsAndColumns = append(CurrentTable.RowsAndColumns, subjectPronounsVIILocal) // append the subject pronouns as the first row
+		CurrentTable.RowsAndColumns = append(CurrentTable.RowsAndColumns, slice)                   // append the current slice in the conjugation array (sliceIndex corresponds to the tense)
+		CurrentTable.RowsAndColumns = transposeRowsAndColumns(CurrentTable.RowsAndColumns)         // switch rows and columns for the html template
+		OutputData.Tables = append(OutputData.Tables, CurrentTable)                                // append each table to the output data table slice
 	}
 	return OutputData
 }
@@ -1102,7 +1192,7 @@ func conjugateVerb(InputVerb Verb) [][]string {
 
 	// some forms of the conditional do not have negatives in use; the future negative is used instead
 	// conditional suppositive
-	if InputVerb.Conjugation != 6 && InputVerb.Conjugation != 7 && InputVerb.ConjugationVariant != "inan" {
+	if InputVerb.Conjugation != 6 && InputVerb.Conjugation != 7 && InputVerb.Type != VII {
 		// the sixth, seventh, and VII verbs do not have the suppositive conditional
 		// (does not exist for inanimates, apparently conflated with the counterfactual in the 6th and 7th conjugations)
 		FormIndex = fmt.Sprintf("%d.cond.sup.%s", InputVerb.Conjugation, Namespace)       // create the indexed title key
@@ -1187,12 +1277,22 @@ func pluralInanimateForms(InputArray [][]string) [][]string {
 				pluralForm = "*"
 			} else {
 				if formIndex == 0 {
-					pluralForm = fmt.Sprintf("%sanl", form) // the first person singular takes -anl
+					if strings.Contains(form, ",") == true { // if there is a comma, i.e. if there are multiple variants
+						splitForms := strings.Split(form, ", ")                                // split the string at that comma
+						pluralForm = fmt.Sprintf("%sanl, %sanl", splitForms[0], splitForms[1]) // put "anl" after both variants, and join them together again
+					} else {
+						pluralForm = fmt.Sprintf("%sanl", form) // the first person singular takes -anl
+					}
 				} else {
 					if string(form[len(form)-1]) == "l" { // if a form ends in -l, the plural is the same
 						pluralForm = form
 					} else {
-						pluralForm = fmt.Sprintf("%sl", form) // else, append -l
+						if strings.Contains(form, ",") == true { // if there is a comma, i.e. if there are multiple variants
+							splitForms := strings.Split(form, ", ")                            // split the string at that comma
+							pluralForm = fmt.Sprintf("%sl, %sl", splitForms[0], splitForms[1]) // put "l" after both variants, and join them together again
+						} else {
+							pluralForm = fmt.Sprintf("%sl", form) // else, append -l
+						}
 					}
 				}
 			}
@@ -1376,8 +1476,17 @@ func parseVerb(InputStr string) (Verb, error) {
 		InputVerb.ConjugationVariant = "aestem"
 		// InputVerb.ConjugationVariant = "astem"
 		// InputVerb.ConjugationVariant = "estem"
-		// the above are relegated to the python script — had to do things a bit differently here
+		// the above are relegated to the python script — had to do things a bit differently here and so the above lines are commented out
 		InputVerb.Type = VTA
+		return InputVerb, nil
+	} else if Ending == "a's*k" { // first conjugation inanimate verbs in "a'sɨk" (orthographical/Listuguj variant of "a'sik")
+		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
+			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
+		}
+		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
+		InputVerb.Conjugation = 1
+		InputVerb.ConjugationVariant = "asik"
+		InputVerb.Type = VII
 		return InputVerb, nil
 	}
 
@@ -1403,6 +1512,15 @@ func parseVerb(InputStr string) (Verb, error) {
 		InputVerb.Conjugation = 2
 		InputVerb.ConjugationVariant = "diph"
 		InputVerb.Type = VAI
+		return InputVerb, nil
+	} else if Ending == "iaq" { // third conjugation inanimate verbs that resemble -iet's inanimate conjugation
+		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
+			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
+		}
+		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
+		InputVerb.Conjugation = 3
+		InputVerb.ConjugationVariant = "iaq"
+		InputVerb.Type = VII
 		return InputVerb, nil
 	} else if Ending == "e'k" {
 		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
@@ -1493,7 +1611,13 @@ func parseVerb(InputStr string) (Verb, error) {
 			FinalInt = 3
 			InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 			InputVerb.Conjugation = 6
-			InputVerb.ConjugationVariant = "std"
+			// check if the verb has a long vowel + consonant before the personal agreement ending, e.g. e'natl
+			// these verbs require a schwa inserted for phonotactic reasons
+			if IsConsonant(string(InputVerb.Stem[len(InputVerb.Stem)-1])) == true && string(InputVerb.Stem[len(InputVerb.Stem)-2]) == "'" {
+				InputVerb.ConjugationVariant = "ibar"
+			} else {
+				InputVerb.ConjugationVariant = "std"
+			}
 			return InputVerb, nil
 		}
 	} else if Ending == "u'k" { // fourth conjugation verbs with inanimate subject, e.g. telamu'k
@@ -1614,8 +1738,16 @@ func parseVerb(InputStr string) (Verb, error) {
 		}
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 1
-		InputVerb.ConjugationVariant = "inan"
-		InputVerb.Type = VII
+		FinalInt = 5 // need to check for verbs ending in "a'sik"
+		Ending = getVerbEnding(InputStr, FinalInt)
+		if Ending == "a'sik" {
+			InputVerb.Stem = getVerbStem(InputStr, FinalInt)
+			InputVerb.ConjugationVariant = "asik"
+		} else {
+			FinalInt = 2
+			InputVerb.Stem = getVerbStem(InputStr, FinalInt)
+			InputVerb.ConjugationVariant = "std"
+		}
 		return InputVerb, nil
 	} else if Ending == "aq" { // second conjugation verbs with inanimate subjects
 		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
