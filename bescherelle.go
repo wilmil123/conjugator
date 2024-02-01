@@ -1746,7 +1746,7 @@ func parseVerb(InputStr string) (Verb, error) {
 		} else {
 			FinalInt = 2
 			InputVerb.Stem = getVerbStem(InputStr, FinalInt)
-			InputVerb.ConjugationVariant = "std"
+			InputVerb.ConjugationVariant = "inan"
 		}
 		return InputVerb, nil
 	} else if Ending == "aq" { // second conjugation verbs with inanimate subjects
