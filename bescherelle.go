@@ -1068,6 +1068,8 @@ func conjugateVerb(InputVerb Verb) [][]string {
 	var imperativeNegative []string
 	if InputVerb.Conjugation == 6 || InputVerb.Conjugation == 7 {
 		imperativeNegative = imperativeNegativeFormsVTA(temporaryForms) // VTA negatives are handled differently because of the separators
+	} else if InputVerb.Type == VII {
+		imperativeNegative = imperativeNegativeFormsVII(temporaryForms) // VII verbs need only "mu"
 	} else {
 		imperativeNegative = imperativeNegativeForms(temporaryForms) // make the forms negative
 	}
@@ -1445,6 +1447,16 @@ func imperativeNegativeFormsVTA(InputForms []string) []string { // VTA verbs wor
 	return OutputForms                             // return the output slice
 }
 
+// the imperative negative forms of VII verbs need only "mu"
+func imperativeNegativeFormsVII(InputForms []string) []string { // VII verbs need only "mu"
+	var OutputSlice []string
+	for _, form := range InputForms {
+		form = fmt.Sprintf("mu %s", form)       // prepend "mu"
+		OutputSlice = append(OutputSlice, form) // append the form to the output slice
+	}
+	return OutputSlice
+}
+
 // this function will create a type Verb by recognizing the group of the input stem
 // called by readoutVerb
 func parseVerb(InputStr string) (Verb, error) {
@@ -1812,8 +1824,12 @@ func contractStem(InputStr string, Conjugation int) string { // return the contr
 		} else { // stems that are shorter than two characters
 			if IsConsonant(string(OutputStr[0])) && IsPlosive(string(OutputStr[1])) && Conjugation != 6 && Conjugation != 7 {
 				// if the first character is a consonant, and the second is a plosive
-				// in VTA verbs (conj. 6, 7), the affixes contain vowels that do not necessitate the insertion of a schwa
-				OutputStr = fmt.Sprintf("%sɨ", OutputStr)
+				if Conjugation == 1 || Conjugation == 2 || Conjugation == 3 { // first 3 conjugations involve vowels, so no need for a schwa if the stem is 2 characters.
+					OutputStr = fmt.Sprintf("%s%s", OutputStr[:2], OutputStr[2:])
+				} else {
+					// in VTA verbs (conj. 6, 7), the affixes contain vowels that do not necessitate the insertion of a schwa
+					OutputStr = fmt.Sprintf("%sɨ", OutputStr)
+				}
 			} else if OutputStr[0] == OutputStr[1] { // if the first and second characters are equal, e.g. for nen- => nn- => nɨn-
 				OutputStr = fmt.Sprintf("%sɨ%s", string(OutputStr[0]), string(OutputStr[1]))
 			}
