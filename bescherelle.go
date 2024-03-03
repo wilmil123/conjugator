@@ -33,13 +33,7 @@ type Verb struct {
 	Type               VerbType
 }
 
-type Category struct { // a struct for reading the conjugation dictionary JSON
-	Title string   `json:"title"`
-	Forms []string `json:"forms"`
-}
-
 type Locale struct { // a struct for reading the conjugation dictionary JSON
-	Language                    string   `json:"language"`
 	TableTitles                 []string `json:"tabletitles"`
 	SubjectPronouns             []string `json:"subjectpronouns"`
 	InanimateObjectPronouns     []string `json:"inanobjpronouns"`
@@ -121,8 +115,8 @@ type MainPage struct { // this is what will be sent to the page
 	TableData                   Data
 }
 
-var ConjugationDictionary = []Category{} // define a global conjugation dictionary to hold the readout of the .json file
-var LocalizationDictionary = []Locale{}  // define a global localization lookup for all strings
+var ConjugationDictionary = make(map[string][]string) // define a global conjugation dictionary to hold the readout of the .json file
+var LocalizationDictionary = make(map[string]Locale)  // define a global localization lookup for all strings
 
 func main() {
 	conjugationDictionaryFile, errFileOpen := os.Open("conjdict.json") // open the json file
@@ -139,7 +133,7 @@ func main() {
 	}
 	fmt.Println("Successfully read conjdict.json.")
 
-	json.Unmarshal(conjugationDictionaryBytes, &ConjugationDictionary) // use the json package to unmarshal the byte array into the conjugation dictionary
+	json.Unmarshal([]byte(conjugationDictionaryBytes), &ConjugationDictionary) // use the json package to unmarshal the byte array into the conjugation dictionary
 
 	localizationFile, errFileOpen := os.Open("localization.json") // open the json file
 	if errFileOpen != nil {                                       // if there is an error
@@ -155,7 +149,7 @@ func main() {
 	}
 	fmt.Println("Successfully read localization.json.")
 
-	json.Unmarshal(localizationBytes, &LocalizationDictionary) // use the json package to unmarshal the byte array into the conjugation dictionary
+	json.Unmarshal([]byte(localizationBytes), &LocalizationDictionary) // use the json package to unmarshal the byte array into the conjugation dictionary
 
 	fileServe := http.FileServer(http.Dir("./assets"))              // add a stylesheet
 	http.Handle("/assets/", http.StripPrefix("/assets", fileServe)) // no idea what this actually does, but this is from golang example code
@@ -354,46 +348,20 @@ func convertListugujtoFrancisSmith(InputStr string) string {
 	OutputStr := strings.ToLower(InputStr)
 	// everything below is just replacing character combinations with others
 	// the output string is in francis-smith
-	if strings.Contains(OutputStr, "g") == true {
-		OutputStr = strings.Replace(OutputStr, "g", "k", -1)
-	}
-	if strings.Contains(OutputStr, "ai") == true {
-		OutputStr = strings.Replace(OutputStr, "ai", "ay", -1)
-	}
-	if strings.Contains(OutputStr, "a'i") == true {
-		OutputStr = strings.Replace(OutputStr, "a'i", "a'y", -1)
-	}
-	if strings.Contains(OutputStr, "ei") == true {
-		OutputStr = strings.Replace(OutputStr, "ei", "ey", -1)
-	}
-	if strings.Contains(OutputStr, "e'i") == true {
-		OutputStr = strings.Replace(OutputStr, "e'i", "e'y", -1)
-	}
+	OutputStr = strings.Replace(OutputStr, "g", "k", -1)
+	OutputStr = strings.Replace(OutputStr, "ai", "ay", -1)
+	OutputStr = strings.Replace(OutputStr, "a'i", "a'y", -1)
+	OutputStr = strings.Replace(OutputStr, "ei", "ey", -1)
+	OutputStr = strings.Replace(OutputStr, "e'i", "e'y", -1)
 	// replace all apostrophes after consonants as schwas, but use the escape character "*"
-	if strings.Contains(OutputStr, "j'") == true {
-		OutputStr = strings.Replace(OutputStr, "j'", "j*", -1)
-	}
-	if strings.Contains(OutputStr, "k'") == true {
-		OutputStr = strings.Replace(OutputStr, "k'", "k*", -1)
-	}
-	if strings.Contains(OutputStr, "m'") == true {
-		OutputStr = strings.Replace(OutputStr, "m'", "m*", -1)
-	}
-	if strings.Contains(OutputStr, "n'") == true {
-		OutputStr = strings.Replace(OutputStr, "n'", "n*", -1)
-	}
-	if strings.Contains(OutputStr, "p'") == true {
-		OutputStr = strings.Replace(OutputStr, "p'", "p*", -1)
-	}
-	if strings.Contains(OutputStr, "q'") == true {
-		OutputStr = strings.Replace(OutputStr, "q'", "q*", -1)
-	}
-	if strings.Contains(OutputStr, "s'") == true {
-		OutputStr = strings.Replace(OutputStr, "s'", "s*", -1)
-	}
-	if strings.Contains(OutputStr, "t'") == true {
-		OutputStr = strings.Replace(OutputStr, "t'", "t*", -1)
-	}
+	OutputStr = strings.Replace(OutputStr, "j'", "j*", -1)
+	OutputStr = strings.Replace(OutputStr, "k'", "k*", -1)
+	OutputStr = strings.Replace(OutputStr, "m'", "m*", -1)
+	OutputStr = strings.Replace(OutputStr, "n'", "n*", -1)
+	OutputStr = strings.Replace(OutputStr, "p'", "p*", -1)
+	OutputStr = strings.Replace(OutputStr, "q'", "q*", -1)
+	OutputStr = strings.Replace(OutputStr, "s'", "s*", -1)
+	OutputStr = strings.Replace(OutputStr, "t'", "t*", -1)
 	return OutputStr
 }
 
@@ -402,19 +370,11 @@ func convertFrancisSmithtoListuguj(InputArray [][]string) [][]string {
 	for sliceIndex := range InputArray {
 		for stringIndex, string := range InputArray[sliceIndex] {
 			outputStr := string
-			if strings.Contains(outputStr, "k") == true {
-				outputStr = strings.Replace(outputStr, "k", "g", -1)
-			}
-			if strings.Contains(outputStr, "ɨ") == true {
-				outputStr = strings.Replace(outputStr, "ɨ", "'", -1)
-			}
-			if strings.Contains(outputStr, "y") == true {
-				outputStr = strings.Replace(outputStr, "y", "i", -1)
-			}
+			outputStr = strings.Replace(outputStr, "k", "g", -1)
+			outputStr = strings.Replace(outputStr, "ɨ", "'", -1)
+			outputStr = strings.Replace(outputStr, "y", "i", -1)
 			// converting "y" to "i" in strings of "yi" will lead to "ii"
-			if strings.Contains(outputStr, "ii") == true {
-				outputStr = strings.Replace(outputStr, "ii", "i", -1)
-			}
+			outputStr = strings.Replace(outputStr, "ii", "i", -1)
 			InputArray[sliceIndex][stringIndex] = outputStr
 		}
 	}
@@ -428,154 +388,151 @@ func localizeOutput(languageChoice string, InputVerb Verb) (string, string, Disc
 	var LocalOutputConjugation string
 	var LocalOutputModel string
 	var LocalDisclaimer DisclaimerType
-	LocalDisclaimer.Defined = false                   // this tells the template whether or not to display a tooltip with a disclaimer for a particular verb group
-	for _, language := range LocalizationDictionary { // loop through the objects in the localization file (ENGL or MKMW)
-		if language.Language == languageChoice {
-			if InputVerb.Conjugation == 1 { // cannot use this number directly; there are some that are "between" conjugations
-				if InputVerb.ConjugationVariant == "asit" {
-					LocalOutputConjugation = "1"
-					LocalOutputModel = "pejila'sit"
-				} else if InputVerb.ConjugationVariant == "asik" {
-					LocalOutputConjugation = "1"
-					LocalOutputModel = "enqa'sik"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
-				} else if InputVerb.ConjugationVariant == "ink" {
-					LocalOutputConjugation = "1"
-					LocalOutputModel = "pekisink"
-				} else if InputVerb.ConjugationVariant == "inan" {
-					LocalOutputConjugation = "1"
-					LocalOutputModel = "maqatkwik"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
-				} else if InputVerb.ConjugationVariant == "std" {
-					LocalOutputConjugation = "1"
-					LocalOutputModel = "teluisit"
-				}
-			} else if InputVerb.Conjugation == 2 {
-				if InputVerb.ConjugationVariant == "long" {
-					LocalOutputConjugation = "2"
-					LocalOutputModel = "ajipuna't"
-				} else if InputVerb.ConjugationVariant == "inan" {
-					LocalOutputConjugation = "2"
-					LocalOutputModel = "pesaq"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
-				} else if InputVerb.ConjugationVariant == "diph" {
-					LocalOutputConjugation = "1~2"
-					LocalOutputModel = "wekayk"
-				} else if InputVerb.ConjugationVariant == "std" {
-					LocalOutputConjugation = "2"
-					LocalOutputModel = "amalkat"
-				}
-			} else if InputVerb.Conjugation == 3 {
-				if InputVerb.ConjugationVariant == "iet" {
-					LocalOutputConjugation = "3"
-					LocalOutputModel = "eliet"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.ElietDisclaimer // variant forms for land/water travel in the dual
-				} else if InputVerb.ConjugationVariant == "iaq" {
-					LocalOutputConjugation = "3"
-					LocalOutputModel = "ewniaq"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.EwniaqDisclaimer // variant forms for land/water travel in the dual (inanimate)
-				} else if InputVerb.ConjugationVariant == "uet" {
-					LocalOutputConjugation = "3"
-					LocalOutputModel = "teluet"
-				} else if InputVerb.ConjugationVariant == "eket" {
-					LocalOutputConjugation = "3"
-					LocalOutputModel = "teweket"
-				} else if InputVerb.ConjugationVariant == "long" {
-					LocalOutputConjugation = "1~3"
-					LocalOutputModel = "wele'k"
-				} else if InputVerb.ConjugationVariant == "inan" {
-					LocalOutputConjugation = "3"
-					LocalOutputModel = "te'sipunqek"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
-				} else if InputVerb.ConjugationVariant == "std" {
-					LocalOutputConjugation = "3"
-					LocalOutputModel = "ewi'kiket"
-				}
-			} else if InputVerb.Conjugation == 4 {
-				if InputVerb.ConjugationVariant == "ibar" {
-					LocalOutputConjugation = "4"
-					LocalOutputModel = "nestɨk"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.NestikDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
-				} else if InputVerb.ConjugationVariant == "estem" {
-					LocalOutputConjugation = "4"
-					LocalOutputModel = "telte'k"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.NestikDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
-				} else if InputVerb.ConjugationVariant == "cons" {
-					LocalOutputConjugation = "4"
-					LocalOutputModel = "nenk"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.NenkDisclaimer // some verbs in this group are inanimate subject only
-				} else if InputVerb.ConjugationVariant == "istem" {
-					LocalOutputConjugation = "4"
-					LocalOutputModel = "ketkwi'k"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.NestikDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
-				} else if InputVerb.ConjugationVariant == "eyk" {
-					LocalOutputConjugation = "4"
-					LocalOutputModel = "eyk"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.EykDisclaimer // explaining that eyk is animate, etek is inanimate
-				} else if InputVerb.ConjugationVariant == "astem" {
-					LocalOutputConjugation = "4"
-					LocalOutputModel = "pewa'q"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.PewaqDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
-				} else if InputVerb.ConjugationVariant == "kstem" {
-					LocalOutputConjugation = "4"
-					LocalOutputModel = "ewi'kɨk"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.NestikDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
-				} else if InputVerb.ConjugationVariant == "inan" {
-					LocalOutputConjugation = "4~5"
-					LocalOutputModel = "telamu'k"
-				} else if InputVerb.ConjugationVariant == "std" {
-					LocalOutputConjugation = "4"
-					LocalOutputModel = "kesatk"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.NestikDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
-				}
-			} else if InputVerb.Conjugation == 5 {
-				if InputVerb.ConjugationVariant == "kuk" {
-					LocalOutputConjugation = "5"
-					LocalOutputModel = "ketuk"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.KetukDisclaimer // some verbs in this group are inanimate subject only
-				} else if InputVerb.ConjugationVariant == "std" {
-					LocalOutputConjugation = "5"
-					LocalOutputModel = "mena'toq"
-				}
-			} else if InputVerb.Conjugation == 6 {
-				if InputVerb.ConjugationVariant == "istem" {
-					LocalOutputConjugation = "6"
-					LocalOutputModel = "nemiatl"
-				} else if InputVerb.ConjugationVariant == "aestem" {
-					LocalOutputConjugation = "6"
-					LocalOutputModel = "pesa'tl"
-					LocalDisclaimer.Defined = true
-					LocalDisclaimer.DisclaimerText = language.PesatlDisclaimer // some verbs of this group have -a- stems, some have -e- stems
-				} else if InputVerb.ConjugationVariant == "ibar" {
-					LocalOutputConjugation = "6"
-					LocalOutputModel = "e'natl"
-				} else if InputVerb.ConjugationVariant == "std" {
-					LocalOutputConjugation = "6"
-					LocalOutputModel = "kesalatl"
-				}
-			} else if InputVerb.Conjugation == 7 {
-				LocalOutputConjugation = "7"
-				LocalOutputModel = "kisituatl"
-			} else {
-				LocalOutputConjugation = ""
-				LocalOutputModel = language.OutputVerbUnrecognized
-			}
+	LocalDisclaimer.Defined = false // this tells the template whether or not to display a tooltip with a disclaimer for a particular verb group
+	language := LocalizationDictionary[languageChoice]
+	if InputVerb.Conjugation == 1 { // cannot use this number directly; there are some that are "between" conjugations
+		if InputVerb.ConjugationVariant == "asit" {
+			LocalOutputConjugation = "1"
+			LocalOutputModel = "pejila'sit"
+		} else if InputVerb.ConjugationVariant == "asik" {
+			LocalOutputConjugation = "1"
+			LocalOutputModel = "enqa'sik"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
+		} else if InputVerb.ConjugationVariant == "ink" {
+			LocalOutputConjugation = "1"
+			LocalOutputModel = "pekisink"
+		} else if InputVerb.ConjugationVariant == "inan" {
+			LocalOutputConjugation = "1"
+			LocalOutputModel = "maqatkwik"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
+		} else if InputVerb.ConjugationVariant == "std" {
+			LocalOutputConjugation = "1"
+			LocalOutputModel = "teluisit"
 		}
+	} else if InputVerb.Conjugation == 2 {
+		if InputVerb.ConjugationVariant == "long" {
+			LocalOutputConjugation = "2"
+			LocalOutputModel = "ajipuna't"
+		} else if InputVerb.ConjugationVariant == "inan" {
+			LocalOutputConjugation = "2"
+			LocalOutputModel = "pesaq"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
+		} else if InputVerb.ConjugationVariant == "diph" {
+			LocalOutputConjugation = "1~2"
+			LocalOutputModel = "wekayk"
+		} else if InputVerb.ConjugationVariant == "std" {
+			LocalOutputConjugation = "2"
+			LocalOutputModel = "amalkat"
+		}
+	} else if InputVerb.Conjugation == 3 {
+		if InputVerb.ConjugationVariant == "iet" {
+			LocalOutputConjugation = "3"
+			LocalOutputModel = "eliet"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.ElietDisclaimer // variant forms for land/water travel in the dual
+		} else if InputVerb.ConjugationVariant == "iaq" {
+			LocalOutputConjugation = "3"
+			LocalOutputModel = "ewniaq"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.EwniaqDisclaimer // variant forms for land/water travel in the dual (inanimate)
+		} else if InputVerb.ConjugationVariant == "uet" {
+			LocalOutputConjugation = "3"
+			LocalOutputModel = "teluet"
+		} else if InputVerb.ConjugationVariant == "eket" {
+			LocalOutputConjugation = "3"
+			LocalOutputModel = "teweket"
+		} else if InputVerb.ConjugationVariant == "long" {
+			LocalOutputConjugation = "1~3"
+			LocalOutputModel = "wele'k"
+		} else if InputVerb.ConjugationVariant == "inan" {
+			LocalOutputConjugation = "3"
+			LocalOutputModel = "te'sipunqek"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
+		} else if InputVerb.ConjugationVariant == "std" {
+			LocalOutputConjugation = "3"
+			LocalOutputModel = "ewi'kiket"
+		}
+	} else if InputVerb.Conjugation == 4 {
+		if InputVerb.ConjugationVariant == "ibar" {
+			LocalOutputConjugation = "4"
+			LocalOutputModel = "nestɨk"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.NestikDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
+		} else if InputVerb.ConjugationVariant == "estem" {
+			LocalOutputConjugation = "4"
+			LocalOutputModel = "telte'k"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.NestikDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
+		} else if InputVerb.ConjugationVariant == "cons" {
+			LocalOutputConjugation = "4"
+			LocalOutputModel = "nenk"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.NenkDisclaimer // some verbs in this group are inanimate subject only
+		} else if InputVerb.ConjugationVariant == "istem" {
+			LocalOutputConjugation = "4"
+			LocalOutputModel = "ketkwi'k"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.NestikDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
+		} else if InputVerb.ConjugationVariant == "eyk" {
+			LocalOutputConjugation = "4"
+			LocalOutputModel = "eyk"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.EykDisclaimer // explaining that eyk is animate, etek is inanimate
+		} else if InputVerb.ConjugationVariant == "astem" {
+			LocalOutputConjugation = "4"
+			LocalOutputModel = "pewa'q"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.PewaqDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
+		} else if InputVerb.ConjugationVariant == "kstem" {
+			LocalOutputConjugation = "4"
+			LocalOutputModel = "ewi'kɨk"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.NestikDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
+		} else if InputVerb.ConjugationVariant == "inan" {
+			LocalOutputConjugation = "4~5"
+			LocalOutputModel = "telamu'k"
+		} else if InputVerb.ConjugationVariant == "std" {
+			LocalOutputConjugation = "4"
+			LocalOutputModel = "kesatk"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.NestikDisclaimer // about the variant -kik/-mi'tij forms in the 3rd person plural
+		}
+	} else if InputVerb.Conjugation == 5 {
+		if InputVerb.ConjugationVariant == "kuk" {
+			LocalOutputConjugation = "5"
+			LocalOutputModel = "ketuk"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.KetukDisclaimer // some verbs in this group are inanimate subject only
+		} else if InputVerb.ConjugationVariant == "std" {
+			LocalOutputConjugation = "5"
+			LocalOutputModel = "mena'toq"
+		}
+	} else if InputVerb.Conjugation == 6 {
+		if InputVerb.ConjugationVariant == "istem" {
+			LocalOutputConjugation = "6"
+			LocalOutputModel = "nemiatl"
+		} else if InputVerb.ConjugationVariant == "aestem" {
+			LocalOutputConjugation = "6"
+			LocalOutputModel = "pesa'tl"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.PesatlDisclaimer // some verbs of this group have -a- stems, some have -e- stems
+		} else if InputVerb.ConjugationVariant == "ibar" {
+			LocalOutputConjugation = "6"
+			LocalOutputModel = "e'natl"
+		} else if InputVerb.ConjugationVariant == "std" {
+			LocalOutputConjugation = "6"
+			LocalOutputModel = "kesalatl"
+		}
+	} else if InputVerb.Conjugation == 7 {
+		LocalOutputConjugation = "7"
+		LocalOutputModel = "kisituatl"
+	} else {
+		LocalOutputConjugation = ""
+		LocalOutputModel = language.OutputVerbUnrecognized
 	}
 	return LocalOutputConjugation, LocalOutputModel, LocalDisclaimer
 }
@@ -583,30 +540,28 @@ func localizeOutput(languageChoice string, InputVerb Verb) (string, string, Disc
 // this function returns the proper strings for titles, buttons, tenses, subject persons, etc. based on language
 func localize(page MainPage, languageChoice string) MainPage {
 	// get localization strings
-	for _, language := range LocalizationDictionary { // loop through the objects in the localization file (ENGL or MKMW)
-		if language.Language == languageChoice {
-			page.Title = language.PageTitle
-			page.OrthographyTooltip = language.OrthographyTooltip
-			page.EntryPrompt = language.EntryPrompt
-			page.SummaryDetails = language.SummaryDetails
-			page.LanguageFieldLabel = language.LanguageFieldLabel
-			page.English = language.English
-			page.Mikmaw = language.Mikmaw
-			page.French = language.French
-			page.ConjugateButton = language.ConjugateButton
-			page.OutputConjugationTitle = language.OutputConjugation
-			page.OutputModelTitle = language.OutputModel
-			page.OutputTitle = language.OutputTitle
-			page.InfoTitle = language.InfoTitle
-			page.HelpTitle = language.HelpTitle
-			page.HelpField = language.HelpField
-			page.SourceTitle = language.SourceTitle
-			page.SourceField = language.SourceField
-			page.OrthographyRadioButtonTitle = language.OrthographyRadioButtonTitle
-			page.ContactTitle = language.ContactTitle
-			page.ContactMe = language.ContactMe
-		}
-	}
+	language := LocalizationDictionary[languageChoice]
+	page.Title = language.PageTitle
+	page.OrthographyTooltip = language.OrthographyTooltip
+	page.EntryPrompt = language.EntryPrompt
+	page.SummaryDetails = language.SummaryDetails
+	page.LanguageFieldLabel = language.LanguageFieldLabel
+	page.English = language.English
+	page.Mikmaw = language.Mikmaw
+	page.French = language.French
+	page.ConjugateButton = language.ConjugateButton
+	page.OutputConjugationTitle = language.OutputConjugation
+	page.OutputModelTitle = language.OutputModel
+	page.OutputTitle = language.OutputTitle
+	page.InfoTitle = language.InfoTitle
+	page.HelpTitle = language.HelpTitle
+	page.HelpField = language.HelpField
+	page.SourceTitle = language.SourceTitle
+	page.SourceField = language.SourceField
+	page.OrthographyRadioButtonTitle = language.OrthographyRadioButtonTitle
+	page.ContactTitle = language.ContactTitle
+	page.ContactMe = language.ContactMe
+
 	return page
 }
 
@@ -645,14 +600,11 @@ func transposeRowsAndColumns(InputArray [][]string) [][]string {
 // this makes the tables for VAI verbs
 func makeTablesVAI(ConjugationArray [][]string, languageChoice string) Data {
 	// get localization strings
-	var subjectPronounsVAI []string                   // subject pronouns
-	var tensesVAI []string                            // tense headers (e.g. present, present negative)
-	for _, language := range LocalizationDictionary { // loop through the objects in the localization file (ENGL or MKMW)
-		if language.Language == languageChoice {
-			subjectPronounsVAI = language.SubjectPronouns
-			tensesVAI = language.TableTitles
-		}
-	}
+	var subjectPronounsVAI []string // subject pronouns
+	var tensesVAI []string          // tense headers (e.g. present, present negative)
+	language := LocalizationDictionary[languageChoice]
+	subjectPronounsVAI = language.SubjectPronouns
+	tensesVAI = language.TableTitles
 
 	var OutputData Data
 	// for each slice in the array, make a table from it
@@ -707,18 +659,15 @@ func makeTablesVAI(ConjugationArray [][]string, languageChoice string) Data {
 // this makes the tables for VTI verbs
 func makeTablesVTI(ConjugationArray [][]string, languageChoice string) Data {
 	// get localization strings
-	var subjectPronounsVTI []string                   // subject pronouns
-	var tensesVTI []string                            // tense headers (e.g. present, present negative)
-	var objectPronounsVTI []string                    // object headers for inanimates (conj. 4, 5)
-	var subjectObjectHeader []string                  // the (subject/object) header
-	for _, language := range LocalizationDictionary { // loop through the objects in the localization file (ENGL or MKMW)
-		if language.Language == languageChoice {
-			subjectPronounsVTI = language.SubjectPronouns
-			tensesVTI = language.TableTitles
-			objectPronounsVTI = language.InanimateObjectPronouns
-			subjectObjectHeader = append(subjectObjectHeader, language.SubjectObjectSplit) // the header goes first (↓subject/object→)
-		}
-	}
+	var subjectPronounsVTI []string  // subject pronouns
+	var tensesVTI []string           // tense headers (e.g. present, present negative)
+	var objectPronounsVTI []string   // object headers for inanimates (conj. 4, 5)
+	var subjectObjectHeader []string // the (subject/object) header
+	language := LocalizationDictionary[languageChoice]
+	subjectPronounsVTI = language.SubjectPronouns
+	tensesVTI = language.TableTitles
+	objectPronounsVTI = language.InanimateObjectPronouns
+	subjectObjectHeader = append(subjectObjectHeader, language.SubjectObjectSplit) // the header goes first (↓subject/object→)
 
 	var OutputData Data
 	// for the present and past, make a table with singular/plural objects
@@ -815,19 +764,16 @@ func makeTablesVTA(ConjugationArray [][]string, languageChoice string) Data {
 	var OutputData Data
 
 	// get localization strings
-	var subjectPronounsVTA []string                   // subject pronouns
-	var tensesVTA []string                            // tense headers (e.g. present, present negative)
-	var objectPronounsVTA []string                    // object headers for inanimates (conj. 4, 5)
-	var subjectObjectHeader []string                  // the (subject/object) header
-	for _, language := range LocalizationDictionary { // loop through the objects in the localization file (ENGL or MKMW)
-		if language.Language == languageChoice {
-			subjectPronounsVTA = language.SubjectPronounsVTA
-			tensesVTA = language.TableTitles
-			objectPronounsVTA = language.ObjectPronounsVTA
-			subjectObjectHeader = append(subjectObjectHeader, language.SubjectObjectSplit) // the header goes first (↓subject/object→)
-		}
-	}
-	var objectPronounsVTANarrowed []string // make a string slice for storing filtered object pronouns
+	var subjectPronounsVTA []string  // subject pronouns
+	var tensesVTA []string           // tense headers (e.g. present, present negative)
+	var objectPronounsVTA []string   // object headers for inanimates (conj. 4, 5)
+	var subjectObjectHeader []string // the (subject/object) header
+	language := LocalizationDictionary[languageChoice]
+	subjectPronounsVTA = language.SubjectPronounsVTA
+	tensesVTA = language.TableTitles
+	objectPronounsVTA = language.ObjectPronounsVTA
+	subjectObjectHeader = append(subjectObjectHeader, language.SubjectObjectSplit) // the header goes first (↓subject/object→)
+	var objectPronounsVTANarrowed []string                                         // make a string slice for storing filtered object pronouns
 	for itemIndex, item := range objectPronounsVTA {
 		if itemIndex != 3 && itemIndex != 8 { // filter items 3 and 8 out (absentative object)
 			objectPronounsVTANarrowed = append(objectPronounsVTANarrowed, item)
@@ -898,17 +844,14 @@ func makeTablesVTA(ConjugationArray [][]string, languageChoice string) Data {
 // this makes the tables for VII verbs
 func makeTablesVII(ConjugationArray [][]string, languageChoice string) Data {
 	// get localization strings
-	var subjectPronounsVII []string                   // subject pronouns
-	var subjectPronounsVIINarrowed []string           // subject pronouns without absentatives
-	var subjectPronounsVIILocal []string              // subjectpronouns that are mobile and build the table
-	var tensesVII []string                            // tense headers (e.g. present, present negative)
-	var tempslice []string                            // a temporary string to store all of the subject pronouns, which will be filtered
-	for _, language := range LocalizationDictionary { // loop through the objects in the localization file (ENGL or MKMW)
-		if language.Language == languageChoice {
-			tempslice = language.SubjectPronouns // this is the same subject pronouns as for VAI/VTI tables
-			tensesVII = language.TableTitles
-		}
-	}
+	var subjectPronounsVII []string         // subject pronouns
+	var subjectPronounsVIINarrowed []string // subject pronouns without absentatives
+	var subjectPronounsVIILocal []string    // subjectpronouns that are mobile and build the table
+	var tensesVII []string                  // tense headers (e.g. present, present negative)
+	var tempslice []string                  // a temporary string to store all of the subject pronouns, which will be filtered
+	language := LocalizationDictionary[languageChoice]
+	tempslice = language.SubjectPronouns // this is the same subject pronouns as for VAI/VTI tables
+	tensesVII = language.TableTitles
 
 	for itemIndex, item := range tempslice { // filter only the inanimate subjects out of the total subject pronoun slice (with absentatives)
 		if itemIndex == 3 || itemIndex == 6 || itemIndex == 12 || itemIndex == 15 || itemIndex == 20 || itemIndex == 23 { // items 3, 6, 12, 15, 20, and 23 are the inanimate subjects
@@ -1236,20 +1179,16 @@ func readForms(ToConcatenate string, FormIndex string) ([]string, error) {
 	var FoundForms []string  // a slice of forms found in the file
 	var OutputForms []string // the slice of completed (appended) forms
 	var ResultForm string    // the resulting form of one append instance
-	for _, element := range ConjugationDictionary {
-		if element.Title == FormIndex { // iterate until the Title is equal to the FormIndex (i.e. the correct list in the file)
-			FoundForms = element.Forms
-		}
-	}
+	FoundForms = ConjugationDictionary[FormIndex]
 	if len(FoundForms) == 0 { // if FoundForms is 0 long, the forms were not found
-		return FoundForms, errors.New("Could not find forms in dictionary.")
+		return FoundForms, errors.New("could not find forms in dictionary")
 	} else { // otherwise, the forms have been found
 		for _, line := range FoundForms {
-			if strings.Contains(line, "*") == true || strings.Contains(line, "&&") {
+			if strings.Contains(line, "*") || strings.Contains(line, "&&") {
 				// starred forms do not exist, and thus shouldn't have the stem prepended
 				// "&&" is a delineator character between persons in VTA verbs
 				ResultForm = line
-			} else if strings.Contains(line, ":") == true { // forms separated by a colon are variants of a form
+			} else if strings.Contains(line, ":") { // forms separated by a colon are variants of a form
 				// they should be concatenated together with a comma
 				SplitForms := strings.Split(line, ":")
 				ResultForm1 := SplitForms[0]
@@ -1279,7 +1218,7 @@ func pluralInanimateForms(InputArray [][]string) [][]string {
 				pluralForm = "*"
 			} else {
 				if formIndex == 0 {
-					if strings.Contains(form, ",") == true { // if there is a comma, i.e. if there are multiple variants
+					if strings.Contains(form, ",") { // if there is a comma, i.e. if there are multiple variants
 						splitForms := strings.Split(form, ", ")                                // split the string at that comma
 						pluralForm = fmt.Sprintf("%sanl, %sanl", splitForms[0], splitForms[1]) // put "anl" after both variants, and join them together again
 					} else {
@@ -1289,7 +1228,7 @@ func pluralInanimateForms(InputArray [][]string) [][]string {
 					if string(form[len(form)-1]) == "l" { // if a form ends in -l, the plural is the same
 						pluralForm = form
 					} else {
-						if strings.Contains(form, ",") == true { // if there is a comma, i.e. if there are multiple variants
+						if strings.Contains(form, ",") { // if there is a comma, i.e. if there are multiple variants
 							splitForms := strings.Split(form, ", ")                            // split the string at that comma
 							pluralForm = fmt.Sprintf("%sl, %sl", splitForms[0], splitForms[1]) // put "l" after both variants, and join them together again
 						} else {
@@ -1336,7 +1275,7 @@ func negativeForms(InputForms []string) []string { //returns the negative form o
 	var OutputForms []string          // output slice
 	for _, form := range InputForms { // for every form in the input slice
 		if form != "*" && form != "||" && form != "&&" { // these are delineator characters and should not be made negative
-			if strings.Contains(form, ",") == true { // if there is a comma, i.e. if there are multiple variants
+			if strings.Contains(form, ",") { // if there is a comma, i.e. if there are multiple variants
 				splitForms := strings.Split(form, ", ")                                  // split the string at that comma
 				joinedForms := fmt.Sprintf("mu %s, mu %s", splitForms[0], splitForms[1]) // put "mu" before both variants, and join them together again
 				OutputForms = append(OutputForms, joinedForms)                           // append the result to the slice
@@ -1355,7 +1294,7 @@ func negativeForms(InputForms []string) []string { //returns the negative form o
 func futureNegativeForms(InputForms []string) []string { // the negative for the future is "ma'"
 	var OutputForms []string                  // output slice
 	for formIndex, form := range InputForms { // for all forms in the input slice
-		if strings.Contains(form, ",") == true { // if there are variant forms with a comma
+		if strings.Contains(form, ",") { // if there are variant forms with a comma
 			splitStrings := strings.Split(form, ", ")                              // split the string at the comma
 			form = fmt.Sprintf("ma' %s, ma' %s", splitStrings[0], splitStrings[1]) // prepend "ma'" to each
 		} else {
@@ -1389,14 +1328,14 @@ func imperativeNegativeForms(InputForms []string) []string { // for the imperati
 	var OutputForms []string                  // output slice
 	for formIndex, form := range InputForms { // for all forms in the input list
 		if formIndex == 0 || formIndex == 5 || formIndex == 9 { // if the index corresponds to a second person
-			if strings.Contains(form, ",") == true { // if there are variants of a form (with commas in between)
+			if strings.Contains(form, ",") { // if there are variants of a form (with commas in between)
 				splitStrings := strings.Split(form, ", ")                                // split the string at the comma
 				form = fmt.Sprintf("mukk %s, mukk %s", splitStrings[0], splitStrings[1]) // prepend "mukk" to each
 			} else {
 				form = fmt.Sprintf("mukk %s", form) // prepend "mukk"
 			}
 		} else {
-			if strings.Contains(form, ",") == true { // if there are variants with a comma
+			if strings.Contains(form, ",") { // if there are variants with a comma
 				splitStrings := strings.Split(form, ", ") // split the string at the comma
 				form = fmt.Sprintf("mu %s, mu %s", splitStrings[0], splitStrings[1])
 			} else {
@@ -1423,14 +1362,14 @@ func imperativeNegativeFormsVTA(InputForms []string) []string { // VTA verbs wor
 		for itemIndex, item := range form { // for every item in that person slice
 			if item != "*" { // if it is not a delineator character
 				if itemIndex == 0 || itemIndex == 5 || itemIndex == 8 { // if the index is 0 or 5 or 8 (corresponding to 2nd persons for each person slice)
-					if strings.Contains(item, ",") == true { // if there are comma separated variant forms
+					if strings.Contains(item, ",") { // if there are comma separated variant forms
 						formSlice := strings.Split(item, ", ")                             // split the string
 						item = fmt.Sprintf("mukk %s, mukk %s", formSlice[0], formSlice[1]) // prepend "mukk" to both
 					} else {
 						item = fmt.Sprintf("mukk %s", item) // prepend mukk
 					}
 				} else {
-					if strings.Contains(item, ",") == true { // if there are comma separated variant forms
+					if strings.Contains(item, ",") { // if there are comma separated variant forms
 						formSlice := strings.Split(item, ", ")                         // split the string there
 						item = fmt.Sprintf("mu %s, mu %s", formSlice[0], formSlice[1]) // prepend "mu" to both
 					} else {
@@ -1461,9 +1400,7 @@ func imperativeNegativeFormsVII(InputForms []string) []string { // VII verbs nee
 // called by readoutVerb
 func parseVerb(InputStr string) (Verb, error) {
 	// replace ɨ with *
-	if strings.Contains(InputStr, "ɨ") == true {
-		InputStr = strings.Replace(InputStr, "ɨ", "*", -1)
-	}
+	InputStr = strings.Replace(InputStr, "ɨ", "*", -1)
 
 	var InputVerb Verb // define an instance of the Verb struct
 	var Ending string  // for storing the ending of the InputStr
@@ -1473,16 +1410,28 @@ func parseVerb(InputStr string) (Verb, error) {
 	// i had thought about putting e.g. "etek" here, as an exception to "eyk", etc.,
 	// but i think these are rather separate verbs, and the animate and inanimate conjugations are not combined
 
-	// start with 4 letter verb endings
+	// only 1 five letter ending that stands alone
+	FinalInt = 5
+	if len(InputStr) > 4 { // strings with length less than 5 will throw an error
+		Ending = getVerbEnding(InputStr, FinalInt)
+	}
+	if Ending == "a's*k" { // first conjugation inanimate verbs in "a'sɨk" (orthographical/Listuguj variant of "a'sik")
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
+		InputVerb.Stem = getVerbStem(InputStr, FinalInt+1) // ɨ counts as two characters?
+		InputVerb.Conjugation = 1
+		InputVerb.ConjugationVariant = "asik"
+		InputVerb.Type = VII
+		return InputVerb, nil
+	}
+
+	// do 4 letter verb endings
 	FinalInt = 4
 	if len(InputStr) > 3 { // strings with length less than 4 will throw an error
 		Ending = getVerbEnding(InputStr, FinalInt)
 	}
 	if Ending == "a'tl" {
 		// there are two possibilities here: -a stem and -e stem verbs both of which end in -a'tl for the third person
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 6
 		InputVerb.ConjugationVariant = "aestem"
@@ -1490,15 +1439,6 @@ func parseVerb(InputStr string) (Verb, error) {
 		// InputVerb.ConjugationVariant = "estem"
 		// the above are relegated to the python script — had to do things a bit differently here and so the above lines are commented out
 		InputVerb.Type = VTA
-		return InputVerb, nil
-	} else if Ending == "a's*k" { // first conjugation inanimate verbs in "a'sɨk" (orthographical/Listuguj variant of "a'sik")
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
-		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
-		InputVerb.Conjugation = 1
-		InputVerb.ConjugationVariant = "asik"
-		InputVerb.Type = VII
 		return InputVerb, nil
 	}
 
@@ -1508,36 +1448,28 @@ func parseVerb(InputStr string) (Verb, error) {
 		Ending = getVerbEnding(InputStr, FinalInt)
 	}
 	if Ending == "a't" { // second conjugation verbs with a long vowel
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 2
 		InputVerb.ConjugationVariant = "long"
 		InputVerb.Type = VAI
 		return InputVerb, nil
 	} else if Ending == "ayk" { // conjugation 1~2 verbs with a diphthong
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 2
 		InputVerb.ConjugationVariant = "diph"
 		InputVerb.Type = VAI
 		return InputVerb, nil
 	} else if Ending == "iaq" { // third conjugation inanimate verbs that resemble -iet's inanimate conjugation
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 3
 		InputVerb.ConjugationVariant = "iaq"
 		InputVerb.Type = VII
 		return InputVerb, nil
 	} else if Ending == "e'k" {
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		FinalInt = 4
 		Ending = getVerbEnding(InputStr, FinalInt)
 		if Ending == "te'k" { // fourth conjugation verbs in -te'k, e.g. telte'k
@@ -1556,46 +1488,36 @@ func parseVerb(InputStr string) (Verb, error) {
 			return InputVerb, nil
 		}
 	} else if Ending == "ink" { // conjugation 1~4 verbs in -ink
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 1
 		InputVerb.ConjugationVariant = "ink"
 		InputVerb.Type = VAI
 		return InputVerb, nil
 	} else if Ending == "t*k" { // fourth conjugation verbs that end in An -t, with an intervening schwa
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt+1) // ɨ counts as two characters?
 		InputVerb.Conjugation = 4
 		InputVerb.ConjugationVariant = "ibar"
 		InputVerb.Type = VTI
 		return InputVerb, nil
 	} else if Ending == "a'q" { // fourth conjugation verbs in -a'q, overlaps some second person inanimate verbs, but those are covered with -a't
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 4
 		InputVerb.ConjugationVariant = "astem"
 		InputVerb.Type = VTI
 		return InputVerb, nil
 	} else if Ending == "i'k" { // fourth conjugation verbs with an -i- stem
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
-		FinalInt = 1 // have to only remove the -k
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
+		FinalInt = 1                                       // have to only remove the -k
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 4
 		InputVerb.ConjugationVariant = "istem"
 		InputVerb.Type = VTI
 		return InputVerb, nil
 	} else if Ending == "toq" { // fifth conjugation verbs in -toq, e.g. muska'toq
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		FinalInt = 2
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 5
@@ -1603,9 +1525,7 @@ func parseVerb(InputStr string) (Verb, error) {
 		InputVerb.Type = VTI
 		return InputVerb, nil
 	} else if Ending == "atl" { // variations of VTA verbs
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Type = VTA
 		FinalInt = 4
 		Ending = getVerbEnding(InputStr, FinalInt)
@@ -1625,7 +1545,7 @@ func parseVerb(InputStr string) (Verb, error) {
 			InputVerb.Conjugation = 6
 			// check if the verb has a long vowel + consonant before the personal agreement ending, e.g. e'natl
 			// these verbs require a schwa inserted for phonotactic reasons
-			if IsConsonant(string(InputVerb.Stem[len(InputVerb.Stem)-1])) == true && string(InputVerb.Stem[len(InputVerb.Stem)-2]) == "'" {
+			if IsConsonant(string(InputVerb.Stem[len(InputVerb.Stem)-1])) && string(InputVerb.Stem[len(InputVerb.Stem)-2]) == "'" {
 				InputVerb.ConjugationVariant = "ibar"
 			} else {
 				InputVerb.ConjugationVariant = "std"
@@ -1633,9 +1553,7 @@ func parseVerb(InputStr string) (Verb, error) {
 			return InputVerb, nil
 		}
 	} else if Ending == "u'k" { // fourth conjugation verbs with inanimate subject, e.g. telamu'k
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 4
 		InputVerb.ConjugationVariant = "inan"
@@ -1649,9 +1567,7 @@ func parseVerb(InputStr string) (Verb, error) {
 		Ending = getVerbEnding(InputStr, FinalInt)
 	}
 	if Ending == "it" { // Pacifique's first conjugation
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Conjugation = 1
 		InputVerb.Type = VAI
 		FinalInt = 5 // need to check for verbs ending in "a'sit"
@@ -1666,18 +1582,14 @@ func parseVerb(InputStr string) (Verb, error) {
 		}
 		return InputVerb, nil
 	} else if Ending == "at" { // Pacifique's second conjugation
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 2
 		InputVerb.ConjugationVariant = "std"
 		InputVerb.Type = VAI
 		return InputVerb, nil
 	} else if Ending == "et" { // Pacifique's third conjugation
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Conjugation = 3
 		InputVerb.Type = VAI
 		FinalInt = 3 // start checking for variants
@@ -1703,18 +1615,14 @@ func parseVerb(InputStr string) (Verb, error) {
 		}
 		return InputVerb, nil
 	} else if Ending == "tk" { // some of Pacifique's fourth conjugation
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 4
 		InputVerb.ConjugationVariant = "std"
 		InputVerb.Type = VTI
 		return InputVerb, nil
-	} else if string(Ending[1]) == "k" && IsConsonant(string(Ending[0])) == true && string(Ending[0]) != "t" { // more of Pacifique's fourth conjugation
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+	} else if string(Ending[1]) == "k" && IsConsonant(string(Ending[0])) && string(Ending[0]) != "t" { // more of Pacifique's fourth conjugation
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		FinalInt = 1
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 4
@@ -1727,27 +1635,21 @@ func parseVerb(InputStr string) (Verb, error) {
 		}
 		return InputVerb, nil
 	} else if Ending == "*k" && string(InputStr[len(InputStr)-1:]) != "t" { // fourth conjugation verbs with stems in -kɨk
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt+1) // ɨ counts as two characters?
 		InputVerb.Conjugation = 4
 		InputVerb.ConjugationVariant = "kstem"
 		InputVerb.Type = VTI
 		return InputVerb, nil
 	} else if Ending == "uk" { // fifth conjugation verbs that do not take "oq" in the third person
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 5
 		InputVerb.ConjugationVariant = "kuk"
 		InputVerb.Type = VTI
 		return InputVerb, nil
 	} else if Ending == "ik" { // first conjugation verbs with inanimate subjects
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 1
 		FinalInt = 5 // need to check for verbs ending in "a'sik"
@@ -1762,18 +1664,14 @@ func parseVerb(InputStr string) (Verb, error) {
 		}
 		return InputVerb, nil
 	} else if Ending == "aq" { // second conjugation verbs with inanimate subjects
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 2
 		InputVerb.ConjugationVariant = "inan"
 		InputVerb.Type = VII
 		return InputVerb, nil
 	} else if Ending == "ek" { // third conjugation verbs with inanimate subjects
-		if strings.Contains(InputStr, "*") == true { // convert the stars back to ɨ
-			InputStr = strings.Replace(InputStr, "*", "ɨ", -1)
-		}
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 		InputVerb.Conjugation = 3
 		InputVerb.ConjugationVariant = "inan"
@@ -1786,22 +1684,20 @@ func parseVerb(InputStr string) (Verb, error) {
 
 // this returns the input string minus the last FinalInt characters (i.e. the stem)
 func getVerbStem(InputStr string, FinalInt int) string {
-	var OutputStr string
-	OutputStr = InputStr[:len(InputStr)-FinalInt] // gives InputStr minues the last FinalInt characters
+	OutputStr := InputStr[:len(InputStr)-FinalInt] // gives InputStr minues the last FinalInt characters
 	return OutputStr
 }
 
 // this returns the last FinalInt characters of the input string (i.e. the ending of the verb)
 func getVerbEnding(InputStr string, FinalInt int) string {
-	var OutputStr string
-	OutputStr = InputStr[len(InputStr)-FinalInt:] // gives the last FinalInt characters of InputStr
+	OutputStr := InputStr[len(InputStr)-FinalInt:] // gives the last FinalInt characters of InputStr
 	return OutputStr
 }
 
 // this returns a contracted stem — verbs with "e" in the first syllable have it removed, and there are different phonotactic consequences for this
 func contractStem(InputStr string, Conjugation int) string { // return the contracted stem for use in the future, etc.
 	var OutputStr string
-	if string(InputStr[0]) == "e" && IsConsonant(string(InputStr[1])) == true {
+	if string(InputStr[0]) == "e" && IsConsonant(string(InputStr[1])) {
 		OutputStr = InputStr[1:]
 		if string(OutputStr[0]) == "y" { // if the first character is y, turn this into i'. e.g. ey- => y- => i'-
 			OutputStr = fmt.Sprintf("i'%s", OutputStr[1:])
@@ -1813,9 +1709,9 @@ func contractStem(InputStr string, Conjugation int) string { // return the contr
 			OutputStr = fmt.Sprintf("i'%s", OutputStr[1:])
 		}
 		if len(OutputStr) > 2 { //handle stems shorter than two differently
-			if IsConsonant(string(OutputStr[0])) == true && IsPlosive(string(OutputStr[1])) == true && IsPlosive(string(OutputStr[2])) == true {
+			if IsConsonant(string(OutputStr[0])) && IsPlosive(string(OutputStr[1])) && IsPlosive(string(OutputStr[2])) {
 				// if the first character is a consonant, the second is a plosive, and the third is a plosive
-				if IsPlosive(string(OutputStr[0])) == true { // if the first is a plosive
+				if IsPlosive(string(OutputStr[0])) { // if the first is a plosive
 					OutputStr = fmt.Sprintf("%sɨ%s", OutputStr[:1], OutputStr[1:])
 				} else { // if the first is not a plosive (therefore must be a sonorant, a consonant that is not a plosive)
 					OutputStr = fmt.Sprintf("%sɨ%s", OutputStr[:2], OutputStr[2:])

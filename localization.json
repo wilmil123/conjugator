@@ -1,6 +1,5 @@
-[
-    {
-        "language": "ENGL",
+{
+    "ENGL": {
         "tabletitles": [
             "Present",
             "Present Negative",
@@ -117,8 +116,7 @@
         "contactme": "Contact Me",
         "orthographyradiobuttontitle": "I am writing in:"
     },
-    {
-        "language": "MKMW",
+    "MKMW": {
         "tabletitles": [
             "Nike' Teliaq",
             "Nike' Mu Telianuk",
@@ -204,9 +202,9 @@
             "Nekmow",
             "Nekmowo'q"
         ],
-        "pagetitle": "Waqjuika'tekemkewey Ukjit Verbl Lnu-iktuk",
+        "pagetitle": "Waqjuika'tekemkewey Ukjit Verbk Lnu-iktuk",
         "orthographytooltip": "1) Wi'ke'n Francis-Smith-iktuk kisna Listukujk.<br>2) Mu wi'kmn <i>ɨ</i>, awna wi'ke'n <i>*</i>.",
-        "entryprompt": "Wi'ke'n verb stɨke' ewi'kmn ukjit <i>nekm</i>, e.g. <i>teluisit</i>.",
+        "entryprompt": "Wi'ke'n verb stɨke' ewi'ka'tijik ukjit <i>nekm</i>, e.g. <i>teluisit</i>.",
         "summarydetails": "Paskejika tett, aji-mski'tew/aji-apje'ttew",
         "languagefieldlabel": "Tli'suti ukjit ta'n tel-wi'kasik:",
         "english": "Aqalasiew-iktuk",
@@ -220,22 +218,22 @@
         "infotitle": "Me' kjitu:",
         "helptitle": "Apoqonmati",
         "sourcetitle": "Tami wejiaqap kina'masuti",
-        "helpfield": "Nmitu, verb piskwa'tu'sɨp tla'sik stɨke' na ulaal tett.<br><br>Waqjuika'tekemkewey nenk verbl ta'n tel-kaqiaql stɨke:<ul><li>Keknukwatasik 1, Tela'sikl stɨke' <i>teluisit, pejila'sit, pekisink, wele'k, wekayk, maqatkwik, enqa'sik</i></li><li>Keknukwatasik 2, Tela'sikl stɨke' <i>amalkat, ajipuna't, pesaq</i></li><li>Keknukwatasik 3, Tela'sikl stɨke' <i>ewi'kiket, eliet, teluet, teweket, te'sipunqek, ewniaq</i></li><li>Keknukwatasik 4, Tela'sikl stɨke' <i>nestɨk, ewi'kɨk, nenk, telte'k, ketkwi'k, pewa'q, eyk, telamu'k</i></li><li>Keknukwatasik 5, Tela'sikl stɨke' <i>mena'toq, ketuk</i></li><li>Keknukwatasik 6, Tela'sikl stɨke' <i>kesalatl, nemiatl, pesa'tl, e'natl</i></li><li>Keknukwatasik 7, Tela'sik stɨke' <i>kisituatl</i></li></ul><br>Waqjuika'tekemkewey mu nennuk, ta'n tel-pilui-tluekl verbl dialectl-iktuk.<br>Msɨt verb-forml mu e'wasinukl ukjit msɨt verbl.<br>Koqoey teluet waqjuika'tekemkewey etukjel apjiw mu telianuk.",
+        "helpfield": "Nmitu, verb piskwa'lɨtsɨp tla'sik stɨke' na ulaal tett.<br><br>Waqjuika'tekemkewey nenuatl verba ta'n tel-kaqa'tiji stɨke:<ul><li>Keknukwatasik 1, Tela'sikl stɨke' <i>teluisit, pejila'sit, pekisink, wele'k, wekayk, maqatkwik, enqa'sik</i></li><li>Keknukwatasik 2, Tela'sikl stɨke' <i>amalkat, ajipuna't, pesaq</i></li><li>Keknukwatasik 3, Tela'sikl stɨke' <i>ewi'kiket, eliet, teluet, teweket, te'sipunqek, ewniaq</i></li><li>Keknukwatasik 4, Tela'sikl stɨke' <i>nestɨk, ewi'kɨk, nenk, telte'k, ketkwi'k, pewa'q, eyk, telamu'k</i></li><li>Keknukwatasik 5, Tela'sikl stɨke' <i>mena'toq, ketuk</i></li><li>Keknukwatasik 6, Tela'sikl stɨke' <i>kesalatl, nemiatl, pesa'tl, e'natl</i></li><li>Keknukwatasik 7, Tela'sik stɨke' <i>kisituatl</i></li></ul><br>Waqjuika'tekemkewey mu nennuk, ta'n tel-pilui-tluekl verbl dialectl-iktuk.<br>Msɨt verb-forml mu e'wasinukl ukjit msɨt verbl.<br>Koqoey teluet waqjuika'tekemkewey etukjel apjiw mu telianuk.",
         "sourcefield": "<ul><li>Francis & Hewson 1994, <i>The Mi'kmaw Grammar of Father Pacifique</i></li><li>Dr. Stephanie Inglis' Doctoral Dissertation, 2002</li><li>Dr. Dianne Friesen's Doctoral Dissertation, 2022</li></ul>",
-        "elietdisclaimer": "Verbl tel-kaqiaql <i>-iet</i> pilui-tla'sikl ta'n tujiw tapusijik mimajuinu'k elukwejik: e.g. <i>-a'tikw</i> teluen ta'n tujiw ela'tikw maqamikek, aqq <i>-ieyikw</i> teluen ta'n tujiw elieyikw samqwan-iktuk.",
-        "nestikdisclaimer": "Verbl keknukwatasik 4-iktuk tapunemi'kl tel-tla'sikl ukjit <i>nekmow</i>: newte'k na <i>-kik</i> stɨke ktɨkl verbl ukjit <i>nekmow</i>, aqq ktɨk na <i>-mi'tij</i> stɨke 'ta'n tujiw teliaj' ukjit <i>nekmow</i>. Ula tela'sik stɨke na 'ta'n tujiw teliaj' teluemk me' kaqi'sk.",
-        "nenkdisclaimer": "Alt verbl tett waqjuikasikl pasɨk ukjit <i>ula, ula'l, etc.</i>. Pasɨk weketu forml ukjit <i>ula, ulaal, etc.<i> ukjit ulaal verbl. Alt ulaal verbl na <i>kelulk, nipk, etc</i>.",
-        "pewaqdisclaimer": "Alt verbl tett waqjuikasikl stɨke keknukwatasik 2, aqq pasɨk ukjit <i>ula, ula'l, etc.</i>. Pasɨk weketu forml ukjit <i>ula, ulaal, etc.<i> ukjit ulaal verbl. Alt ulaal verbl na <i>toqwa'q, wejkwapa'q, etc</i>.",
-        "pesatldisclaimer": "Ulaal verbl tela'sikl tapunemi'kl, aqq ta'n tel-tla'sik verb mu kejitɨmmɨk pasɨk ukjit <i>nekm</i>. Alt tela'sikl <i>-a-</i>, ktɨkl tela'sikl <i>-e-</i>. Kjitu'n ta'n tel-kaqiaq form ukjit <i>ni'n</i>, tel-kaqiaq <i>-a'q</i> kisna <i>-e'k</i>, kis-kjittes ta'n tel-tla'sik verb. Forml ukjit <i>-a-</i> na amskwesewe'l, aqq forml ukjit <i>-e-</i> na tapuewe'l. Ta'n tujiw form ukjit kitk na wijey, pasɨk ula form ewi'kasitew.",
-        "ketukdisclaimer": "Alt verbl tett waqjuikasikl pasɨk ukjit <i>ula, ula'l, etc.</i>, stɨke <i>telamu'k</i>, katu vowel kiaspiaq na toqwaqji'jk. Pasɨk weketu forml ukjit <i>ula, ulaal, etc.<i> ukjit ulaal verbl.",
+        "elietdisclaimer": "Verbk tel-kaqa'tijik <i>-iet</i> pilui-tla'tijik ta'n tujiw tapusijik mimajuinu'k elukwejik: e.g. <i>-a'tikw</i> teluen ta'n tujiw ela'tikw maqamikek, aqq <i>-ieyikw</i> teluen ta'n tujiw elieyikw samqwan-iktuk.",
+        "nestikdisclaimer": "Verbk keknukwatatijik 4-iktuk tapunemiksijik tel-tla'tijik ukjit <i>nekmow</i>: newte'k na <i>-kik</i> stɨke ktɨk verbk ukjit <i>nekmow</i>, aqq ktɨk na <i>-mi'tij</i> stɨke 'ta'n tujiw teliaj' ukjit <i>nekmow</i>. Ula tela'sit stɨke na 'ta'n tujiw teliaj' teluemk me' kaqi'sk.",
+        "nenkdisclaimer": "Alt verbk tett waqjuikatijik pasɨk ukjit <i>ula, ula'l, etc</i>. Pasɨk weketu forml ukjit <i>ula, ulaal, etc.</i> ukjit ulayk verbk. Alt ulayk verbk na <i>kelulk, nipk, etc</i>.",
+        "pewaqdisclaimer": "Alt verbk tett waqjuikatijik stɨke keknukwatasik 2, aqq pasɨk ukjit <i>ula, ula'l, etc.</i>. Pasɨk weketu forml ukjit <i>ula, ulaal, etc.<i> ukjit ulayk verbk. Alt ulayk verbk na <i>toqwa'q, wejkwapa'q, etc</i>.",
+        "pesatldisclaimer": "Ulayk verbk tela'tijik tapunemiksijik, aqq ta'n tel-tla'sit verb mu kejitui'mmɨk pasɨk ukjit <i>nekm</i>. Alt tela'tijik <i>-a-</i>, ktɨkl tela'tijik <i>-e-</i>. Kjitu'n ta'n tel-kaqiaq form ukjit <i>ni'n</i>, tel-kaqiaq <i>-a'q</i> kisna <i>-e'k</i>, kis-kjittes ta'n tel-tla'sit verb. Forml ukjit <i>-a-</i> na amskwesewe'l, aqq forml ukjit <i>-e-</i> na tapuewe'l. Ta'n tujiw form ukjit kitk na wijey, pasɨk ula form ewi'kasitew.",
+        "ketukdisclaimer": "Alt verbk tett waqjuikatijik pasɨk ukjit <i>ula, ula'l, etc.</i>, stɨke <i>telamu'k</i>, katu vowel kiaspiaq na toqwaqji'jk. Pasɨk weketu forml ukjit <i>ula, ulaal, etc.<i> ukjit ulayk verbk.",
         "eykdisclaimer": "Eweketumk <i>eyk</i> ta'n tujiw <i>ula, ulaal, etc.</i> mu elukwenuk. Ukjit <i>ula, ulaal, etc.</i>, eweketumk <i>etek</i>.",
-        "viidisclaimer": "Verbl stɨke ulaal eweketoql pasɨk ukjit <i>ula, ula'l, etc.</i>. Tela'sɨkl tapune'mikl ta'n tujiw tliatew.",
-        "ewniaqdisclaimer": "Verbl tel-kaqiaql <i>-iaq</i> pilui-tla'sikl ta'n tujiw tapusijik mimajuinu'k elukwejik: e.g. <i>-a'tikl</i> teluen ta'n tujiw ela'tikl maqamikek, aqq <i>-iaql</i> teluen ta'n tujiw eliaql samqwan-iktuk.",
+        "viidisclaimer": "Verbk stɨke ulayk eweke'tɨk pasɨk ukjit <i>ula, ula'l, etc.</i>. Tela'tijik tapunemiksijik ta'n tujiw tliatew.",
+        "ewniaqdisclaimer": "Verbk tel-kaqa'tijik <i>-iaq</i> pilui-tla'tijik ta'n tujiw tapusijik mimajuinu'k elukwejik: e.g. <i>-a'tikl</i> teluen ta'n tujiw ela'tikl maqamikek, aqq <i>-iaql</i> teluen ta'n tujiw eliaql samqwan-iktuk.",
         "contacttitle": "Pewatmn Aji-klu'sitew?",
         "contactme": "Kluli",
         "orthographyradiobuttontitle": "Wi'katikney:"
     },
-    {"language": "FREN",
+    "FREN": {
         "tabletitles": [
             "Présent",
             "Présent négatif",
@@ -352,4 +350,4 @@
         "contactme": "Contact",
         "orthographyradiobuttontitle": "J'écris en:"
     }
-]
+}
