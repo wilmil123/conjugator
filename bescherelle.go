@@ -1412,7 +1412,7 @@ func parseVerb(InputStr string) (Verb, error) {
 
 	// only 1 five letter ending that stands alone
 	FinalInt = 5
-	if len(InputStr) > 4 { // strings with length less than 5 will throw an error
+	if len(InputStr) > 5 { // strings with length less than 5 will throw an error. strings with length of 4 will not be parsed because the barred i counts as two characters, and this interferes with the counting of the contractStem function. as far as i am aware, there are no verbs that are a single consonant + a's*k
 		Ending = getVerbEnding(InputStr, FinalInt)
 	}
 	if Ending == "a's*k" { // first conjugation inanimate verbs in "a'sɨk" (orthographical/Listuguj variant of "a'sik")
