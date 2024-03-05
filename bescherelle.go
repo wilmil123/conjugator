@@ -399,7 +399,7 @@ func localizeOutput(languageChoice string, InputVerb Verb) (string, string, Disc
 			LocalOutputModel = "enqa'sik"
 			LocalDisclaimer.Defined = true
 			LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
-		} else if InputVerb.ConjugationVariant == "ink" {
+		} else if InputVerb.ConjugationVariant == "ink" || InputVerb.ConjugationVariant == "cons" {
 			LocalOutputConjugation = "1"
 			LocalOutputModel = "pekisink"
 		} else if InputVerb.ConjugationVariant == "inan" {
@@ -1409,10 +1409,19 @@ func parseVerb(InputStr string) (Verb, error) {
 	// exceptions
 	// i had thought about putting e.g. "etek" here, as an exception to "eyk", etc.,
 	// but i think these are rather separate verbs, and the animate and inanimate conjugations are not combined
+	if InputStr == "keskulk" { // a verb that is like pekisink, but will get caught with nenk. possibly more here that i am yet to catch.
+		FinalInt = 1
+		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
+		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
+		InputVerb.Conjugation = 1
+		InputVerb.ConjugationVariant = "cons"
+		InputVerb.Type = VAI
+		return InputVerb, nil
+	}
 
 	// only 1 five letter ending that stands alone
 	FinalInt = 5
-	if len(InputStr) > 5 { // strings with length less than 5 will throw an error. strings with length of 4 will not be parsed because the barred i counts as two characters, and this interferes with the counting of the contractStem function. as far as i am aware, there are no verbs that are a single consonant + a's*k
+	if len(InputStr) > 4 { // strings with length less than 5 will throw an error
 		Ending = getVerbEnding(InputStr, FinalInt)
 	}
 	if Ending == "a's*k" { // first conjugation inanimate verbs in "a'sɨk" (orthographical/Listuguj variant of "a'sik")
@@ -1697,6 +1706,15 @@ func getVerbEnding(InputStr string, FinalInt int) string {
 // this returns a contracted stem — verbs with "e" in the first syllable have it removed, and there are different phonotactic consequences for this
 func contractStem(InputStr string, Conjugation int) string { // return the contracted stem for use in the future, etc.
 	var OutputStr string
+	if len(InputStr) == 1 { // strings of length 1 have to be caught immediately
+		if InputStr != "e" { // if the only letter of the "stem" is not e, then return that
+			OutputStr = InputStr
+			return OutputStr
+		} else { // if the only letter is an e, return a blank string
+			OutputStr = ""
+			return OutputStr
+		}
+	}
 	if string(InputStr[0]) == "e" && IsConsonant(string(InputStr[1])) {
 		OutputStr = InputStr[1:]
 		if string(OutputStr[0]) == "y" { // if the first character is y, turn this into i'. e.g. ey- => y- => i'-
