@@ -1419,6 +1419,10 @@ func parseVerb(InputStr string) (Verb, error) {
 		return InputVerb, nil
 	}
 
+	if InputStr == "wejku'et" { // from earlier development of wejkuiet. this could be handled differently, but it works just as well to do this for now.
+		InputStr = "wejkuiet"
+	}
+
 	// only 1 five letter ending that stands alone
 	FinalInt = 5
 	if len(InputStr) > 4 { // strings with length less than 5 will throw an error

@@ -1,5 +1,11 @@
 @charset "utf-8";
 
+/*make the header at the bottom small*/
+h2 {
+    font-size: 14px;
+    font-weight: lighter;
+}
+
 /* making the tables how they should be */
 table {
     border-collapse: collapse;
