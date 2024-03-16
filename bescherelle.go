@@ -1409,7 +1409,7 @@ func parseVerb(InputStr string) (Verb, error) {
 	// exceptions
 	// i had thought about putting e.g. "etek" here, as an exception to "eyk", etc.,
 	// but i think these are rather separate verbs, and the animate and inanimate conjugations are not combined
-	if InputStr == "keskulk" { // a verb that is like pekisink, but will get caught with nenk. possibly more here that i am yet to catch.
+	if InputStr == "keskulk" || InputStr == "meskilk" { // a verb that is like pekisink, but will get caught with nenk. possibly more here that i am yet to catch.
 		FinalInt = 1
 		InputStr = strings.Replace(InputStr, "*", "ɨ", -1) // convert the stars back to ɨ
 		InputVerb.Stem = getVerbStem(InputStr, FinalInt)
@@ -1419,7 +1419,7 @@ func parseVerb(InputStr string) (Verb, error) {
 		return InputVerb, nil
 	}
 
-	if InputStr == "wejku'et" { // from earlier development of wejkuiet. this could be handled differently, but it works just as well to do this for now.
+	if InputStr == "wejku'et" { // this arises from earlier development of wejkuiet. this could be handled differently, but it works just as well to do this for now.
 		InputStr = "wejkuiet"
 	}
 
