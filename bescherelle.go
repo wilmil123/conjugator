@@ -1402,6 +1402,9 @@ func parseVerb(InputStr string) (Verb, error) {
 	// replace ɨ with *
 	InputStr = strings.Replace(InputStr, "ɨ", "*", -1)
 
+	//on apple keyboards, they use the curly apostrophe. this must be replaced
+	InputStr = strings.Replace(InputStr, "’", "'", -1)
+
 	var InputVerb Verb // define an instance of the Verb struct
 	var Ending string  // for storing the ending of the InputStr
 	var FinalInt int   // for how many characters you are looking at the end of a verb
