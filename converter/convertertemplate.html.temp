@@ -1,0 +1,123 @@
+{{ $ispacifiquedisclaimer := .PacifiqueDisclaimer }}
+{{ $isranddisclaimer := .RandDisclaimer }}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="assets/stylesheet.css">
+    <link rel="shortcut icon" type="image/png" href="assets/icon.png"/>
+    <title>The Mi'kmaw OrthoConverter</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="A tool that can automatically convert between Mi'kmaw orthographies.">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+</head>
+<fieldset>
+    <legend>Links</legend>
+    <ul><li><a class="pagelink" href="https://wills-corner.com/contact" target="_blank">Contact</a></li>
+    <li><a class="pagelink" href="/eng">Conjugator</a></li>
+    <li><a class="pagelink" href="/">Home</a></li></ul>
+</fieldset>
+<h1>The Mi'kmaw OrthoConverter</h1>
+<h3>Convert between Mi'kmaw orthographies | Sa'se'wita'ql wi'katikne'l l'nu-iktuk | Convertir entre orthographes en mi'kmaw </h3>
+<form method="POST">
+    <label for="wordinput"><b>Enter a word: | Piskwa'tu klusuaqan: | Saisis un mot:</b></label><br>
+    <input type="text" class="input" name="wordinput">
+    <label for="orthographyselect">This word is in: | Ula klusuaqan ewi'kasik ula wi'katikney-iktuk: | Ce mot est écrit en:</label>
+      <select name="orthographies" id="orthographyselect" class="selectfield">
+        <option value="francissmith">Francis-Smith</option>
+        <option value="listuguj">Listuguj</option>
+        <option value="pacifique">Pacifique</option>
+        <option value="rand">Rand</option>
+        <option value="lexicon">Lexicon</option>
+        <option value="metallic">Metallic</option>
+      </select>
+    {{ if $ispacifiquedisclaimer }}<div class="hover-text">i<span class="tooltip-text">Pacifique orthography is difficult to accurately convert to other orthographies. Conversions are tentative.</span></div>{{ end }}
+    {{ if $isranddisclaimer }}<div class="hover-text">i<span class="tooltip-text">Rand orthography is complex. Conversion to and from this orthography is a work in progress.</span></div>{{ end }}
+    <input type="submit" class="button" value="Go | Lia' | Aller"><br>
+</form>
+<hr>
+<div class="outputfield">
+<div>
+  <h3>This word is written as: | Ula klusuaqan tel-wi'kasik: | Ce mot est écrit ainsi: </h3>
+  <table>
+    <tr>
+      <td><b>Francis-Smith</b></td>
+      <td>{{.FrancisSmith}}</td>
+    </tr>
+    <tr>
+      <td><b>Listuguj</b></td>
+      <td>{{.Listuguj}}</td>
+    </tr>
+    <tr>
+      <td><b>Pacifique</b></td>
+      <td>{{.Pacifique}}</td>
+    </tr>
+    <tr>
+      <td><b>Rand</b> <div class="hover-text">i<span class="tooltip-text" id="left">Rand orthography is complex. Conversion to and from this orthography is a work in progress.</span></div></td>
+      <td>{{.Rand}}</td>
+    </tr>
+    <tr>
+      <td><b>Lexicon</b></td>
+      <td>{{.Lexicon}}</td>
+    </tr>
+    <tr>
+      <td><b>Metallic</b></td>
+      <td>{{.Metallic}}</td>
+    </tr>
+  </table>
+</div>
+<div class="halfwidth">
+  <details class="details">
+  <summary><b>Character substitution table | Ta'n tel-pilui-wi'kasikl knukwatiknn | Table de substitution des caractères</b></summary>
+  <p>The difficult-to-type characters on the left may be substituted by those on the right.<br>
+  Ta'n tujiw metue'k ulaal patatuje'l knukwatiknn ewi'kmnn, awna kisi-wi'kmn inaqane'l.<br>
+  Les caractères qui sont difficiles à saisir (à gauche) peuvent être remplacés par ceux à droite.</p>
+  <table id="charsubtable">
+    <tr>
+      <td>ā</td>
+      <td>a-</td>
+    </tr>
+    <tr>
+      <td>ă</td>
+      <td>a/</td>
+    </tr>
+    <tr>
+      <td>â</td>
+      <td>a!</td>
+    </tr>
+    <tr>
+      <td>ç</td>
+      <td>c</td>
+    </tr>
+    <tr>
+      <td>ĕ</td>
+      <td>e/</td>
+    </tr>
+    <tr>
+      <td>ê</td>
+      <td>e!</td>
+    </tr>
+    <tr>
+      <td>ĭ</td>
+      <td>i/</td>
+    </tr>
+    <tr>
+      <td>ɨ</td>
+      <td>*</td>
+    </tr>
+    <tr>
+      <td>ŏ</td>
+      <td>o/</td>
+    </tr>
+    <tr>
+      <td>ŭ</td>
+      <td>u/</td>
+    </tr>
+  </table>
+  </details>
+  </div>
+</div>
+<div class="footer">
+<h2><i>This orthographical converter is made for use with Mi'kmaw, also known as Mikmaw, Mi'kmaq, Mikmaq, Mi'gmaq, Migmaq, Micmac.</i></h2>
+</div>
+</html>

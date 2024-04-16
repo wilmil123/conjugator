@@ -22,6 +22,56 @@ table td {
     height: 15px;
 }
 
+.outputfield {
+    display: inline-flex;
+}
+
+/* for the orthoconverter */
+.halfwidth {
+    max-width: 50%;
+}
+
+.inline {
+    display: inline;
+}
+
+.outputfield div {
+    padding: 0.5%;
+    margin-right: 0.5%;
+}
+
+#charsubtable td {
+    width: 10%;
+    text-align: center;
+}
+
+/* for the homepage */
+.homepagebody {
+    display: inline-flex;
+}
+
+.homepagebody div {
+    float: inline-start;
+    max-width: 30%;
+    min-height: 100%;
+    border: 1px solid #D6A692;
+    padding: 5px;
+    margin: 5px 5px;
+    position: relative;
+}
+
+.homepagelink,
+.homepagelink:link,
+.homepagelink:visited {
+    color: #77311F;
+}
+
+.homepagelink:hover {
+    color: #D6A692;
+    text-decoration: none;
+    transition: 0.7s;
+}
+
 body {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     background-color: #E2DDC4;
@@ -65,6 +115,17 @@ body {
 
 .radiobutton {
     margin-right: 10px;
+}
+
+.selectfield {
+    background: #D6CEAA;
+    color: #77311F;
+    padding: 2px 5px;
+    margin: 5px 5px;
+    border: 1px solid #D6A692;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    position: relative;
+    outline: 0;
 }
 
 /* input field */
@@ -119,9 +180,8 @@ body {
 }
 
 .hover-text:hover .tooltip-text {
-    opacity: 1;
-    transition: opacity 0.5s;
-    transition-delay: 0.2s;
+    visibility: visible;
+    cursor: help;
 }
 
 .tooltip-text {
@@ -136,7 +196,7 @@ body {
     padding: 4px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     text-align: left;
-    opacity: 0;
+    visibility: hidden;
 }
 
 #left {

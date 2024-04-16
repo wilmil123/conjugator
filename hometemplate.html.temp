@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="assets/stylesheet.css">
+    <link rel="shortcut icon" type="image/png" href="assets/icon.png"/>
+    <title>The Mi'kmaw Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Find links to various Mi'kmaw language resources, including ones hosted at this domain.">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+</head>
+<h1>The Mi'kmaw Conjugator | Dashboard</h1>
+<h3>Find links to educational resources and additional information about this website.</h3>
+<div class="footer">
+<h2>Mi'kmaw is also known as Mikmaw, Mi'kmaq, Mikmaq, Mi'gmaq, or Migmaq in various spellings.</h2>
+</div>
+<div class="homepagebody">
+<div class="homepagelinkfield">
+<p>
+    <b>Resources on this website</b><br>
+    The conjugator takes an input verb, automatically classifies it by conjugation, and returns a number of forms in various tenses. Because it attempts to automatically parse and classify verbs, it does not know the meaning of what is being entered, so it cannot give translations for verb forms. However, this also means that an infinite amount of verbs can be entered and conjugated.
+    <ul>
+        <li><a class="homepagelink" href="/eng">Conjugator</a> (in English)</li>
+        <li><a class="homepagelink" href="/mkw">Conjugator</a> (in Mi'kmaw)</li>
+        <li><a class="homepagelink" href="/fre">Conjugator</a> (in French)</li>
+    </ul>
+    The OrthoConverter takes in words in several orthographies (Francis-Smith/Smith-Francis, Listuguj, Pacifique, Rand, Lexicon, and Metallic), and attempts to automatically convert between these orthographies. The page also includes a set of substitutions for characters that are difficult to type.
+    <ul>
+        <li><a class="homepagelink" href="/convert">OrthoConverter</a> (interface in multiple languages)</li>
+    </ul>
+</p>
+</div>
+<div class="homepagelinkfield">
+<p>
+    <b>Other resources</b><br>
+    <ul>
+        <li><a class="homepagelink" href="https://www.mikmaqonline.org/" target="_blank">Mi'gmaq Online Talking Dictionary</a> (in Listuguj orthography. The OrthoConverter can be used to convert to other orthographies)</li>
+        <li><a class="homepagelink" href="https://firstnationhelp.com/ali/lexicon.pdf" target="_blank">Mi'kmaw Lexicon</a> (another dictionary in Francis-Smith orthography. The OrthoConverter can be used to convert to other orthographies)</li>
+        <li><a class="homepagelink" href="http://mikmawteachingresources.ca/" target="_blank">Msit Kisitaqn L'nui'simkewe'l</a> (searchable database of Mi'kmaw language resources)</li>
+        <li><a class="homepagelink" href="https://www.upei.ca/faculty-of-indigenous-knowledge-education-research-and-applied-studies/mikmaq-language-websites" target="_blank">UPEI collection of learning resources</a></li>
+        <li><a class="homepagelink" href="https://stfx.libguides.com/c.php?g=101569&p=4173908" target="_blank">StFX collection of learning resources</a></li>
+    </ul>
+</p>
+</div>
+<div class="homepagelinkfield">
+<p>
+    <b>About this website</b><br>
+    <ul>
+        <li><a class="homepagelink" href="https://wills-corner.com/contact" target="_blank">Contact</a></li>
+        <li><a class="homepagelink" href="https://wills-corner.com/mikmaw" target="_blank">Previous work in Mi'kmaw</a> (Under the Conjugator section, an explanation of the theory behind how the Conjugator recognizes verbs)</li>
+        <li><a class="homepagelink" href="https://github.com/wilmil123/conjugator" target="_blank">GitHub page</a> (Source code from which the website runs)</li>
+    </ul>
+</p>
+</div>
+</div>
+</html>
