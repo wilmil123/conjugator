@@ -262,6 +262,9 @@ func normalizeListuguj(inputStr string) string {
 	outputStr = strings.Replace(outputStr, "p'", "p*", -1)
 	outputStr = strings.Replace(outputStr, "t'", "t*", -1)
 	outputStr = strings.Replace(outputStr, "k'", "k*", -1)
+	outputStr = strings.Replace(outputStr, "s'", "s*", -1)
+	outputStr = strings.Replace(outputStr, "j'", "j*", -1)
+	outputStr = strings.Replace(outputStr, "q'", "q*", -1)
 
 	for charIndex, character := range outputStr {
 		if IsSonorant(string(character)) {
@@ -617,6 +620,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "7", "ŭn", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "8", "ŭm", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "99", "9n", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "n9", "nn", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "9", "ŭn", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "0", "ŭl", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "#", "gw", -1)
@@ -642,6 +646,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "7", "ên", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "8", "êm", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "99", "9n", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "n9", "nn", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "9", "ên", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "0", "êl", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "#", "gw", -1)
