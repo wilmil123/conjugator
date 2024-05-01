@@ -15,8 +15,8 @@
 </div>
 <div class="homepagebody">
 <div class="homepagelinkfield">
-<p>
-    <b>Resources on this website</b><br>
+    <h3>Resources on this website</h3>
+    <p>
     The conjugator takes an input verb, automatically classifies it by conjugation, and returns a number of forms in various tenses. Because it attempts to automatically parse and classify verbs, it does not know the meaning of what is being entered, so it cannot give translations for verb forms. However, this also means that an infinite amount of verbs can be entered and conjugated.
     <ul>
         <li><a class="homepagelink" href="/eng">Conjugator</a> (in English)</li>
@@ -30,8 +30,8 @@
 </p>
 </div>
 <div class="homepagelinkfield">
-<p>
-    <b>Other resources</b><br>
+    <h3>Other resources</h3>
+    <p>
     <ul>
         <li><a class="homepagelink" href="https://www.mikmaqonline.org/" target="_blank">Mi'gmaq Online Talking Dictionary</a> (in Listuguj orthography. The OrthoConverter can be used to convert to other orthographies)</li>
         <li><a class="homepagelink" href="https://firstnationhelp.com/ali/lexicon.pdf" target="_blank">Mi'kmaw Lexicon</a> (another dictionary in Francis-Smith orthography. The OrthoConverter can be used to convert to other orthographies)</li>
@@ -42,8 +42,8 @@
 </p>
 </div>
 <div class="homepagelinkfield">
-<p>
-    <b>About this website</b><br>
+    <h3>About this website</h3>
+    <p>
     <ul>
         <li><a class="homepagelink" href="https://wills-corner.com/contact" target="_blank">Contact</a></li>
         <li><a class="homepagelink" href="https://wills-corner.com/mikmaw" target="_blank">Previous work in Mi'kmaw</a> (Under the Conjugator section, an explanation of the theory behind how the Conjugator recognizes verbs)</li>

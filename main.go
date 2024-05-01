@@ -23,7 +23,8 @@ func main() {
 
 	fileServe := http.FileServer(http.Dir("./assets"))              // add a stylesheet
 	http.Handle("/assets/", http.StripPrefix("/assets", fileServe)) // no idea what this actually does, but this is from golang example code
-	http.ListenAndServe(":8080", nil)                               // listen and serve
+	// all pages pull from the same stylesheet for consistency
+	http.ListenAndServe(":8080", nil) // listen and serve
 }
 
 func mainIndexHandler(writer http.ResponseWriter, reader *http.Request) {

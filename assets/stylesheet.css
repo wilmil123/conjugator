@@ -46,13 +46,10 @@ table td {
 }
 
 /* for the homepage */
-.homepagebody {
-    display: inline-flex;
-}
-
 .homepagebody div {
     float: inline-start;
     max-width: 30%;
+    min-width: 350px;
     min-height: 100%;
     border: 1px solid #D6A692;
     padding: 5px;
@@ -65,12 +62,21 @@ table td {
 .homepagelink:link,
 .homepagelink:visited {
     color: #77311F;
+    padding: 4px 4px;
+    background: #77311F;
+    color: #D6A692;
+    border-radius: 6px;
+    margin: 15px;
+    text-decoration: none;
+    line-height: 300%;
 }
 
 .homepagelink:hover {
-    color: #D6A692;
+    background: #ba985d;
+    color: #ce5e2d;
     text-decoration: none;
     transition: 0.7s;
+    line-height: 300%;
 }
 
 body {
@@ -208,6 +214,7 @@ body {
     left: 1%;
 }
 
+/* for larger devices */
 @media (min-width: 800px) {
     /* language links */
     fieldset {
@@ -220,8 +227,13 @@ body {
         align-items: center;
         height: 100px;
     }
+
+    .homepagebody {
+        display: inline-flex;
+    }
 }
 
+/* for mobile devices */
 @media (max-width: 800px) {
     /* language links */
     fieldset {
@@ -244,6 +256,10 @@ body {
     input[type=radio] {
         width: 1.5em;
         height: 1.5em;
+    }
+
+    .homepagebody {
+        display: inline-block;
     }
 }
 
