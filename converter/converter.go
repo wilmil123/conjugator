@@ -15,6 +15,7 @@
 // "0" is syllabic /l/, non-initial
 // "6" is initial syllabic /l/
 // "7" is initial syllabic /n/
+// "+" is initial syllabic /m/
 // "j" is voiced /dʒ/
 // "c" is voiceless /tʃ/
 // many unique sequences are used for rand orthography special characters, in case the user cannot type them. these can be found in the character substitution table
@@ -65,7 +66,7 @@ func orthoIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 	if reader.Method == http.MethodPost { // if the "go" button is pressed
 		InputStr := reader.FormValue("wordinput")              // get the input string
 		orthographyChoice := reader.FormValue("orthographies") // a string value correstponding to the orthography chosen by the user
-		if InputStr != "" {                                    // if the input is not empty
+		if InputStr != "" && len(InputStr) < 40 {              // if the input is not empty
 			if strings.ToUpper(string([]rune(InputStr)[0])) == string([]rune(InputStr)[0]) {
 				wasUpper = true
 			}
@@ -88,6 +89,8 @@ func orthoIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 			default:
 				fmt.Println("orthography type missing")
 			}
+		} else if len(InputStr) >= 40 {
+			normalStr = normalizeFrancisSmith("put*p") // return to default
 		}
 	} else { // if the button was not pressed (i.e. on first load of the page without cache)
 		normalStr = normalizeFrancisSmith("put*p") // default is "put*p"
@@ -304,6 +307,7 @@ func normalizeFrancisSmith(inputStr string) string {
 	// initial syllabic consonants are rendered differently in francis-smith & lexicon, so must be recognized here
 	outputStr = strings.Replace(outputStr, "l'", "6", -1)
 	outputStr = strings.Replace(outputStr, "n'", "7", -1)
+	outputStr = strings.Replace(outputStr, "m'", "+", -1)
 
 	// sonorants after syllabic word-initial sonorants do not need to be recognized as such
 	outputStr = fixSonorantDistribution(outputStr)
@@ -364,6 +368,8 @@ func normalizeListuguj(inputStr string) string {
 						outputStr = string(outputStr[:charIndex]) + "6" + outputStr[charIndex+1:]
 					} else if string(character) == "n" {
 						outputStr = string(outputStr[:charIndex]) + "7" + outputStr[charIndex+1:]
+					} else if string(character) == "m" {
+						outputStr = string(outputStr[:charIndex]) + "+" + outputStr[charIndex+1:]
 					}
 				}
 			}
@@ -419,7 +425,9 @@ func normalizePacifique(inputStr string) string {
 
 	// replace i and o with /j/, /w/ when it is known they exist
 	outputStr = strings.Replace(outputStr, "ai", "ay", -1)
+	outputStr = strings.Replace(outputStr, "ao", "aw", -1)
 	outputStr = strings.Replace(outputStr, "ei", "ey", -1)
+	outputStr = strings.Replace(outputStr, "eo", "ew", -1)
 	outputStr = strings.Replace(outputStr, "goa", "$a", -1)
 	outputStr = strings.Replace(outputStr, "goe", "$e", -1)
 	outputStr = strings.Replace(outputStr, "goi", "$i", -1)
@@ -428,6 +436,13 @@ func normalizePacifique(inputStr string) string {
 	// pacifique uses ô for /o/, o for /u/
 	outputStr = strings.Replace(outputStr, "o", "u", -1)
 	outputStr = strings.Replace(outputStr, "ô", "o", -1)
+
+	// replace double vowels (not necessarily indicated in pacifique)
+	outputStr = strings.Replace(outputStr, "aa", "@", -1)
+	outputStr = strings.Replace(outputStr, "ee", "3", -1)
+	outputStr = strings.Replace(outputStr, "ii", "!", -1)
+	outputStr = strings.Replace(outputStr, "oo", "%", -1)
+	outputStr = strings.Replace(outputStr, "uu", "&", -1)
 
 	// make every consonant voiceless for consistency
 	outputStr = strings.Replace(outputStr, "g", "k", -1)
@@ -501,11 +516,13 @@ func normalizeRand(inputStr string) string {
 	outputStr = strings.Replace(outputStr, "u:", "ü", -1)
 	outputStr = strings.Replace(outputStr, "tc", "tç", -1)
 
-	// if the first two characters are ŭl/ŭn or l'/n' (usage is inconsistent?)
-	if string([]rune(outputStr)[0:2]) == "ŭl" || string([]rune(outputStr)[0:2]) == "l'" {
+	// if the first two characters are ŭl/ŭn/ŭm or 'l/'n/'m (usage is inconsistent?)
+	if string([]rune(outputStr)[0:2]) == "ŭl" || string([]rune(outputStr)[0:2]) == "'l" {
 		outputStr = "6" + string(outputStr[3:])
-	} else if string([]rune(outputStr)[0:2]) == "ŭn" || string([]rune(outputStr)[0:2]) == "n'" {
-		outputStr = "7" + string(outputStr[3:])
+	} else if string([]rune(outputStr)[0:2]) == "ŭn" || string([]rune(outputStr)[0:2]) == "'n" {
+		outputStr = "7" + string([]rune(outputStr[2:]))
+	} else if string([]rune(outputStr)[0:2]) == "ŭm" || string([]rune(outputStr)[0:2]) == "'m" {
+		outputStr = "+" + string([]rune(outputStr[2:]))
 	}
 	// replace with word-initial syllabic variants
 
@@ -588,9 +605,11 @@ func normalizeMetallic(inputStr string) string {
 
 	// if the first two characters are êl or ên
 	if string([]rune(outputStr)[0:2]) == "êl" {
-		outputStr = "6" + outputStr[3:]
+		outputStr = "6" + string([]rune(outputStr[2:]))
 	} else if string([]rune(outputStr)[0:2]) == "ên" {
-		outputStr = "7" + outputStr[3:]
+		outputStr = "7" + string([]rune(outputStr[2:]))
+	} else if string([]rune(outputStr)[0:2]) == "êm" {
+		outputStr = "+" + string([]rune(outputStr[2:]))
 	}
 
 	// replace remaining syllabic sonorants with their variants
@@ -644,6 +663,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "g", "k", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "6", "l'", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "7", "n'", -1)
+	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "+", "m'", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "8", "m", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "9", "n", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "0", "l", -1)
@@ -668,6 +688,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "#", "gw", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "6", "l", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "7", "n", -1)
+	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "+", "m", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "8", "m", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "9", "n", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "0", "l", -1)
@@ -692,6 +713,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "k", "g", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "6", "el", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "7", "en", -1)
+	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "+", "em", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "8", "m", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "9", "n", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "0", "l", -1)
@@ -735,6 +757,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "c", "ch", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "6", "ŭl", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "7", "ŭn", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "+", "ŭm", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "8", "ŭm", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "9", "ŭn", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "0", "ŭl", -1)
@@ -747,6 +770,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Lexicon = strings.Replace(OutputWords.Lexicon, "'", ":", -1)
 	OutputWords.Lexicon = strings.Replace(OutputWords.Lexicon, "l:", "l'", -1) // have to reconvert "l:" etc. probably easier to do this than to be smarter about the previous line
 	OutputWords.Lexicon = strings.Replace(OutputWords.Lexicon, "n:", "n'", -1)
+	OutputWords.Lexicon = strings.Replace(OutputWords.Lexicon, "m:", "m'", -1)
 
 	// metallic
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "cc", "c", -1)
@@ -759,6 +783,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "c", "ch", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "6", "êl", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "7", "ên", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "+", "êm", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "8", "êm", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "9", "ên", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "0", "êl", -1)
