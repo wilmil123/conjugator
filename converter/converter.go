@@ -10,6 +10,7 @@
 // "&" is /u:/
 // "$" is for /kw/ (coarticulated)
 // "#" is for /gw/ (coarticulated, intervocalically voiced)
+// "=" is for /xw/ (coarticulated)
 // "8" is syllabic /m/, non-initial
 // "9" is syllabic /n/, non-initial
 // "0" is syllabic /l/, non-initial
@@ -22,6 +23,7 @@
 
 // todo
 // put more work into rand orthography
+// add a system of sequence escaping
 
 package converter
 
@@ -49,56 +51,111 @@ func ConverterInit() error {
 }
 
 func retainInitialCapital(OutputWords Output) Output {
-	OutputWords.FrancisSmith = strings.ToUpper(string([]rune(OutputWords.FrancisSmith)[0])) + string([]rune(OutputWords.FrancisSmith)[1:])
-	OutputWords.Listuguj = strings.ToUpper(string([]rune(OutputWords.Listuguj)[0])) + string([]rune(OutputWords.Listuguj)[1:])
-	OutputWords.Pacifique = strings.ToUpper(string([]rune(OutputWords.Pacifique)[0])) + string([]rune(OutputWords.Pacifique)[1:])
-	OutputWords.Rand = strings.ToUpper(string([]rune(OutputWords.Rand)[0])) + string([]rune(OutputWords.Rand)[1:])
-	OutputWords.Lexicon = strings.ToUpper(string([]rune(OutputWords.Lexicon)[0])) + string([]rune(OutputWords.Lexicon)[1:])
-	OutputWords.Metallic = strings.ToUpper(string([]rune(OutputWords.Metallic)[0])) + string([]rune(OutputWords.Metallic)[1:])
+	OutputWords.FrancisSmith = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.FrancisSmith)[0])), string([]rune(OutputWords.FrancisSmith)[1:]))
+	OutputWords.Listuguj = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.Listuguj)[0])), string([]rune(OutputWords.Listuguj)[1:]))
+	OutputWords.Pacifique = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.Pacifique)[0])), string([]rune(OutputWords.Pacifique)[1:]))
+	OutputWords.Rand = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.Rand)[0])), string([]rune(OutputWords.Rand)[1:]))
+	OutputWords.Lexicon = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.Lexicon)[0])), string([]rune(OutputWords.Lexicon)[1:]))
+	OutputWords.Metallic = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.Metallic)[0])), string([]rune(OutputWords.Metallic)[1:]))
 	return OutputWords
 }
 
 func orthoIndexHandler(writer http.ResponseWriter, reader *http.Request) {
-	var normalStr string // the "normal" string is that which is normalized for conversion to any orthography
+	var normalStr []string // the "normal" string is that which is normalized for conversion to any orthography
 	var wasUpper bool
+	var strToConvert []string  // storing those to be converted
+	var strToConserve []string // storing those not to be converted
 	var PacifiqueDisclaimer bool = false
 	var RandDisclaimer bool = false
 	if reader.Method == http.MethodPost { // if the "go" button is pressed
 		InputStr := reader.FormValue("wordinput")              // get the input string
 		orthographyChoice := reader.FormValue("orthographies") // a string value correstponding to the orthography chosen by the user
-		if InputStr != "" && len(InputStr) < 40 {              // if the input is not empty
-			if strings.ToUpper(string([]rune(InputStr)[0])) == string([]rune(InputStr)[0]) {
-				wasUpper = true
+		if InputStr != "" {                                    // if the input is not empty
+			if strings.ToUpper(string([]rune(InputStr)[0])) == string([]rune(InputStr)[0]) { // if the first character's capital letter is equal to its value, i.e. it is a capital
+				wasUpper = true // record that the first letter was a capital. in the future, could maybe try for multiple capitals?
 			}
 			InputStr = strings.ToLower(InputStr)
+			if strings.Contains(InputStr, "{") && strings.Contains(InputStr, "}") {
+				localStr := InputStr
+				for escapedSequences := 0; escapedSequences <= strings.Count(InputStr, "{"); escapedSequences++ {
+					splitStr1 := []string{"", ""}
+					splitStr1[0], splitStr1[1], _ = strings.Cut(localStr, "{")
+					strToConvert = append(strToConvert, splitStr1[0])
+					splitStr2 := []string{"", ""}
+					splitStr2[0], splitStr2[1], _ = strings.Cut(splitStr1[1], "}")
+					strToConserve = append(strToConserve, splitStr2[0])
+					localStr = splitStr2[1]
+				}
+			} else {
+				strToConvert = append(strToConvert, InputStr)
+			}
 			switch orthographyChoice {
 			case "francissmith":
-				normalStr = normalizeFrancisSmith(InputStr)
+				for strCount := range strToConvert {
+					normalStr = append(normalStr, normalizeFrancisSmith(strToConvert[strCount]))
+				}
 			case "listuguj":
-				normalStr = normalizeListuguj(InputStr)
+				for strCount := range strToConvert {
+					normalStr = append(normalStr, normalizeListuguj(strToConvert[strCount]))
+				}
 			case "pacifique":
-				normalStr = normalizePacifique(InputStr)
+				for strCount := range strToConvert {
+					normalStr = append(normalStr, normalizePacifique(strToConvert[strCount]))
+				}
 				PacifiqueDisclaimer = true
 			case "rand":
-				normalStr = normalizeRand(InputStr)
+				for strCount := range strToConvert {
+					normalStr = append(normalStr, normalizeRand(strToConvert[strCount]))
+				}
 				RandDisclaimer = true
 			case "lexicon":
-				normalStr = normalizeLexicon(InputStr)
+				for strCount := range strToConvert {
+					normalStr = append(normalStr, normalizeLexicon(strToConvert[strCount]))
+				}
 			case "metallic":
-				normalStr = normalizeMetallic(InputStr)
+				for strCount := range strToConvert {
+					normalStr = append(normalStr, normalizeMetallic(strToConvert[strCount]))
+				}
 			default:
 				fmt.Println("orthography type missing")
 			}
-		} else if len(InputStr) >= 40 {
-			normalStr = normalizeFrancisSmith("put*p") // return to default
 		}
 	} else { // if the button was not pressed (i.e. on first load of the page without cache)
-		normalStr = normalizeFrancisSmith("put*p") // default is "put*p"
+		normalStr = append(normalStr, normalizeFrancisSmith("put*p")) // default is "put*p"
 	}
 
-	OutputWords := encodeOutput(normalStr)
+	var OutputWords Output
+	var localFrancisSmith []string
+	var localListuguj []string
+	var localPacifique []string
+	var localRand []string
+	var localLexicon []string
+	var localMetallic []string
+	for strCount := range normalStr {
+		var localOutput Output = encodeOutput(normalStr[strCount])
+		localFrancisSmith = append(localFrancisSmith, localOutput.FrancisSmith)
+		localListuguj = append(localListuguj, localOutput.Listuguj)
+		localPacifique = append(localPacifique, localOutput.Pacifique)
+		localRand = append(localRand, localOutput.Rand)
+		localLexicon = append(localLexicon, localOutput.Lexicon)
+		localMetallic = append(localMetallic, localOutput.Metallic)
+		if len(strToConserve) != 0 && strCount <= len(strToConserve) {
+			localFrancisSmith = append(localFrancisSmith, strToConserve[strCount])
+			localListuguj = append(localListuguj, strToConserve[strCount])
+			localPacifique = append(localPacifique, strToConserve[strCount])
+			localRand = append(localRand, strToConserve[strCount])
+			localLexicon = append(localLexicon, strToConserve[strCount])
+			localMetallic = append(localMetallic, strToConserve[strCount])
+		}
+	}
+	OutputWords.FrancisSmith = strings.Join(localFrancisSmith, "")
+	OutputWords.Listuguj = strings.Join(localListuguj, "")
+	OutputWords.Pacifique = strings.Join(localPacifique, "")
 	OutputWords.PacifiqueDisclaimer = PacifiqueDisclaimer
+	OutputWords.Rand = strings.Join(localRand, "")
 	OutputWords.RandDisclaimer = RandDisclaimer
+	OutputWords.Lexicon = strings.Join(localLexicon, "")
+	OutputWords.Metallic = strings.Join(localMetallic, "")
 	if wasUpper && len(normalStr) > 1 {
 		OutputWords = retainInitialCapital(OutputWords)
 	}
@@ -117,9 +174,12 @@ func IsConsonant(category string) bool { // returns true if the passed slice is 
 		"c",
 		"k",
 		"g",
+		"#",
+		"&",
 		"p",
 		"b",
 		"q",
+		"+",
 		"s",
 		"t",
 		"d",
@@ -210,29 +270,27 @@ func fixSonorantDistribution(outputStr string) string {
 func resolveUvularFricative(outputStr string) string {
 	for charIndex, character := range outputStr {
 		if string(character) == "g" || string(character) == "k" {
-			if charIndex == 0 && IsLowBackVowel(string(outputStr[charIndex+1])) {
-				outputStr = "q" + outputStr[1:]
-			} else if charIndex != len(outputStr)-1 && !IsDelineator((string(outputStr[charIndex+1]))) {
+			if charIndex > 0 && charIndex != len(outputStr)-1 {
 				if IsLowBackVowel(string(outputStr[charIndex-1])) &&
 					(string(outputStr[charIndex+1]) != "i" && string(outputStr[charIndex+1]) != "!") {
-					outputStr = string(outputStr[:charIndex]) + "q" + string(outputStr[charIndex+1:])
+					outputStr = fmt.Sprintf("%sq%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 				}
-			} else if charIndex == len(outputStr)-1 || IsDelineator((string(outputStr[charIndex+1]))) {
+			} else if charIndex == len(outputStr)-1 {
 				if IsLowBackVowel(string(outputStr[charIndex-1])) {
-					outputStr = string(outputStr[:charIndex]) + "q"
+					outputStr = fmt.Sprintf("%sq", string(outputStr[:charIndex]))
 				}
 			}
 		} else if string(character) == "#" || string(character) == "$" {
 			if charIndex == 0 && IsLowBackVowel(string(outputStr[charIndex+1])) {
-				outputStr = "qw" + outputStr[1:]
-			} else if charIndex != len(outputStr)-1 && !IsDelineator((string(outputStr[charIndex+1]))) {
+				outputStr = fmt.Sprintf("=%s", string(outputStr[1:]))
+			} else if charIndex != len(outputStr)-1 {
 				if IsLowBackVowel(string(outputStr[charIndex-1])) &&
 					(string(outputStr[charIndex+1]) != "i" && string(outputStr[charIndex+1]) != "!") {
-					outputStr = string(outputStr[:charIndex]) + "qw" + string(outputStr[charIndex+1:])
+					outputStr = fmt.Sprintf("%s=%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 				}
-			} else if charIndex == len(outputStr)-1 || IsDelineator((string(outputStr[charIndex+1]))) {
+			} else if charIndex == len(outputStr)-1 {
 				if IsLowBackVowel(string(outputStr[charIndex-1])) {
-					outputStr = string(outputStr[:charIndex]) + "qw"
+					outputStr = fmt.Sprintf("%s=", string(outputStr[:charIndex]))
 				}
 			}
 		}
@@ -251,6 +309,7 @@ func normalizeFrancisSmith(inputStr string) string {
 	outputStr = strings.Replace(outputStr, "o'", "%", -1)
 	outputStr = strings.Replace(outputStr, "u'", "&", -1)
 	outputStr = strings.Replace(outputStr, "kw", "$", -1)
+	outputStr = strings.Replace(outputStr, "qw", "=", -1)
 	outputStr = strings.Replace(outputStr, "j", "c", -1) // replace with voiceless allophone for consistency with p, t, k
 
 	// loop through every character in the input string
@@ -262,37 +321,39 @@ func normalizeFrancisSmith(inputStr string) string {
 				(!IsSemivowel(string(outputStr[charIndex-1]))) {
 				// replace these with their allophonic variants
 				if string(character) == "m" {
-					outputStr = string(outputStr[:charIndex]) + "8" + outputStr[charIndex+1:]
+					outputStr = fmt.Sprintf("%s8%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 				} else if string(character) == "n" {
-					outputStr = string(outputStr[:charIndex]) + "9" + outputStr[charIndex+1:]
+					outputStr = fmt.Sprintf("%s9%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 				} else if string(character) == "l" {
-					outputStr = string(outputStr[:charIndex]) + "0" + outputStr[charIndex+1:]
+					outputStr = fmt.Sprintf("%s0%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 				}
 			}
 		} else if IsAllophonicallyVoiced(string(character)) { // if the current character is allophonically voiced
 			if charIndex == 0 && !(IsConsonant(string(outputStr[charIndex+1]))) { // if the consonant is at the beginning of a word and the next character is not a consonant
 				if string(character) == "t" {
-					outputStr = "d" + outputStr[charIndex+1:]
+					outputStr = fmt.Sprintf("d%s", string(outputStr[charIndex+1:]))
 				} else if string(character) == "p" {
-					outputStr = "b" + outputStr[charIndex+1:]
+					outputStr = fmt.Sprintf("b%s", string(outputStr[charIndex+1:]))
 				} else if string(character) == "k" {
-					outputStr = "g" + outputStr[charIndex+1:]
+					outputStr = fmt.Sprintf("g%s", string(outputStr[charIndex+1:]))
 				} else if string(character) == "$" {
-					outputStr = "#" + outputStr[charIndex+1:]
+					outputStr = fmt.Sprintf("#%s", string(outputStr[charIndex+1:]))
 				} else if string(character) == "c" {
-					outputStr = "j" + outputStr[charIndex+1:]
+					outputStr = fmt.Sprintf("j%s", string(outputStr[charIndex+1:]))
 				}
 			} else if charIndex != len(outputStr)-1 && !IsDelineator((string(outputStr[charIndex+1]))) {
 				if !(IsConsonant(string(outputStr[charIndex-1]))) && !(IsConsonant(string(outputStr[charIndex+1]))) {
 					// if the consonant is word-final and is not in a cluster, replace with voiced variants
 					if string(character) == "t" {
-						outputStr = string(outputStr[:charIndex]) + "d" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%sd%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "p" {
-						outputStr = string(outputStr[:charIndex]) + "b" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%sb%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "k" {
-						outputStr = string(outputStr[:charIndex]) + "g" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%sg%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+					} else if string(character) == "c" {
+						outputStr = fmt.Sprintf("%sj%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "$" {
-						outputStr = string(outputStr[:charIndex]) + "#" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%s#%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					}
 				}
 			}
@@ -301,7 +362,7 @@ func normalizeFrancisSmith(inputStr string) string {
 
 	// if the first two characters are consonants, begin the word with a schwa
 	if IsConsonant(string((outputStr[0]))) && IsConsonant(string((outputStr[1]))) {
-		outputStr = "*" + outputStr
+		outputStr = fmt.Sprintf("*%s", outputStr)
 	}
 
 	// initial syllabic consonants are rendered differently in francis-smith & lexicon, so must be recognized here
@@ -334,6 +395,7 @@ func normalizeListuguj(inputStr string) string {
 
 	// replace gw, g, j with voiceless variants
 	outputStr = strings.Replace(outputStr, "gw", "$", -1)
+	outputStr = strings.Replace(outputStr, "qw", "=", -1)
 	outputStr = strings.Replace(outputStr, "g", "k", -1)
 	outputStr = strings.Replace(outputStr, "j", "c", -1)
 
@@ -354,22 +416,31 @@ func normalizeListuguj(inputStr string) string {
 				// if the previous character is a consonant or sonorant but is not a semivowel, replace with syllabic variants
 				if IsConsonant(string(outputStr[charIndex-1])) || IsSonorant(string(outputStr[charIndex-1])) && (!IsSemivowel(string(outputStr[charIndex-1]))) {
 					if string(character) == "m" {
-						outputStr = string(outputStr[:charIndex]) + "8" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%s8%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "n" {
-						outputStr = string(outputStr[:charIndex]) + "9" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%s9%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "l" {
-						outputStr = string(outputStr[:charIndex]) + "0" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%s0%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+					}
+				} else if (IsConsonant(string(outputStr[charIndex+1])) || IsSonorant(string(outputStr[charIndex+1]))) && IsDelineator(string(outputStr[charIndex-1])) {
+					// if the character is a sonorant that can be voiced word-initially and the previous character is a delineator
+					if string(character) == "l" {
+						outputStr = fmt.Sprintf("%s6%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+					} else if string(character) == "n" {
+						outputStr = fmt.Sprintf("%s7%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+					} else if string(character) == "m" {
+						outputStr = fmt.Sprintf("%s+%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					}
 				}
-			} else { // else (if the sonorant is word initial)
+			} else if charIndex == 0 { // else (if the sonorant is word initial)
 				// if the following character is a consonant or sonorant, replace with word-initial syllabic variants
 				if IsConsonant(string(outputStr[charIndex+1])) || IsSonorant(string(outputStr[charIndex+1])) {
 					if string(character) == "l" {
-						outputStr = string(outputStr[:charIndex]) + "6" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%s6%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "n" {
-						outputStr = string(outputStr[:charIndex]) + "7" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%s7%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "m" {
-						outputStr = string(outputStr[:charIndex]) + "+" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%s+%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					}
 				}
 			}
@@ -377,15 +448,15 @@ func normalizeListuguj(inputStr string) string {
 			if charIndex == 0 { // if this character is word-initial
 				if !(IsConsonant(string(outputStr[charIndex+1]))) { // if the next character is not a consonant, replace with voiced variants
 					if string(character) == "t" {
-						outputStr = "d" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("d%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "p" {
-						outputStr = "b" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("b%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "k" {
-						outputStr = "g" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("g%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "$" {
-						outputStr = "#" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("#%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "c" {
-						outputStr = "j" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("j%s", string(outputStr[charIndex+1:]))
 					}
 				}
 			} else if charIndex != len(outputStr)-1 && !IsDelineator(string(outputStr[charIndex+1])) {
@@ -393,15 +464,15 @@ func normalizeListuguj(inputStr string) string {
 				// if it is not surrounded by consonants, make it voiced
 				if !(IsConsonant(string(outputStr[charIndex-1]))) && !(IsConsonant(string(outputStr[charIndex+1]))) {
 					if string(character) == "t" {
-						outputStr = string(outputStr[:charIndex]) + "d" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%sd%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "p" {
-						outputStr = string(outputStr[:charIndex]) + "b" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%sb%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "k" {
-						outputStr = string(outputStr[:charIndex]) + "g" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%sg%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "$" {
-						outputStr = string(outputStr[:charIndex]) + "#" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%s#%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "c" {
-						outputStr = string(outputStr[:charIndex]) + "j" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%sj%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					}
 				}
 			}
@@ -410,7 +481,7 @@ func normalizeListuguj(inputStr string) string {
 
 	// if the first two characters are consonants, insert a schwa at the beginning
 	if IsConsonant(string((outputStr[0]))) && IsConsonant(string((outputStr[1]))) {
-		outputStr = "*" + outputStr
+		outputStr = fmt.Sprintf("*%s", outputStr)
 	}
 
 	// sonorants after syllabic word-initial sonorants do not need to be recognized as such
@@ -423,6 +494,9 @@ func normalizeListuguj(inputStr string) string {
 func normalizePacifique(inputStr string) string {
 	outputStr := inputStr
 
+	// o! is ô from the character substitution table
+	outputStr = strings.Replace(outputStr, "o!", "ô", -1)
+
 	// replace i and o with /j/, /w/ when it is known they exist
 	outputStr = strings.Replace(outputStr, "ai", "ay", -1)
 	outputStr = strings.Replace(outputStr, "ao", "aw", -1)
@@ -432,6 +506,16 @@ func normalizePacifique(inputStr string) string {
 	outputStr = strings.Replace(outputStr, "goe", "$e", -1)
 	outputStr = strings.Replace(outputStr, "goi", "$i", -1)
 	outputStr = strings.Replace(outputStr, "go", "$", -1)
+	// this last replacement causes issues in front of other consonants, which have to be fixed
+	outputStr = strings.Replace(outputStr, "$t", "got", -1)
+	outputStr = strings.Replace(outputStr, "$p", "gop", -1)
+	outputStr = strings.Replace(outputStr, "$g", "gog", -1)
+	outputStr = strings.Replace(outputStr, "$$", "go$", -1)
+	outputStr = strings.Replace(outputStr, "$l", "gol", -1)
+	outputStr = strings.Replace(outputStr, "$m", "gom", -1)
+	outputStr = strings.Replace(outputStr, "$n", "gon", -1)
+	outputStr = strings.Replace(outputStr, "$w", "gow", -1)
+	outputStr = strings.Replace(outputStr, "$y", "goy", -1)
 
 	// pacifique uses ô for /o/, o for /u/
 	outputStr = strings.Replace(outputStr, "o", "u", -1)
@@ -457,31 +541,37 @@ func normalizePacifique(inputStr string) string {
 				// if the next character is not a consonant, make it voiced
 				if !(IsConsonant(string(outputStr[charIndex+1]))) {
 					if string(character) == "t" {
-						outputStr = "d" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("d%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "p" {
-						outputStr = "b" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("b%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "k" {
-						outputStr = "g" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("g%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "c" {
-						outputStr = "j" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("j%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "$" {
-						outputStr = "#" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("#%s", string(outputStr[charIndex+1:]))
 					}
 				}
-			} else if charIndex != len(outputStr)-1 { // if it is not the last character
+			} else if charIndex != len(outputStr)-1 && !IsDelineator(string(outputStr[charIndex+1])) { // if it is not the last character
 				// if the previous and next characters are not consonants, make this consonant voiced
 				if !(IsConsonant(string(outputStr[charIndex-1]))) && !(IsConsonant(string(outputStr[charIndex+1]))) {
 					if string(character) == "t" {
-						outputStr = string(outputStr[:charIndex]) + "d" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%sd%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "p" {
-						outputStr = string(outputStr[:charIndex]) + "b" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%sb%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "k" {
-						outputStr = string(outputStr[:charIndex]) + "g" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%sg%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "c" {
-						outputStr = string(outputStr[:charIndex]) + "j" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%sj%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "$" {
-						outputStr = string(outputStr[:charIndex]) + "#" + outputStr[charIndex+1:]
+						outputStr = fmt.Sprintf("%s#%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					}
+				}
+			}
+		} else if string(character) == "u" {
+			if charIndex == 0 || IsDelineator(string(outputStr[charIndex-1])) {
+				if !IsConsonant(string(outputStr[charIndex+1])) && !IsSonorant(string(outputStr[charIndex+1])) && !IsSemivowel(string(outputStr[charIndex+1])) {
+					outputStr = fmt.Sprintf("%sw%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 				}
 			}
 		}
@@ -500,7 +590,7 @@ func normalizePacifique(inputStr string) string {
 func normalizeRand(inputStr string) string {
 	outputStr := inputStr
 
-	// per the character substitution table, replace these sequences with how they appear in rand orhography
+	// per the character substitution table, replace these sequences with how they appear in rand orthography
 	outputStr = strings.Replace(outputStr, "a-", "ā", -1)
 	outputStr = strings.Replace(outputStr, "a/", "ă", -1)
 	outputStr = strings.Replace(outputStr, "a!", "â", -1)
@@ -518,11 +608,11 @@ func normalizeRand(inputStr string) string {
 
 	// if the first two characters are ŭl/ŭn/ŭm or 'l/'n/'m (usage is inconsistent?)
 	if string([]rune(outputStr)[0:2]) == "ŭl" || string([]rune(outputStr)[0:2]) == "'l" {
-		outputStr = "6" + string(outputStr[3:])
+		outputStr = fmt.Sprintf("6%s", string([]rune(outputStr[2:])))
 	} else if string([]rune(outputStr)[0:2]) == "ŭn" || string([]rune(outputStr)[0:2]) == "'n" {
-		outputStr = "7" + string([]rune(outputStr[2:]))
+		outputStr = fmt.Sprintf("7%s", string([]rune(outputStr[2:])))
 	} else if string([]rune(outputStr)[0:2]) == "ŭm" || string([]rune(outputStr)[0:2]) == "'m" {
-		outputStr = "+" + string([]rune(outputStr[2:]))
+		outputStr = fmt.Sprintf("+%s", string([]rune(outputStr[2:])))
 	}
 	// replace with word-initial syllabic variants
 
@@ -565,15 +655,15 @@ func normalizeRand(inputStr string) string {
 	outputStr = strings.Replace(outputStr, "ĕ", "e", -1)
 	outputStr = strings.Replace(outputStr, "ā", "3", -1)
 	if string([]rune(outputStr)[len([]rune(outputStr))-1]) == "3" {
-		outputStr = string(outputStr[:(len(outputStr)-1)]) + "ey"
+		outputStr = fmt.Sprintf("%sey", string(outputStr[:(len(outputStr)-1)]))
 	}
 	outputStr = strings.Replace(outputStr, "ĭ", "i", -1)
 	outputStr = strings.Replace(outputStr, "ō", "%", -1)
 	outputStr = strings.Replace(outputStr, "ŏ", "o", -1)
-	outputStr = strings.Replace(outputStr, "h", "q", -1)
 	outputStr = strings.Replace(outputStr, "tç", "c", -1)
 	// ch or tç are used in different versions of rand for /tʃ/
 	outputStr = strings.Replace(outputStr, "ch", "c", -1)
+	outputStr = strings.Replace(outputStr, "h", "q", -1)
 	outputStr = strings.Replace(outputStr, "dj", "j", -1)
 	outputStr = strings.Replace(outputStr, "gw", "#", -1)
 	outputStr = strings.Replace(outputStr, "kw", "$", -1)
@@ -605,11 +695,11 @@ func normalizeMetallic(inputStr string) string {
 
 	// if the first two characters are êl or ên
 	if string([]rune(outputStr)[0:2]) == "êl" {
-		outputStr = "6" + string([]rune(outputStr[2:]))
+		outputStr = fmt.Sprintf("6%s", string([]rune(outputStr[2:])))
 	} else if string([]rune(outputStr)[0:2]) == "ên" {
-		outputStr = "7" + string([]rune(outputStr[2:]))
+		outputStr = fmt.Sprintf("7%s", string([]rune(outputStr[2:])))
 	} else if string([]rune(outputStr)[0:2]) == "êm" {
-		outputStr = "+" + string([]rune(outputStr[2:]))
+		outputStr = fmt.Sprintf("+%s", string([]rune(outputStr[2:])))
 	}
 
 	// replace remaining syllabic sonorants with their variants
@@ -623,6 +713,7 @@ func normalizeMetallic(inputStr string) string {
 	outputStr = strings.Replace(outputStr, "ch", "c", -1)
 	outputStr = strings.Replace(outputStr, "kw", "$", -1)
 	outputStr = strings.Replace(outputStr, "gw", "#", -1)
+	outputStr = strings.Replace(outputStr, "qw", "=", -1)
 
 	// replace long vowels with their 1-glyph counterparts
 	outputStr = strings.Replace(outputStr, "à", "@", -1)
@@ -669,6 +760,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "0", "l", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "#", "kw", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "$", "kw", -1)
+	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "=", "qw", -1)
 
 	// listuguj
 	if string(OutputWords.Listuguj[0]) == "*" {
@@ -686,6 +778,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "k", "g", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "$", "gw", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "#", "gw", -1)
+	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "=", "qw", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "6", "l", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "7", "n", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "+", "m", -1)
@@ -724,33 +817,64 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "q", "g", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "#", "go", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "$", "go", -1)
+	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "=", "go", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "oo", "o", -1) // have to replace double o created by previous lines (i.e. -wo-)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "-", "", -1)
 
 	// rand? more work needed for sure
 	// the order of these substitutions is important, but it is hard to read. there must be a better way.
+
+	// rand makes a distinction between â for /a/ before single consonants or vowels, ă for /a/ before clusters
+	for charIndex, character := range OutputWords.Rand {
+		if charIndex < len(OutputWords.Rand)-2 {
+			if string(character) == "a" {
+				if (IsConsonant(string(OutputWords.Rand[charIndex+1])) || IsSonorant(string(OutputWords.Rand[charIndex+1]))) && (IsConsonant(string(OutputWords.Rand[charIndex+2])) || IsSonorant(string(OutputWords.Rand[charIndex+2]))) {
+					OutputWords.Rand = fmt.Sprintf("%s?%s", string([]rune(OutputWords.Rand[:charIndex])), string([]rune(OutputWords.Rand[charIndex+1:]))) // ? is a placeholder for ă, which is two bytes!
+				} else {
+					OutputWords.Rand = fmt.Sprintf("%s|%s", string([]rune(OutputWords.Rand[:charIndex])), string([]rune(OutputWords.Rand[charIndex+1:]))) // | is a placeholder for â, which is also two bytes
+				}
+			} else if string(character) == "i" {
+				if (IsConsonant(string(OutputWords.Rand[charIndex+1])) || IsSonorant(string(OutputWords.Rand[charIndex+1]))) && (IsConsonant(string(OutputWords.Rand[charIndex+2])) || IsSonorant(string(OutputWords.Rand[charIndex+2]))) {
+					OutputWords.Rand = fmt.Sprintf("%s(%s", string([]rune(OutputWords.Rand[:charIndex])), string([]rune(OutputWords.Rand[charIndex+1:]))) // ( is a placeholder for ĭ, which is two bytes!
+				} else {
+					OutputWords.Rand = fmt.Sprintf("%s)%s", string([]rune(OutputWords.Rand[:charIndex])), string([]rune(OutputWords.Rand[charIndex+1:]))) // ) is a placeholder for e so it does not interfere elsewhere
+				}
+			}
+		}
+	}
+
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "cc", "c", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "qq", "q", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "q=", "=", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "ey", "ā", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "3y", "āā", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "*", "ŭ", -1)
-	OutputWords.Rand = strings.Replace(OutputWords.Rand, "a", "ă", -1)
-	OutputWords.Rand = strings.Replace(OutputWords.Rand, "@", "â", -1)
-	OutputWords.Rand = strings.Replace(OutputWords.Rand, "@y", "eei", -1)
+
+	// replace temporary characters
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "?", "ă", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "|", "â", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "@", "a", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "e", "ĕ", -1)
-	OutputWords.Rand = strings.Replace(OutputWords.Rand, "ăy", "ei", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "3", "ā", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "o", "ŏ", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "u", "oo", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "@w", "oow", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "!w", "uu", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "iw", "u", -1)
-	OutputWords.Rand = strings.Replace(OutputWords.Rand, "i", "e", -1)
+
+	// replace temporary characters
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "(", "ĭ", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, ")", "e", -1)
+
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "ăy", "ei", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "@y", "eei", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "!", "ee", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "ŏq", "ŏg", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "ăw", "ow", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "%", "ō", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "&", "oo", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "ăq", "ăg", -1) // rand uses k/g for /x/ after back vowels
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "aq", "ag", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "âq", "âg", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "ōq", "ōg", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "q", "h", -1)
@@ -763,6 +887,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "0", "ŭl", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "#", "gw", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "$", "kw", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "=", "gw", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "-", "", -1)
 
 	// lexicon
@@ -789,6 +914,7 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "0", "êl", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "#", "gw", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "$", "kw", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "=", "qw", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "-", "", -1)
 
 	return OutputWords
