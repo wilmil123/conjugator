@@ -40,7 +40,7 @@ table td {
     margin-right: 0.5%;
 }
 
-#charsubtable td {
+.charsubtable td {
     width: 10%;
     text-align: center;
 }

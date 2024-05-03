@@ -72,7 +72,7 @@
   <p>The difficult-to-type characters on the left may be substituted by those on the right.<br>
   Ta'n tujiw metue'k ulaal patatuje'l knukwatiknn ewi'kmnn, awna kisi-wi'kmnn inaqane'l.<br>
   Les caractères qui sont difficiles à saisir (à gauche) peuvent être remplacés par ceux à droite.</p>
-  <table id="charsubtable">
+  <table class="charsubtable">
     <tr>
       <td>ā</td>
       <td>a-</td>
@@ -143,7 +143,7 @@
     </tr>
     <tr>
       <td>{}</td>
-      <td id="alignleft">Brackets surrounding text will be ignored by the OrthoConverter. Use this for names, dates, etc., that you do not want the OrthoConverter to read; e.g. "Wejia'p {Ontario 2022}ek".</td>
+      <td id="alignleft">Brackets surrounding text will be ignored by the OrthoConverter. Use this for names, dates, etc., that you do not want the OrthoConverter to read; e.g.<br> Wejia'p <i>{Ontario 2022}</i>ek.</td>
     </tr>
   </table>
   </details>

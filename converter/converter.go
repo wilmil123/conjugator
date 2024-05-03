@@ -60,11 +60,132 @@ func retainInitialCapital(OutputWords Output) Output {
 	return OutputWords
 }
 
+func escapeSequences(InputStr string) ([]string, []string) { // handling escaped sequences
+	var strToConvert []string  // storing those to be converted
+	var strToConserve []string // storing those not to be converted
+	localStr := InputStr
+	for escapedSequences := 0; escapedSequences <= strings.Count(InputStr, "{"); escapedSequences++ {
+		splitStr1 := []string{"", ""}
+		if strings.Index(localStr, "{") != len(localStr)-1 && strings.Contains(localStr, "{") {
+			splitStr1[0], splitStr1[1], _ = strings.Cut(localStr, "{")
+			strToConvert = append(strToConvert, splitStr1[0])
+		} else {
+			splitStr1[0], _ = strings.CutSuffix(localStr, "{")
+			strToConvert = append(strToConvert, splitStr1[0])
+			break
+		}
+		splitStr2 := []string{"", ""}
+		if strings.Index(splitStr1[1], "}") != len(splitStr1[1])-1 && strings.Contains(splitStr1[1], "}") {
+			splitStr2[0], splitStr2[1], _ = strings.Cut(splitStr1[1], "}")
+			strToConserve = append(strToConserve, splitStr2[0])
+		} else {
+			splitStr2[0], _ = strings.CutSuffix(splitStr1[1], "}")
+			strToConserve = append(strToConserve, splitStr2[0])
+			break
+		}
+		localStr = splitStr2[1]
+	}
+	return strToConvert, strToConserve
+}
+
+func collapseStrings(OutputWords Output, normalStr []string, strToConserve []string, conservedSequenceInitial bool) Output {
+	var localFrancisSmith []string
+	var localListuguj []string
+	var localPacifique []string
+	var localRand []string
+	var localLexicon []string
+	var localMetallic []string
+	if len(normalStr) > len(strToConserve) {
+		for strCount := range normalStr {
+			var localOutput Output = encodeOutput(normalStr[strCount])
+			if !conservedSequenceInitial {
+				localFrancisSmith = append(localFrancisSmith, localOutput.FrancisSmith)
+				localListuguj = append(localListuguj, localOutput.Listuguj)
+				localPacifique = append(localPacifique, localOutput.Pacifique)
+				localRand = append(localRand, localOutput.Rand)
+				localLexicon = append(localLexicon, localOutput.Lexicon)
+				localMetallic = append(localMetallic, localOutput.Metallic)
+
+				if strCount < len(strToConserve) {
+					localFrancisSmith = append(localFrancisSmith, strToConserve[strCount])
+					localListuguj = append(localListuguj, strToConserve[strCount])
+					localPacifique = append(localPacifique, strToConserve[strCount])
+					localRand = append(localRand, strToConserve[strCount])
+					localLexicon = append(localLexicon, strToConserve[strCount])
+					localMetallic = append(localMetallic, strToConserve[strCount])
+				}
+			} else {
+				if strCount < len(strToConserve) {
+					localFrancisSmith = append(localFrancisSmith, strToConserve[strCount])
+					localListuguj = append(localListuguj, strToConserve[strCount])
+					localPacifique = append(localPacifique, strToConserve[strCount])
+					localRand = append(localRand, strToConserve[strCount])
+					localLexicon = append(localLexicon, strToConserve[strCount])
+					localMetallic = append(localMetallic, strToConserve[strCount])
+				}
+
+				localFrancisSmith = append(localFrancisSmith, localOutput.FrancisSmith)
+				localListuguj = append(localListuguj, localOutput.Listuguj)
+				localPacifique = append(localPacifique, localOutput.Pacifique)
+				localRand = append(localRand, localOutput.Rand)
+				localLexicon = append(localLexicon, localOutput.Lexicon)
+				localMetallic = append(localMetallic, localOutput.Metallic)
+			}
+		}
+	} else {
+		for strCount := range strToConserve {
+			var localOutput Output = encodeOutput(normalStr[strCount])
+			if !conservedSequenceInitial {
+				if strCount < len(normalStr) {
+					localFrancisSmith = append(localFrancisSmith, localOutput.FrancisSmith)
+					localListuguj = append(localListuguj, localOutput.Listuguj)
+					localPacifique = append(localPacifique, localOutput.Pacifique)
+					localRand = append(localRand, localOutput.Rand)
+					localLexicon = append(localLexicon, localOutput.Lexicon)
+					localMetallic = append(localMetallic, localOutput.Metallic)
+				}
+
+				localFrancisSmith = append(localFrancisSmith, strToConserve[strCount])
+				localListuguj = append(localListuguj, strToConserve[strCount])
+				localPacifique = append(localPacifique, strToConserve[strCount])
+				localRand = append(localRand, strToConserve[strCount])
+				localLexicon = append(localLexicon, strToConserve[strCount])
+				localMetallic = append(localMetallic, strToConserve[strCount])
+			} else {
+				localFrancisSmith = append(localFrancisSmith, strToConserve[strCount])
+				localListuguj = append(localListuguj, strToConserve[strCount])
+				localPacifique = append(localPacifique, strToConserve[strCount])
+				localRand = append(localRand, strToConserve[strCount])
+				localLexicon = append(localLexicon, strToConserve[strCount])
+				localMetallic = append(localMetallic, strToConserve[strCount])
+
+				if strCount < len(normalStr) {
+					localFrancisSmith = append(localFrancisSmith, localOutput.FrancisSmith)
+					localListuguj = append(localListuguj, localOutput.Listuguj)
+					localPacifique = append(localPacifique, localOutput.Pacifique)
+					localRand = append(localRand, localOutput.Rand)
+					localLexicon = append(localLexicon, localOutput.Lexicon)
+					localMetallic = append(localMetallic, localOutput.Metallic)
+				}
+			}
+		}
+	}
+	OutputWords.FrancisSmith = strings.Join(localFrancisSmith, "")
+	OutputWords.Listuguj = strings.Join(localListuguj, "")
+	OutputWords.Pacifique = strings.Join(localPacifique, "")
+	OutputWords.Rand = strings.Join(localRand, "")
+	OutputWords.Lexicon = strings.Join(localLexicon, "")
+	OutputWords.Metallic = strings.Join(localMetallic, "")
+
+	return OutputWords
+}
+
 func orthoIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 	var normalStr []string // the "normal" string is that which is normalized for conversion to any orthography
 	var wasUpper bool
-	var strToConvert []string  // storing those to be converted
-	var strToConserve []string // storing those not to be converted
+	var strToConvert []string         // storing those to be converted
+	var strToConserve []string        // storing those not to be converted
+	var conservedSequenceInitial bool // whether the initial is a conserved sequence or not
 	var PacifiqueDisclaimer bool = false
 	var RandDisclaimer bool = false
 	if reader.Method == http.MethodPost { // if the "go" button is pressed
@@ -76,28 +197,12 @@ func orthoIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 			}
 			InputStr = strings.ToLower(InputStr)
 			if strings.Contains(InputStr, "{") && strings.Contains(InputStr, "}") {
-				localStr := InputStr
-				for escapedSequences := 0; escapedSequences <= strings.Count(InputStr, "{"); escapedSequences++ {
-					splitStr1 := []string{"", ""}
-					if strings.Index(localStr, "{") != len(localStr)-1 && strings.Contains(localStr, "{") {
-						splitStr1[0], splitStr1[1], _ = strings.Cut(localStr, "{")
-						strToConvert = append(strToConvert, splitStr1[0])
-					} else {
-						splitStr1[0], _ = strings.CutSuffix(localStr, "{")
-						strToConvert = append(strToConvert, splitStr1[0])
-						break
-					}
-					splitStr2 := []string{"", ""}
-					if strings.Index(splitStr1[1], "}") != len(splitStr1[1])-1 && strings.Contains(splitStr1[1], "}") {
-						splitStr2[0], splitStr2[1], _ = strings.Cut(splitStr1[1], "}")
-						strToConserve = append(strToConserve, splitStr2[0])
-					} else {
-						splitStr2[0], _ = strings.CutSuffix(splitStr1[1], "}")
-						strToConserve = append(strToConserve, splitStr2[0])
-						break
-					}
-					localStr = splitStr2[1]
+				if strings.Index(InputStr, "{") == 0 {
+					conservedSequenceInitial = true
+				} else {
+					conservedSequenceInitial = false
 				}
+				strToConvert, strToConserve = escapeSequences(InputStr)
 			} else {
 				strToConvert = append(strToConvert, InputStr)
 			}
@@ -137,37 +242,9 @@ func orthoIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 	}
 
 	var OutputWords Output
-	var localFrancisSmith []string
-	var localListuguj []string
-	var localPacifique []string
-	var localRand []string
-	var localLexicon []string
-	var localMetallic []string
-	for strCount := range normalStr {
-		var localOutput Output = encodeOutput(normalStr[strCount])
-		localFrancisSmith = append(localFrancisSmith, localOutput.FrancisSmith)
-		localListuguj = append(localListuguj, localOutput.Listuguj)
-		localPacifique = append(localPacifique, localOutput.Pacifique)
-		localRand = append(localRand, localOutput.Rand)
-		localLexicon = append(localLexicon, localOutput.Lexicon)
-		localMetallic = append(localMetallic, localOutput.Metallic)
-		if len(strToConserve) != 0 && strCount <= len(strToConserve) {
-			localFrancisSmith = append(localFrancisSmith, strToConserve[strCount])
-			localListuguj = append(localListuguj, strToConserve[strCount])
-			localPacifique = append(localPacifique, strToConserve[strCount])
-			localRand = append(localRand, strToConserve[strCount])
-			localLexicon = append(localLexicon, strToConserve[strCount])
-			localMetallic = append(localMetallic, strToConserve[strCount])
-		}
-	}
-	OutputWords.FrancisSmith = strings.Join(localFrancisSmith, "")
-	OutputWords.Listuguj = strings.Join(localListuguj, "")
-	OutputWords.Pacifique = strings.Join(localPacifique, "")
+	OutputWords = collapseStrings(OutputWords, normalStr, strToConserve, conservedSequenceInitial)
 	OutputWords.PacifiqueDisclaimer = PacifiqueDisclaimer
-	OutputWords.Rand = strings.Join(localRand, "")
 	OutputWords.RandDisclaimer = RandDisclaimer
-	OutputWords.Lexicon = strings.Join(localLexicon, "")
-	OutputWords.Metallic = strings.Join(localMetallic, "")
 	if wasUpper && len(normalStr) > 1 {
 		OutputWords = retainInitialCapital(OutputWords)
 	}
@@ -187,11 +264,11 @@ func IsConsonant(category string) bool { // returns true if the passed slice is 
 		"k",
 		"g",
 		"#",
-		"&",
+		"$",
 		"p",
 		"b",
 		"q",
-		"+",
+		"=",
 		"s",
 		"t",
 		"d",
