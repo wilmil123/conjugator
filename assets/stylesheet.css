@@ -45,6 +45,26 @@ table td {
     text-align: center;
 }
 
+#alignleft {
+    text-align: left;
+}
+
+#converterinput {
+    background: #D6CEAA;
+    color: #77311F;
+    border: 1px solid #D6A692;
+    padding: 2px 5px;
+    margin: 5px 5px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    width: 95%;
+}
+
+#converterinput:focus {
+    outline-color: transparent;
+    outline-style: solid;
+    box-shadow: 0 0 0 1px #D6A692;
+}
+
 /* for the homepage */
 .homepagebody div {
     float: inline-start;
@@ -142,9 +162,8 @@ body {
     border: 1px solid #D6A692;
     padding: 2px 5px;
     margin: 5px 5px;
-    min-width: 250px;
+    width: 250px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    resize: both;
 }
 
 .input:focus {

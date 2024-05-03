@@ -21,7 +21,7 @@
 <h3>Convert between Mi'kmaw orthographies | Sa'se'wita'ql wi'katikne'l l'nu-iktuk | Convertir entre orthographes en mi'kmaw </h3>
 <form method="POST">
     <label for="wordinput"><b>Enter a word: | Piskwa'tu klusuaqan: | Saisis un mot:</b></label><br>
-    <input type="text" class="input" name="wordinput">
+    <textarea id="converterinput" name="wordinput" rows="3"></textarea><br>
     <label for="orthographyselect">This word is in: | Ula klusuaqan ewi'kasik ula wi'katikney-iktuk: | Ce mot est écrit en:</label>
       <select name="orthographies" id="orthographyselect" class="selectfield">
         <option value="francissmith">Francis-Smith</option>
@@ -33,7 +33,7 @@
       </select>
     {{ if $ispacifiquedisclaimer }}<div class="hover-text">i<span class="tooltip-text">Pacifique orthography is difficult to accurately convert to other orthographies. Conversions are tentative.</span></div>{{ end }}
     {{ if $isranddisclaimer }}<div class="hover-text">i<span class="tooltip-text">Rand orthography is complex. Conversion to and from this orthography is a work in progress.</span></div>{{ end }}
-    <input type="submit" class="button" value="Go | Lia' | Aller"><br>
+    <br><input type="submit" class="button" value="Go | Lia' | Aller"><br>
 </form>
 <hr>
 <div class="outputfield">
@@ -143,7 +143,7 @@
     </tr>
     <tr>
       <td>{}</td>
-      <td>Brackets surrounding text will be ignored by the OrthoConverter. Use this for names, dates, etc., that you do not want the OrthoConverter to read; e.g. "Wejia'p {Ontario 2022}ek".</td>
+      <td id="alignleft">Brackets surrounding text will be ignored by the OrthoConverter. Use this for names, dates, etc., that you do not want the OrthoConverter to read; e.g. "Wejia'p {Ontario 2022}ek".</td>
     </tr>
   </table>
   </details>

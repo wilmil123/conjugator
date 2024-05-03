@@ -79,11 +79,23 @@ func orthoIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 				localStr := InputStr
 				for escapedSequences := 0; escapedSequences <= strings.Count(InputStr, "{"); escapedSequences++ {
 					splitStr1 := []string{"", ""}
-					splitStr1[0], splitStr1[1], _ = strings.Cut(localStr, "{")
-					strToConvert = append(strToConvert, splitStr1[0])
+					if strings.Index(localStr, "{") != len(localStr)-1 && strings.Contains(localStr, "{") {
+						splitStr1[0], splitStr1[1], _ = strings.Cut(localStr, "{")
+						strToConvert = append(strToConvert, splitStr1[0])
+					} else {
+						splitStr1[0], _ = strings.CutSuffix(localStr, "{")
+						strToConvert = append(strToConvert, splitStr1[0])
+						break
+					}
 					splitStr2 := []string{"", ""}
-					splitStr2[0], splitStr2[1], _ = strings.Cut(splitStr1[1], "}")
-					strToConserve = append(strToConserve, splitStr2[0])
+					if strings.Index(splitStr1[1], "}") != len(splitStr1[1])-1 && strings.Contains(splitStr1[1], "}") {
+						splitStr2[0], splitStr2[1], _ = strings.Cut(splitStr1[1], "}")
+						strToConserve = append(strToConserve, splitStr2[0])
+					} else {
+						splitStr2[0], _ = strings.CutSuffix(splitStr1[1], "}")
+						strToConserve = append(strToConserve, splitStr2[0])
+						break
+					}
 					localStr = splitStr2[1]
 				}
 			} else {
