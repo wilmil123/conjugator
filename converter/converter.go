@@ -68,19 +68,27 @@ func escapeSequences(InputStr string) ([]string, []string) { // handling escaped
 		splitStr1 := []string{"", ""}
 		if strings.Index(localStr, "{") != len(localStr)-1 && strings.Contains(localStr, "{") {
 			splitStr1[0], splitStr1[1], _ = strings.Cut(localStr, "{")
-			strToConvert = append(strToConvert, splitStr1[0])
+			if len(splitStr1[0]) != 0 {
+				strToConvert = append(strToConvert, splitStr1[0])
+			}
 		} else {
 			splitStr1[0], _ = strings.CutSuffix(localStr, "{")
-			strToConvert = append(strToConvert, splitStr1[0])
+			if len(splitStr1[0]) != 0 {
+				strToConvert = append(strToConvert, splitStr1[0])
+			}
 			break
 		}
 		splitStr2 := []string{"", ""}
 		if strings.Index(splitStr1[1], "}") != len(splitStr1[1])-1 && strings.Contains(splitStr1[1], "}") {
 			splitStr2[0], splitStr2[1], _ = strings.Cut(splitStr1[1], "}")
-			strToConserve = append(strToConserve, splitStr2[0])
+			if len(splitStr2) != 0 {
+				strToConserve = append(strToConserve, splitStr2[0])
+			}
 		} else {
 			splitStr2[0], _ = strings.CutSuffix(splitStr1[1], "}")
-			strToConserve = append(strToConserve, splitStr2[0])
+			if len(splitStr2[0]) != 0 {
+				strToConserve = append(strToConserve, splitStr2[0])
+			}
 			break
 		}
 		localStr = splitStr2[1]
@@ -704,6 +712,9 @@ func normalizeRand(inputStr string) string {
 		outputStr = fmt.Sprintf("+%s", string([]rune(outputStr[2:])))
 	}
 	// replace with word-initial syllabic variants
+	outputStr = strings.Replace(outputStr, "'l", "6", -1)
+	outputStr = strings.Replace(outputStr, "'n", "7", -1)
+	outputStr = strings.Replace(outputStr, "'m", "+", -1)
 
 	// an apostrophe in rand orthography marks stress, which is problematic in unified orthography since it is unpredictable and no other orthographies make use of it
 	outputStr = strings.Replace(outputStr, "'", "", -1)
@@ -762,6 +773,17 @@ func normalizeRand(inputStr string) string {
 
 	// this function attempts to resolve some ambiguities with uvular fricatives in rand and pacifique
 	outputStr = resolveUvularFricative(outputStr)
+
+	// remove final schwas that sometime appear (maybe an emphatic thing? certainly not around now)
+	if string(outputStr[len(outputStr)-1]) == "*" {
+		outputStr = outputStr[:len(outputStr)-1]
+	}
+	for charIndex, character := range outputStr {
+		if string(character) == "*" && IsDelineator(string(outputStr[charIndex+1])) {
+			outputStr = fmt.Sprintf("%s|%s", outputStr[:charIndex], outputStr[charIndex+1:]) // | as a temporary marker to remove later
+		}
+	}
+	outputStr = strings.Replace(outputStr, "|", "", -1)
 
 	return outputStr
 }
@@ -831,6 +853,12 @@ func encodeOutput(inputStr string) Output {
 	if string(OutputWords.FrancisSmith[0]) == "*" {
 		OutputWords.FrancisSmith = OutputWords.FrancisSmith[1:]
 	}
+	for charIndex, character := range OutputWords.FrancisSmith {
+		if string(character) == "*" && IsDelineator(string(OutputWords.FrancisSmith[charIndex-1])) {
+			OutputWords.FrancisSmith = fmt.Sprintf("%s|%s", OutputWords.FrancisSmith[:charIndex], OutputWords.FrancisSmith[charIndex+1:])
+		}
+	}
+	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "|", "", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "*", "ɨ", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "@", "a'", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "3", "e'", -1)
@@ -855,6 +883,12 @@ func encodeOutput(inputStr string) Output {
 	if string(OutputWords.Listuguj[0]) == "*" {
 		OutputWords.Listuguj = OutputWords.Listuguj[1:]
 	}
+	for charIndex, character := range OutputWords.Listuguj {
+		if string(character) == "*" && IsDelineator(string(OutputWords.Listuguj[charIndex-1])) {
+			OutputWords.Listuguj = fmt.Sprintf("%s|%s", OutputWords.Listuguj[:charIndex], OutputWords.Listuguj[charIndex+1:])
+		}
+	}
+	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "|", "", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "*", "'", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "@", "a'", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "3", "e'", -1)
