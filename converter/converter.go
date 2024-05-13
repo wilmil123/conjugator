@@ -398,6 +398,14 @@ func resolveUvularFricative(outputStr string) string {
 // turns francis-smith into unified orthography
 func normalizeFrancisSmith(inputStr string) string {
 	outputStr := inputStr
+
+	// from the character substitution table, long vowels can be either with an accent or apostrophe
+	outputStr = strings.Replace(outputStr, "à", "a'", -1)
+	outputStr = strings.Replace(outputStr, "è", "e'", -1)
+	outputStr = strings.Replace(outputStr, "ì", "i'", -1)
+	outputStr = strings.Replace(outputStr, "ò", "o'", -1)
+	outputStr = strings.Replace(outputStr, "ù", "u'", -1)
+
 	// below are standard character replacements to 1 glyph 'unified orthography' values
 	outputStr = strings.Replace(outputStr, "ɨ", "*", -1)
 	outputStr = strings.Replace(outputStr, "a'", "@", -1)
@@ -413,44 +421,51 @@ func normalizeFrancisSmith(inputStr string) string {
 	for charIndex, character := range outputStr {
 		// if the current character is a sonorant
 		if IsSonorant(string(character)) {
-			// if the sonorant is not initial, and the preceding character is a consonant or a sonorant, but not a semivowel
-			if charIndex != 0 && (IsConsonant(string(outputStr[charIndex-1])) || IsSonorant(string(outputStr[charIndex-1]))) &&
-				(!IsSemivowel(string(outputStr[charIndex-1]))) {
-				// replace these with their allophonic variants
-				if string(character) == "m" {
-					outputStr = fmt.Sprintf("%s8%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
-				} else if string(character) == "n" {
-					outputStr = fmt.Sprintf("%s9%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
-				} else if string(character) == "l" {
-					outputStr = fmt.Sprintf("%s0%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+			// if the sonorant is not initial
+			if charIndex != 0 {
+				// if the preceding character is a consonant or a sonorant, but not a semivowel
+				if (IsConsonant(string(outputStr[charIndex-1])) || IsSonorant(string(outputStr[charIndex-1]))) &&
+					(!IsSemivowel(string(outputStr[charIndex-1]))) {
+					// replace these with their allophonic variants
+					if string(character) == "m" {
+						outputStr = fmt.Sprintf("%s8%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+					} else if string(character) == "n" {
+						outputStr = fmt.Sprintf("%s9%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+					} else if string(character) == "l" {
+						outputStr = fmt.Sprintf("%s0%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+					}
 				}
 			}
 		} else if IsAllophonicallyVoiced(string(character)) { // if the current character is allophonically voiced
-			if charIndex == 0 && !(IsConsonant(string(outputStr[charIndex+1]))) { // if the consonant is at the beginning of a word and the next character is not a consonant
-				if string(character) == "t" {
-					outputStr = fmt.Sprintf("d%s", string(outputStr[charIndex+1:]))
-				} else if string(character) == "p" {
-					outputStr = fmt.Sprintf("b%s", string(outputStr[charIndex+1:]))
-				} else if string(character) == "k" {
-					outputStr = fmt.Sprintf("g%s", string(outputStr[charIndex+1:]))
-				} else if string(character) == "$" {
-					outputStr = fmt.Sprintf("#%s", string(outputStr[charIndex+1:]))
-				} else if string(character) == "c" {
-					outputStr = fmt.Sprintf("j%s", string(outputStr[charIndex+1:]))
-				}
-			} else if charIndex != len(outputStr)-1 && !IsDelineator((string(outputStr[charIndex+1]))) {
-				if !(IsConsonant(string(outputStr[charIndex-1]))) && !(IsConsonant(string(outputStr[charIndex+1]))) {
-					// if the consonant is word-final and is not in a cluster, replace with voiced variants
+			if charIndex == 0 { // if the consonant is at the beginning of a word
+				if !IsConsonant(string(outputStr[charIndex+1])) { // if the next character is not a consonant
 					if string(character) == "t" {
-						outputStr = fmt.Sprintf("%sd%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+						outputStr = fmt.Sprintf("d%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "p" {
-						outputStr = fmt.Sprintf("%sb%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+						outputStr = fmt.Sprintf("b%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "k" {
-						outputStr = fmt.Sprintf("%sg%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
-					} else if string(character) == "c" {
-						outputStr = fmt.Sprintf("%sj%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+						outputStr = fmt.Sprintf("g%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "$" {
-						outputStr = fmt.Sprintf("%s#%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+						outputStr = fmt.Sprintf("#%s", string(outputStr[charIndex+1:]))
+					} else if string(character) == "c" {
+						outputStr = fmt.Sprintf("j%s", string(outputStr[charIndex+1:]))
+					}
+				}
+			} else if charIndex != len(outputStr)-1 {
+				if !IsDelineator((string(outputStr[charIndex+1]))) {
+					if !(IsConsonant(string(outputStr[charIndex-1]))) && !(IsConsonant(string(outputStr[charIndex+1]))) {
+						// if the consonant is word-final and is not in a cluster, replace with voiced variants
+						if string(character) == "t" {
+							outputStr = fmt.Sprintf("%sd%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+						} else if string(character) == "p" {
+							outputStr = fmt.Sprintf("%sb%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+						} else if string(character) == "k" {
+							outputStr = fmt.Sprintf("%sg%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+						} else if string(character) == "c" {
+							outputStr = fmt.Sprintf("%sj%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+						} else if string(character) == "$" {
+							outputStr = fmt.Sprintf("%s#%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+						}
 					}
 				}
 			}
@@ -801,8 +816,13 @@ func normalizeLexicon(inputStr string) string {
 func normalizeMetallic(inputStr string) string {
 	outputStr := inputStr
 
-	// from the character substitution table, e! can be ê
+	// from the character substitution table, e! can be ê, and long vowels can be written with an apostrophe
 	outputStr = strings.Replace(outputStr, "e!", "ê", -1)
+	outputStr = strings.Replace(outputStr, "a'", "à", -1)
+	outputStr = strings.Replace(outputStr, "e'", "è", -1)
+	outputStr = strings.Replace(outputStr, "i'", "ì", -1)
+	outputStr = strings.Replace(outputStr, "o'", "ò", -1)
+	outputStr = strings.Replace(outputStr, "u'", "ù", -1)
 
 	// if the first two characters are êl or ên
 	if string([]rune(outputStr)[0:2]) == "êl" {

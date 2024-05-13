@@ -90,6 +90,10 @@
       <td>a:</td>
     </tr>
     <tr>
+      <td>à</td>
+      <td>a'</td>
+    </tr>
+    <tr>
       <td>ç</td>
       <td>c</td>
     </tr>
@@ -106,6 +110,10 @@
       <td>e:</td>
     </tr>
     <tr>
+      <td>è</td>
+      <td>e'</td>
+    </tr>
+    <tr>
       <td>ĭ</td>
       <td>i/</td>
     </tr>
@@ -116,6 +124,10 @@
     <tr>
       <td>ɨ</td>
       <td>*</td>
+    </tr>
+    <tr>
+      <td>ì</td>
+      <td>i'</td>
     </tr>
     <tr>
       <td>ō</td>
@@ -134,12 +146,20 @@
       <td>o:</td>
     </tr>
     <tr>
+      <td>ò</td>
+      <td>o'</td>
+    </tr>
+    <tr>
       <td>ŭ</td>
       <td>u/</td>
     </tr>
     <tr>
       <td>ü</td>
       <td>u:</td>
+    </tr>
+    <tr>
+      <td>ù</td>
+      <td>u'</td>
     </tr>
     <tr>
       <td>{}</td>
