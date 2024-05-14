@@ -282,7 +282,8 @@ func orthoIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 		}
 	} else { // if the button was not pressed (i.e. on first load of the page without cache)
 		var defaultConversion ConversionString
-		defaultConversion.InputString = normalizeFrancisSmith("put*p") // default is "putɨp"
+		defaultConversion.InputString = "put*p" // default is "putɨp"
+		defaultConversion.UnifiedString = normalizeFrancisSmith(defaultConversion.InputString)
 		defaultConversion.Escaped = false
 		defaultConversion.UpperInitial = false
 		finalConversionStringSlice = append(finalConversionStringSlice, defaultConversion)
