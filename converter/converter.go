@@ -45,137 +45,138 @@ type Output struct { // the forms to be output
 	Metallic            string
 }
 
+type ConversionString struct { // for storing strings to be converted
+	InputString   string
+	UnifiedString string
+	Escaped       bool
+	UpperInitial  bool
+}
+
 func ConverterInit() error {
 	http.HandleFunc("/convert", orthoIndexHandler) // create the webpage
 	return nil
 }
 
-func retainInitialCapital(OutputWords Output) Output {
-	OutputWords.FrancisSmith = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.FrancisSmith)[0])), string([]rune(OutputWords.FrancisSmith)[1:]))
-	OutputWords.Listuguj = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.Listuguj)[0])), string([]rune(OutputWords.Listuguj)[1:]))
-	OutputWords.Pacifique = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.Pacifique)[0])), string([]rune(OutputWords.Pacifique)[1:]))
-	OutputWords.Rand = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.Rand)[0])), string([]rune(OutputWords.Rand)[1:]))
-	OutputWords.Lexicon = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.Lexicon)[0])), string([]rune(OutputWords.Lexicon)[1:]))
-	OutputWords.Metallic = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(OutputWords.Metallic)[0])), string([]rune(OutputWords.Metallic)[1:]))
-	return OutputWords
-}
+func parseEscapedSequences(conversionStringSlice []ConversionString) []ConversionString {
+	var multiWordEscapedSequence []string             // storing multi-word escaped sequences
+	var inEscapedSequence bool = false                // storing if the current string is in an escaped sequence
+	var finalConversionStringSlice []ConversionString // storing the final output
+	for conversionElementIndex, conversionElement := range conversionStringSlice {
+		var slicedElements []ConversionString
 
-func escapeSequences(InputStr string) ([]string, []string) { // handling escaped sequences
-	var strToConvert []string  // storing those to be converted
-	var strToConserve []string // storing those not to be converted
-	localStr := InputStr
-	for escapedSequences := 0; escapedSequences <= strings.Count(InputStr, "{"); escapedSequences++ {
-		splitStr1 := []string{"", ""}
-		if strings.Index(localStr, "{") != len(localStr)-1 && strings.Contains(localStr, "{") {
-			splitStr1[0], splitStr1[1], _ = strings.Cut(localStr, "{")
-			if len(splitStr1[0]) != 0 {
-				strToConvert = append(strToConvert, splitStr1[0])
+		if strings.Contains(conversionElement.InputString, "{") && strings.Contains(conversionElement.InputString, "}") {
+			slicedElements = escapeSequences(conversionElement)
+		} else if strings.Contains(conversionElement.InputString, "{") && !strings.Contains(conversionElement.InputString, "}") {
+			// if escaped sequences have been interrupted by spaces
+			multiWordEscapedSequence = nil
+			inEscapedSequence = true
+			multiWordEscapedSequence = append(multiWordEscapedSequence, conversionElement.InputString)
+		} else if !strings.Contains(conversionElement.InputString, "{") && strings.Contains(conversionElement.InputString, "}") {
+			inEscapedSequence = false
+			multiWordEscapedSequence = append(multiWordEscapedSequence, conversionElement.InputString)
+			var joinMultiWordEscapedSequence ConversionString
+			joinMultiWordEscapedSequence.InputString = strings.Join(multiWordEscapedSequence, "")
+			slicedElements = escapeSequences(joinMultiWordEscapedSequence)
+		} else if !strings.Contains(conversionElement.InputString, "{") && !strings.Contains(conversionElement.InputString, "}") &&
+			!inEscapedSequence {
+			conversionElement.Escaped = false
+			slicedElements = append(slicedElements, conversionElement)
+		} else if !strings.Contains(conversionElement.InputString, "{") && !strings.Contains(conversionElement.InputString, "}") &&
+			inEscapedSequence {
+			multiWordEscapedSequence = append(multiWordEscapedSequence, conversionElement.InputString)
+			if conversionElementIndex == len(conversionStringSlice)-1 {
+				inEscapedSequence = false
+				var joinMultiWordEscapedSequence ConversionString
+				joinMultiWordEscapedSequence.InputString = strings.Join(multiWordEscapedSequence, "")
+				slicedElements = escapeSequences(joinMultiWordEscapedSequence)
 			}
-		} else {
-			splitStr1[0], _ = strings.CutSuffix(localStr, "{")
-			if len(splitStr1[0]) != 0 {
-				strToConvert = append(strToConvert, splitStr1[0])
-			}
-			break
 		}
-		splitStr2 := []string{"", ""}
-		if strings.Index(splitStr1[1], "}") != len(splitStr1[1])-1 && strings.Contains(splitStr1[1], "}") {
-			splitStr2[0], splitStr2[1], _ = strings.Cut(splitStr1[1], "}")
-			if len(splitStr2) != 0 {
-				strToConserve = append(strToConserve, splitStr2[0])
-			}
-		} else {
-			splitStr2[0], _ = strings.CutSuffix(splitStr1[1], "}")
-			if len(splitStr2[0]) != 0 {
-				strToConserve = append(strToConserve, splitStr2[0])
-			}
-			break
-		}
-		localStr = splitStr2[1]
+		finalConversionStringSlice = append(finalConversionStringSlice, slicedElements...)
 	}
-	return strToConvert, strToConserve
+	return finalConversionStringSlice
 }
 
-func collapseStrings(OutputWords Output, normalStr []string, strToConserve []string, conservedSequenceInitial bool) Output {
+func escapeSequences(InputStr ConversionString) []ConversionString { // handling escaped sequences in a new way
+	var conversionStringSlice []ConversionString
+	var firstString ConversionString
+	var secondString ConversionString
+	var thirdString ConversionString
+	splitStr1 := []string{"", ""}
+	splitStr2 := []string{"", ""}
+	splitStr1[0], splitStr1[1], _ = strings.Cut(InputStr.InputString, "{")
+	if len(splitStr1[0]) > 0 {
+		firstString.InputString = splitStr1[0]
+		splitFirstString := strings.SplitAfter(firstString.InputString, " ")
+		for strCount := range splitFirstString {
+			var thisString ConversionString
+			thisString.InputString = splitFirstString[strCount]
+			thisString.Escaped = false
+			if len(thisString.InputString) > 0 {
+				conversionStringSlice = append(conversionStringSlice, thisString)
+			}
+		}
+	}
+	if len(splitStr1[1]) > 0 {
+		splitStr2[0], splitStr2[1], _ = strings.Cut(splitStr1[1], "}")
+		if len(splitStr2[0]) > 0 {
+			secondString.InputString = splitStr2[0]
+			splitSecondString := strings.SplitAfter(secondString.InputString, " ")
+			for strCount := range splitSecondString {
+				var thisString ConversionString
+				thisString.InputString = splitSecondString[strCount]
+				thisString.Escaped = true
+				if len(thisString.InputString) > 0 {
+					conversionStringSlice = append(conversionStringSlice, thisString)
+				}
+			}
+		}
+		if len(splitStr2[1]) > 0 {
+			thirdString.InputString = splitStr2[1]
+			splitThirdString := strings.SplitAfter(thirdString.InputString, " ")
+			for strCount := range splitThirdString {
+				var thisString ConversionString
+				thisString.InputString = splitThirdString[strCount]
+				thisString.Escaped = false
+				if len(thisString.InputString) > 0 {
+					conversionStringSlice = append(conversionStringSlice, thisString)
+				}
+			}
+		}
+	}
+	return conversionStringSlice
+}
+
+func collapseStrings(OutputWords Output, finalConversionStringSlice []ConversionString) Output {
 	var localFrancisSmith []string
 	var localListuguj []string
 	var localPacifique []string
 	var localRand []string
 	var localLexicon []string
 	var localMetallic []string
-	if len(normalStr) > len(strToConserve) {
-		for strCount := range normalStr {
-			var localOutput Output = encodeOutput(normalStr[strCount])
-			if !conservedSequenceInitial {
-				localFrancisSmith = append(localFrancisSmith, localOutput.FrancisSmith)
-				localListuguj = append(localListuguj, localOutput.Listuguj)
-				localPacifique = append(localPacifique, localOutput.Pacifique)
-				localRand = append(localRand, localOutput.Rand)
-				localLexicon = append(localLexicon, localOutput.Lexicon)
-				localMetallic = append(localMetallic, localOutput.Metallic)
-
-				if strCount < len(strToConserve) {
-					localFrancisSmith = append(localFrancisSmith, strToConserve[strCount])
-					localListuguj = append(localListuguj, strToConserve[strCount])
-					localPacifique = append(localPacifique, strToConserve[strCount])
-					localRand = append(localRand, strToConserve[strCount])
-					localLexicon = append(localLexicon, strToConserve[strCount])
-					localMetallic = append(localMetallic, strToConserve[strCount])
-				}
-			} else {
-				if strCount < len(strToConserve) {
-					localFrancisSmith = append(localFrancisSmith, strToConserve[strCount])
-					localListuguj = append(localListuguj, strToConserve[strCount])
-					localPacifique = append(localPacifique, strToConserve[strCount])
-					localRand = append(localRand, strToConserve[strCount])
-					localLexicon = append(localLexicon, strToConserve[strCount])
-					localMetallic = append(localMetallic, strToConserve[strCount])
-				}
-
-				localFrancisSmith = append(localFrancisSmith, localOutput.FrancisSmith)
-				localListuguj = append(localListuguj, localOutput.Listuguj)
-				localPacifique = append(localPacifique, localOutput.Pacifique)
-				localRand = append(localRand, localOutput.Rand)
-				localLexicon = append(localLexicon, localOutput.Lexicon)
-				localMetallic = append(localMetallic, localOutput.Metallic)
-			}
+	for strCount, stringElement := range finalConversionStringSlice {
+		if !stringElement.Escaped {
+			var localOutput Output = encodeOutput(stringElement.UnifiedString)
+			localFrancisSmith = append(localFrancisSmith, localOutput.FrancisSmith)
+			localListuguj = append(localListuguj, localOutput.Listuguj)
+			localPacifique = append(localPacifique, localOutput.Pacifique)
+			localRand = append(localRand, localOutput.Rand)
+			localLexicon = append(localLexicon, localOutput.Lexicon)
+			localMetallic = append(localMetallic, localOutput.Metallic)
+		} else {
+			localFrancisSmith = append(localFrancisSmith, stringElement.UnifiedString)
+			localListuguj = append(localListuguj, stringElement.UnifiedString)
+			localPacifique = append(localPacifique, stringElement.UnifiedString)
+			localRand = append(localRand, stringElement.UnifiedString)
+			localLexicon = append(localLexicon, stringElement.UnifiedString)
+			localMetallic = append(localMetallic, stringElement.UnifiedString)
 		}
-	} else {
-		for strCount := range strToConserve {
-			var localOutput Output = encodeOutput(normalStr[strCount])
-			if !conservedSequenceInitial {
-				if strCount < len(normalStr) {
-					localFrancisSmith = append(localFrancisSmith, localOutput.FrancisSmith)
-					localListuguj = append(localListuguj, localOutput.Listuguj)
-					localPacifique = append(localPacifique, localOutput.Pacifique)
-					localRand = append(localRand, localOutput.Rand)
-					localLexicon = append(localLexicon, localOutput.Lexicon)
-					localMetallic = append(localMetallic, localOutput.Metallic)
-				}
-
-				localFrancisSmith = append(localFrancisSmith, strToConserve[strCount])
-				localListuguj = append(localListuguj, strToConserve[strCount])
-				localPacifique = append(localPacifique, strToConserve[strCount])
-				localRand = append(localRand, strToConserve[strCount])
-				localLexicon = append(localLexicon, strToConserve[strCount])
-				localMetallic = append(localMetallic, strToConserve[strCount])
-			} else {
-				localFrancisSmith = append(localFrancisSmith, strToConserve[strCount])
-				localListuguj = append(localListuguj, strToConserve[strCount])
-				localPacifique = append(localPacifique, strToConserve[strCount])
-				localRand = append(localRand, strToConserve[strCount])
-				localLexicon = append(localLexicon, strToConserve[strCount])
-				localMetallic = append(localMetallic, strToConserve[strCount])
-
-				if strCount < len(normalStr) {
-					localFrancisSmith = append(localFrancisSmith, localOutput.FrancisSmith)
-					localListuguj = append(localListuguj, localOutput.Listuguj)
-					localPacifique = append(localPacifique, localOutput.Pacifique)
-					localRand = append(localRand, localOutput.Rand)
-					localLexicon = append(localLexicon, localOutput.Lexicon)
-					localMetallic = append(localMetallic, localOutput.Metallic)
-				}
-			}
+		if stringElement.UpperInitial {
+			localFrancisSmith[strCount] = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(localFrancisSmith[strCount])[0])), string([]rune(localFrancisSmith[strCount])[1:]))
+			localListuguj[strCount] = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(localListuguj[strCount])[0])), string([]rune(localListuguj[strCount])[1:]))
+			localPacifique[strCount] = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(localPacifique[strCount])[0])), string([]rune(localPacifique[strCount])[1:]))
+			localRand[strCount] = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(localRand[strCount])[0])), string([]rune(localRand[strCount])[1:]))
+			localLexicon[strCount] = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(localLexicon[strCount])[0])), string([]rune(localLexicon[strCount])[1:]))
+			localMetallic[strCount] = fmt.Sprintf("%s%s", strings.ToUpper(string([]rune(localMetallic[strCount])[0])), string([]rune(localMetallic[strCount])[1:]))
 		}
 	}
 	OutputWords.FrancisSmith = strings.Join(localFrancisSmith, "")
@@ -188,80 +189,123 @@ func collapseStrings(OutputWords Output, normalStr []string, strToConserve []str
 	return OutputWords
 }
 
+// main function for I/O with the frontend
 func orthoIndexHandler(writer http.ResponseWriter, reader *http.Request) {
-	var normalStr []string // the "normal" string is that which is normalized for conversion to any orthography
-	var wasUpper bool
-	var strToConvert []string         // storing those to be converted
-	var strToConserve []string        // storing those not to be converted
-	var conservedSequenceInitial bool // whether the initial is a conserved sequence or not
+	var conversionStringSlice []ConversionString      // for handling the strings to be converted/escaped with a special type
+	var finalConversionStringSlice []ConversionString // need a final one for handling length changes caused by splitting of escaped strings
 	var PacifiqueDisclaimer bool = false
 	var RandDisclaimer bool = false
 	if reader.Method == http.MethodPost { // if the "go" button is pressed
 		InputStr := reader.FormValue("wordinput")              // get the input string
 		orthographyChoice := reader.FormValue("orthographies") // a string value correstponding to the orthography chosen by the user
 		if InputStr != "" {                                    // if the input is not empty
-			if strings.ToUpper(string([]rune(InputStr)[0])) == string([]rune(InputStr)[0]) { // if the first character's capital letter is equal to its value, i.e. it is a capital
-				wasUpper = true // record that the first letter was a capital. in the future, could maybe try for multiple capitals?
+			// replace non-standard unicode characters
+			InputStr = strings.Replace(InputStr, "`", "'", -1)
+			InputStr = strings.Replace(InputStr, "’", "'", -1)
+			InputStr = strings.Replace(InputStr, "‘", "'", -1)
+			InputStr = strings.Replace(InputStr, "”", "\"", -1)
+			InputStr = strings.Replace(InputStr, "“", "\"", -1)
+
+			inputStringSlice := strings.SplitAfter(InputStr, " ") // split the strings at brackets (keeping them intact)
+			// reading all the split strings into a struct
+			for _, stringElement := range inputStringSlice {
+				var thisString ConversionString
+				thisString.InputString = stringElement
+				conversionStringSlice = append(conversionStringSlice, thisString)
 			}
-			InputStr = strings.ToLower(InputStr)
-			if strings.Contains(InputStr, "{") && strings.Contains(InputStr, "}") {
-				if strings.Index(InputStr, "{") == 0 {
-					conservedSequenceInitial = true
-				} else {
-					conservedSequenceInitial = false
+			// check if each string has escaped sequences
+			finalConversionStringSlice = parseEscapedSequences(conversionStringSlice)
+
+			// check if the initial elements are capitals for every string
+			for strCount := range finalConversionStringSlice {
+				// if the first character's capital letter is equal to its value, i.e. it is a capital
+				if HasInitialCapitalLetter(finalConversionStringSlice[strCount].InputString) {
+					finalConversionStringSlice[strCount].UpperInitial = true // record that the first letter was a capital. in the future, could maybe try for multiple capitals?
 				}
-				strToConvert, strToConserve = escapeSequences(InputStr)
-			} else {
-				strToConvert = append(strToConvert, InputStr)
+				finalConversionStringSlice[strCount].InputString = strings.ToLower(finalConversionStringSlice[strCount].InputString)
 			}
+
 			switch orthographyChoice {
 			case "francissmith":
-				for strCount := range strToConvert {
-					normalStr = append(normalStr, normalizeFrancisSmith(strToConvert[strCount]))
+				for strCount := range finalConversionStringSlice {
+					if !finalConversionStringSlice[strCount].Escaped {
+						finalConversionStringSlice[strCount].UnifiedString = normalizeFrancisSmith(finalConversionStringSlice[strCount].InputString)
+					} else {
+						finalConversionStringSlice[strCount].UnifiedString = finalConversionStringSlice[strCount].InputString
+					}
 				}
 			case "listuguj":
-				for strCount := range strToConvert {
-					normalStr = append(normalStr, normalizeListuguj(strToConvert[strCount]))
+				for strCount := range finalConversionStringSlice {
+					if !finalConversionStringSlice[strCount].Escaped {
+						finalConversionStringSlice[strCount].UnifiedString = normalizeListuguj(finalConversionStringSlice[strCount].InputString)
+					} else {
+						finalConversionStringSlice[strCount].UnifiedString = finalConversionStringSlice[strCount].InputString
+					}
 				}
 			case "pacifique":
-				for strCount := range strToConvert {
-					normalStr = append(normalStr, normalizePacifique(strToConvert[strCount]))
+				for strCount := range finalConversionStringSlice {
+					if !finalConversionStringSlice[strCount].Escaped {
+						finalConversionStringSlice[strCount].UnifiedString = normalizePacifique(finalConversionStringSlice[strCount].InputString)
+					} else {
+						finalConversionStringSlice[strCount].UnifiedString = finalConversionStringSlice[strCount].InputString
+					}
 				}
 				PacifiqueDisclaimer = true
 			case "rand":
-				for strCount := range strToConvert {
-					normalStr = append(normalStr, normalizeRand(strToConvert[strCount]))
+				for strCount := range finalConversionStringSlice {
+					if !finalConversionStringSlice[strCount].Escaped {
+						finalConversionStringSlice[strCount].UnifiedString = normalizeRand(finalConversionStringSlice[strCount].InputString)
+					} else {
+						finalConversionStringSlice[strCount].UnifiedString = finalConversionStringSlice[strCount].InputString
+					}
 				}
 				RandDisclaimer = true
 			case "lexicon":
-				for strCount := range strToConvert {
-					normalStr = append(normalStr, normalizeLexicon(strToConvert[strCount]))
+				for strCount := range finalConversionStringSlice {
+					if !finalConversionStringSlice[strCount].Escaped {
+						finalConversionStringSlice[strCount].UnifiedString = normalizeLexicon(finalConversionStringSlice[strCount].InputString)
+					} else {
+						finalConversionStringSlice[strCount].UnifiedString = finalConversionStringSlice[strCount].InputString
+					}
 				}
 			case "metallic":
-				for strCount := range strToConvert {
-					normalStr = append(normalStr, normalizeMetallic(strToConvert[strCount]))
+				for strCount := range finalConversionStringSlice {
+					if !finalConversionStringSlice[strCount].Escaped {
+						finalConversionStringSlice[strCount].UnifiedString = normalizeMetallic(finalConversionStringSlice[strCount].InputString)
+					} else {
+						finalConversionStringSlice[strCount].UnifiedString = finalConversionStringSlice[strCount].InputString
+					}
 				}
 			default:
 				fmt.Println("orthography type missing")
 			}
 		}
 	} else { // if the button was not pressed (i.e. on first load of the page without cache)
-		normalStr = append(normalStr, normalizeFrancisSmith("put*p")) // default is "put*p"
+		var defaultConversion ConversionString
+		defaultConversion.InputString = normalizeFrancisSmith("put*p") // default is "putɨp"
+		defaultConversion.Escaped = false
+		defaultConversion.UpperInitial = false
+		finalConversionStringSlice = append(finalConversionStringSlice, defaultConversion)
 	}
 
 	var OutputWords Output
-	OutputWords = collapseStrings(OutputWords, normalStr, strToConserve, conservedSequenceInitial)
+	OutputWords = collapseStrings(OutputWords, finalConversionStringSlice)
 	OutputWords.PacifiqueDisclaimer = PacifiqueDisclaimer
 	OutputWords.RandDisclaimer = RandDisclaimer
-	if wasUpper && len(normalStr) > 1 {
-		OutputWords = retainInitialCapital(OutputWords)
-	}
 
 	template, templateBuildErr := template.ParseFiles("converter/convertertemplate.html.temp") // parse conjugatortemplate.html.temp
 	if templateBuildErr != nil {                                                               // if an error is thrown
 		fmt.Println(templateBuildErr)
 	}
 	template.Execute(writer, OutputWords) // execute the template
+}
+
+func HasInitialCapitalLetter(inputStr string) bool { // returns true if the first letter is a capital
+	if strings.ToUpper(string([]rune(inputStr)[0])) == string([]rune(inputStr)[0]) {
+		return true // record that the first letter was a capital
+	} else {
+		return false
+	}
 }
 
 func IsConsonant(category string) bool { // returns true if the passed slice is in this list
@@ -318,7 +362,8 @@ func IsDelineator(category string) bool { // returns true if the passed slice is
 	case
 		" ",
 		".",
-		",":
+		",",
+		";":
 		return true
 	}
 	return false
@@ -453,7 +498,8 @@ func normalizeFrancisSmith(inputStr string) string {
 				}
 			} else if charIndex != len(outputStr)-1 {
 				if !IsDelineator((string(outputStr[charIndex+1]))) {
-					if !(IsConsonant(string(outputStr[charIndex-1]))) && !(IsConsonant(string(outputStr[charIndex+1]))) {
+					if !IsConsonant(string(outputStr[charIndex-1])) && !IsConsonant(string(outputStr[charIndex+1])) &&
+						!IsSonorant(string(outputStr[charIndex-1])) {
 						// if the consonant is word-final and is not in a cluster, replace with voiced variants
 						if string(character) == "t" {
 							outputStr = fmt.Sprintf("%sd%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
@@ -473,7 +519,7 @@ func normalizeFrancisSmith(inputStr string) string {
 	}
 
 	// if the first two characters are consonants, begin the word with a schwa
-	if IsConsonant(string((outputStr[0]))) && IsConsonant(string((outputStr[1]))) {
+	if (IsConsonant(string(outputStr[0])) || IsSonorant(string(outputStr[0]))) && IsConsonant(string(outputStr[1])) {
 		outputStr = fmt.Sprintf("*%s", outputStr)
 	}
 
@@ -493,8 +539,10 @@ func normalizeListuguj(inputStr string) string {
 	outputStr := inputStr
 
 	// listuguj does not recognize /j/ as a semivowel, but it is easy to replace these since /j/ only appears after vowels
+	outputStr = strings.Replace(outputStr, "ai'", "ay!", -1)
 	outputStr = strings.Replace(outputStr, "ai", "ay", -1)
 	outputStr = strings.Replace(outputStr, "a'i", "@y", -1)
+	outputStr = strings.Replace(outputStr, "ei'", "ey!", -1)
 	outputStr = strings.Replace(outputStr, "ei", "ey", -1)
 	outputStr = strings.Replace(outputStr, "e'i", "3y", -1)
 
@@ -518,6 +566,9 @@ func normalizeListuguj(inputStr string) string {
 	outputStr = strings.Replace(outputStr, "s'", "s*", -1)
 	outputStr = strings.Replace(outputStr, "c'", "c*", -1)
 	outputStr = strings.Replace(outputStr, "q'", "q*", -1)
+	outputStr = strings.Replace(outputStr, "n'", "n*", -1)
+	outputStr = strings.Replace(outputStr, "m'", "m*", -1)
+	outputStr = strings.Replace(outputStr, "l'", "l*", -1)
 
 	// loop through every character in the string
 	for charIndex, character := range outputStr {
@@ -558,7 +609,7 @@ func normalizeListuguj(inputStr string) string {
 			}
 		} else if IsAllophonicallyVoiced(string(character)) { // if this character is allophonically voiced
 			if charIndex == 0 { // if this character is word-initial
-				if !(IsConsonant(string(outputStr[charIndex+1]))) { // if the next character is not a consonant, replace with voiced variants
+				if !IsConsonant(string(outputStr[charIndex+1])) { // if the next character is not a consonant, replace with voiced variants
 					if string(character) == "t" {
 						outputStr = fmt.Sprintf("d%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "p" {
@@ -574,7 +625,8 @@ func normalizeListuguj(inputStr string) string {
 			} else if charIndex != len(outputStr)-1 && !IsDelineator(string(outputStr[charIndex+1])) {
 				// if this character is not the last, and the following character is not a delineator
 				// if it is not surrounded by consonants, make it voiced
-				if !(IsConsonant(string(outputStr[charIndex-1]))) && !(IsConsonant(string(outputStr[charIndex+1]))) {
+				if !IsConsonant(string(outputStr[charIndex-1])) && !IsConsonant(string(outputStr[charIndex+1])) &&
+					!IsSonorant(string(outputStr[charIndex-1])) {
 					if string(character) == "t" {
 						outputStr = fmt.Sprintf("%sd%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "p" {
@@ -592,7 +644,7 @@ func normalizeListuguj(inputStr string) string {
 	}
 
 	// if the first two characters are consonants, insert a schwa at the beginning
-	if IsConsonant(string((outputStr[0]))) && IsConsonant(string((outputStr[1]))) {
+	if (IsConsonant(string(outputStr[0])) || IsSonorant(string(outputStr[0]))) && IsConsonant(string(outputStr[1])) {
 		outputStr = fmt.Sprintf("*%s", outputStr)
 	}
 
@@ -651,7 +703,7 @@ func normalizePacifique(inputStr string) string {
 			// if it is the first character
 			if charIndex == 0 {
 				// if the next character is not a consonant, make it voiced
-				if !(IsConsonant(string(outputStr[charIndex+1]))) {
+				if !IsConsonant(string(outputStr[charIndex+1])) {
 					if string(character) == "t" {
 						outputStr = fmt.Sprintf("d%s", string(outputStr[charIndex+1:]))
 					} else if string(character) == "p" {
@@ -666,7 +718,8 @@ func normalizePacifique(inputStr string) string {
 				}
 			} else if charIndex != len(outputStr)-1 && !IsDelineator(string(outputStr[charIndex+1])) { // if it is not the last character
 				// if the previous and next characters are not consonants, make this consonant voiced
-				if !(IsConsonant(string(outputStr[charIndex-1]))) && !(IsConsonant(string(outputStr[charIndex+1]))) {
+				if !IsConsonant(string(outputStr[charIndex-1])) && !IsConsonant(string(outputStr[charIndex+1])) &&
+					!IsSonorant(string(outputStr[charIndex-1])) {
 					if string(character) == "t" {
 						outputStr = fmt.Sprintf("%sd%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 					} else if string(character) == "p" {
@@ -720,16 +773,12 @@ func normalizeRand(inputStr string) string {
 
 	// if the first two characters are ŭl/ŭn/ŭm or 'l/'n/'m (usage is inconsistent?)
 	if string([]rune(outputStr)[0:2]) == "ŭl" || string([]rune(outputStr)[0:2]) == "'l" {
-		outputStr = fmt.Sprintf("6%s", string([]rune(outputStr[2:])))
+		outputStr = fmt.Sprintf("6%s", string([]rune(outputStr)[2:]))
 	} else if string([]rune(outputStr)[0:2]) == "ŭn" || string([]rune(outputStr)[0:2]) == "'n" {
-		outputStr = fmt.Sprintf("7%s", string([]rune(outputStr[2:])))
+		outputStr = fmt.Sprintf("7%s", string([]rune(outputStr)[2:]))
 	} else if string([]rune(outputStr)[0:2]) == "ŭm" || string([]rune(outputStr)[0:2]) == "'m" {
-		outputStr = fmt.Sprintf("+%s", string([]rune(outputStr[2:])))
+		outputStr = fmt.Sprintf("+%s", string([]rune(outputStr)[2:]))
 	}
-	// replace with word-initial syllabic variants
-	outputStr = strings.Replace(outputStr, "'l", "6", -1)
-	outputStr = strings.Replace(outputStr, "'n", "7", -1)
-	outputStr = strings.Replace(outputStr, "'m", "+", -1)
 
 	// an apostrophe in rand orthography marks stress, which is problematic in unified orthography since it is unpredictable and no other orthographies make use of it
 	outputStr = strings.Replace(outputStr, "'", "", -1)
