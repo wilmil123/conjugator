@@ -46,7 +46,9 @@
     <label for="0">Francis-Smith</label>
     <input type="radio" class="radiobutton" name="orthographyradiobutton" value="0" checked>
     <label for="1">Listuguj</label>
-    <input type="radio" class="radiobutton" name="orthographyradiobutton" value="1"><br>
+    <input type="radio" class="radiobutton" name="orthographyradiobutton" value="1">
+    <label for="2">Metallic</label>
+    <input type="radio" class="radiobutton" name="orthographyradiobutton" value="2"><br>
     <input type="text" class="input" name="verbinput">
     {{ .ConjugateButton }}
     <div class="hover-text">i<span class="tooltip-text">{{ .OrthographyTooltip }}</span></div>

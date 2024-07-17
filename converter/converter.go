@@ -19,6 +19,12 @@
 // "+" is initial syllabic /m/
 // "j" is voiced /dʒ/
 // "c" is voiceless /tʃ/
+// metallic orthography shows consonants after long vowels as voiced, where other orthographies don't. they may be only partially voiced
+// "D" is semi-voiced /t ~ d/
+// "B" is semi-voiced /p ~ b/
+// "G" is semi-voiced /k ~ g/
+// "J" is semi-voiced /tʃ ~ dʒ/
+// "V" is semi-voiced /kw ~ gw/
 // many unique sequences are used for rand orthography special characters, in case the user cannot type them. these can be found in the character substitution table
 
 // todo
@@ -395,6 +401,19 @@ func IsLowBackVowel(category string) bool { // returns true if the passed slice 
 	return false
 }
 
+func IsLongVowel(category string) bool { // returns true if the passed slice is in this list
+	switch category {
+	case
+		"@",
+		"3",
+		"!",
+		"%",
+		"&":
+		return true
+	}
+	return false
+}
+
 // sonorants after syllabic word-initial sonorants do not need to be recognized as such
 func fixSonorantDistribution(outputStr string) string {
 	outputStr = strings.Replace(outputStr, "68", "6m", -1)
@@ -434,6 +453,28 @@ func resolveUvularFricative(outputStr string) string {
 			} else if charIndex == len(outputStr)-1 {
 				if IsLowBackVowel(string(outputStr[charIndex-1])) {
 					outputStr = fmt.Sprintf("%s=", string(outputStr[:charIndex]))
+				}
+			}
+		}
+	}
+	return outputStr
+}
+
+// if the consonant after a long vowel, replace with voiced variants
+func voiceAfterLongVowel(outputStr string) string {
+	for charIndex, character := range outputStr {
+		if charIndex != 0 {
+			if IsLongVowel(string(outputStr[charIndex-1])) {
+				if string(character) == "t" {
+					outputStr = fmt.Sprintf("%sD%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+				} else if string(character) == "p" {
+					outputStr = fmt.Sprintf("%sB%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+				} else if string(character) == "k" {
+					outputStr = fmt.Sprintf("%sG%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+				} else if string(character) == "c" {
+					outputStr = fmt.Sprintf("%sJ%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+				} else if string(character) == "$" {
+					outputStr = fmt.Sprintf("%sV%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
 				}
 			}
 		}
@@ -531,6 +572,9 @@ func normalizeFrancisSmith(inputStr string) string {
 
 	// sonorants after syllabic word-initial sonorants do not need to be recognized as such
 	outputStr = fixSonorantDistribution(outputStr)
+
+	//consonants after long vowels are voiced
+	outputStr = voiceAfterLongVowel(outputStr)
 
 	return outputStr
 }
@@ -652,6 +696,9 @@ func normalizeListuguj(inputStr string) string {
 	// sonorants after syllabic word-initial sonorants do not need to be recognized as such
 	outputStr = fixSonorantDistribution(outputStr)
 
+	//consonants after long vowels are voiced
+	outputStr = voiceAfterLongVowel(outputStr)
+
 	return outputStr
 }
 
@@ -748,6 +795,9 @@ func normalizePacifique(inputStr string) string {
 
 	// this function attempts to resolve some ambiguities with uvular fricatives in rand and pacifique
 	outputStr = resolveUvularFricative(outputStr)
+
+	//consonants after long vowels are voiced
+	outputStr = voiceAfterLongVowel(outputStr)
 
 	return outputStr
 }
@@ -850,6 +900,9 @@ func normalizeRand(inputStr string) string {
 	}
 	outputStr = strings.Replace(outputStr, "|", "", -1)
 
+	//consonants after long vowels are voiced
+	outputStr = voiceAfterLongVowel(outputStr)
+
 	return outputStr
 }
 
@@ -948,6 +1001,11 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "#", "kw", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "$", "kw", -1)
 	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "=", "qw", -1)
+	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "B", "p", -1)
+	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "D", "t", -1)
+	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "G", "k", -1)
+	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "J", "j", -1)
+	OutputWords.FrancisSmith = strings.Replace(OutputWords.FrancisSmith, "V", "kw", -1)
 
 	// listuguj
 	if string(OutputWords.Listuguj[0]) == "*" {
@@ -972,6 +1030,11 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "$", "gw", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "#", "gw", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "=", "qw", -1)
+	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "B", "p", -1)
+	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "D", "t", -1)
+	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "G", "g", -1)
+	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "J", "j", -1)
+	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "V", "gw", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "6", "l", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "7", "n", -1)
 	OutputWords.Listuguj = strings.Replace(OutputWords.Listuguj, "+", "m", -1)
@@ -997,6 +1060,11 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "d", "t", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "b", "p", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "k", "g", -1)
+	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "B", "p", -1)
+	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "D", "t", -1)
+	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "G", "g", -1)
+	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "J", "tj", -1)
+	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "V", "go", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "6", "el", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "7", "en", -1)
 	OutputWords.Pacifique = strings.Replace(OutputWords.Pacifique, "+", "em", -1)
@@ -1053,7 +1121,9 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "u", "oo", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "@w", "oow", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "!w", "uu", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, ")w", "uu", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "iw", "u", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "(w", "u", -1)
 
 	// replace temporary characters
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "(", "ĭ", -1)
@@ -1081,6 +1151,11 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "#", "gw", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "$", "kw", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "=", "gw", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "B", "p", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "D", "t", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "G", "k", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "J", "ch", -1)
+	OutputWords.Rand = strings.Replace(OutputWords.Rand, "V", "kw", -1)
 	OutputWords.Rand = strings.Replace(OutputWords.Rand, "-", "", -1)
 
 	// lexicon
@@ -1091,23 +1166,30 @@ func encodeOutput(inputStr string) Output {
 	OutputWords.Lexicon = strings.Replace(OutputWords.Lexicon, "m:", "m'", -1)
 
 	// metallic
-	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "cc", "c", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "cc", "tc", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "*", "ê", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "@y", "ayy", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "@", "à", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "3y", "eyy", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "3", "è", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "!", "ì", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "%", "ò", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "&", "ù", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "c", "ch", -1)
-	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "6", "êl", -1)
-	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "7", "ên", -1)
-	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "+", "êm", -1)
-	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "8", "êm", -1)
-	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "9", "ên", -1)
-	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "0", "êl", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "6", "l", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "7", "n", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "+", "m", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "8", "m", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "9", "n", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "0", "l", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "#", "gw", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "$", "kw", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "=", "qw", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "B", "b", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "D", "d", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "G", "g", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "J", "j", -1)
+	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "V", "gw", -1)
 	OutputWords.Metallic = strings.Replace(OutputWords.Metallic, "-", "", -1)
 
 	return OutputWords

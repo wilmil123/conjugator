@@ -18,7 +18,7 @@
     <li><a class="pagelink" href="/">Home</a></li></ul>
 </fieldset>
 <h1>The Mi'kmaw OrthoConverter</h1>
-<h3>Convert between Mi'kmaw orthographies | Sa'se'wita'ql wi'katikne'l l'nu-iktuk | Convertir entre orthographes en mi'kmaw </h3>
+<h3>Convert between Mi'kmaw orthographies | Sa'se'wa'sikl wi'katikne'l l'nu-iktuk | Convertir entre orthographes en mi'kmaw </h3>
 <form method="POST">
     <label for="wordinput"><b>Enter a word: | Piskwa'tu klusuaqan: | Saisis un mot:</b></label><br>
     <textarea id="converterinput" name="wordinput" rows="3"></textarea><br>

@@ -1,8 +1,8 @@
 {
   "1.cond.cfl.asik": [
     "a'sisoq",
-    "a'tisoq",
-    "ita'soq"
+    "a'tisoq:a'sisoq",
+    "ita'soq:a'sultisoq"
   ],
   "1.cond.cfl.asit": [
     "a'sikapn",
@@ -11,19 +11,19 @@
     "a'sisoq",
     "a'silisoq",
     "a'sinesoq",
-    "a'ti'kupn",
-    "a'tikekpn",
-    "a'tikoqpn",
-    "a'ti'tisoq",
-    "a'tisoq",
-    "a'tilisoq",
-    "ita'kupn",
-    "ita'kekpn",
-    "ita'koqpn",
-    "ita'tisoq",
-    "ita'soq",
-    "ita'soq",
-    "ita'nesoq"
+    "a'ti'kupn:a'si'kupn",
+    "a'tikekpn:a'sikekpn",
+    "a'tikoqpn:a'sikoqpn",
+    "a'ti'tisoq:a'si'tisoq",
+    "a'tisoq:a'sisoq",
+    "a'tilisoq:a'silisoq",
+    "ita'kupn:a'sulti'kupn",
+    "ita'kekpn:a'sultikekpn",
+    "ita'koqpn:a'sultikoqpn",
+    "ita'tisoq:a'sultitisoq",
+    "ita'soq:a'sultisoq",
+    "ita'soq:a'sultisoq",
+    "ita'nesoq:a'sultinesoq"
   ],
   "1.cond.cfl.cons": [
     "kapn",
@@ -74,8 +74,8 @@
   ],
   "1.cond.cfl.neg.asik": [
     "a'sinusoq",
-    "a'tinusoq",
-    "ita'nusoq"
+    "a'tinusoq:a'sinusoq",
+    "ita'nusoq:a'sultinusoq"
   ],
   "1.cond.cfl.neg.asit": [
     "a'siwkapn",
@@ -84,19 +84,19 @@
     "a'sisoq",
     "a'silisoq",
     "a'sinesoq",
-    "a'tiwkupn",
-    "a'tiwkekpn",
-    "a'tiwkoqpn",
-    "a'ti'tisoq",
-    "a'tisoq",
-    "a'tilisoq",
-    "ita'wkupn",
-    "ita'wkekpn",
-    "ita'wkoqpn",
-    "ita'tisoq",
-    "ita'soq",
-    "ita'lisoq",
-    "ita'nesoq"
+    "a'tiwkupn:a'siwkupn",
+    "a'tiwkekpn:a'siwkekpn",
+    "a'tiwkoqpn:a'siwkoqpn",
+    "a'ti'tisoq:a'si'tisoq",
+    "a'tisoq:a'sisoq",
+    "a'tilisoq:a'silisoq",
+    "ita'wkupn:a'sultiwkupn",
+    "ita'wkekpn:a'sultiwkekpn",
+    "ita'wkoqpn:a'sultiwkoqpn",
+    "ita'tisoq:a'sultitisoq",
+    "ita'soq:a'sultisoq",
+    "ita'lisoq:a'sultilisoq",
+    "ita'nesoq:a'sultinesoq"
   ],
   "1.cond.cfl.neg.cons": [
     "ukapn",
@@ -189,8 +189,8 @@
   ],
   "1.cond.prs.asik": [
     "a'sis",
-    "a'tis",
-    "ita's"
+    "a'tis:a'sis",
+    "ita's:a'sultis"
   ],
   "1.cond.prs.asit": [
     "a'sik",
@@ -199,19 +199,19 @@
     "a'sis",
     "a'silis",
     "a'sines",
-    "a'ti'kup",
-    "a'tikek",
-    "a'tikoq",
-    "a'ti'tis",
-    "a'tis",
-    "a'tilis",
-    "ita'kup",
-    "ita'kek",
-    "ita'koq",
-    "ita'tis",
-    "ita's",
-    "ita'lis",
-    "ita'nes"
+    "a'ti'kup:a'si'kup",
+    "a'tikek:a'sikek",
+    "a'tikoq:a'sikoq",
+    "a'ti'tis:a'si'tis",
+    "a'tis:a'sis",
+    "a'tilis:a'silis",
+    "ita'kup:a'sulti'kup",
+    "ita'kek:a'sultikek",
+    "ita'koq:a'sultikoq",
+    "ita'tis:a'sulti'tis",
+    "ita's:a'sultis",
+    "ita'lis:a'sultilis",
+    "ita'nes:a'sultines"
   ],
   "1.cond.prs.cons": [
     "k",
@@ -289,14 +289,14 @@
     "*",
     "*",
     "*",
-    "a'tikek\u0268p",
-    "a'tikoq\u0268p",
+    "a'tikek\u0268p:a'sikek\u0268p",
+    "a'tikoq\u0268p:a'sikoq\u0268p",
     "*",
     "*",
     "*",
     "*",
-    "ita'kek\u0268p",
-    "ita'koq\u0268p",
+    "ita'kek\u0268p:a'sultikek\u0268p",
+    "ita'koq\u0268p:a'sultikoq\u0268p",
     "*",
     "*",
     "*",
@@ -377,19 +377,19 @@
     "a'sitew",
     "a'silital",
     "a'siten",
-    "a'titesnu",
-    "a'titesnen",
-    "a'titoqs\u0268p",
-    "a'titaq",
-    "a'tital",
-    "a'tilita",
-    "it'atesnu",
-    "ita'tesnen",
-    "ita'toqs\u0268p",
-    "ita'taq",
-    "ita'tal",
-    "ita'lita",
-    "ita'ten"
+    "a'titesnu:a'sitesnu",
+    "a'titesnen:a'sitesnen",
+    "a'titoqs\u0268p:a'sitoqs\u0268p",
+    "a'titaq:a'sitaq",
+    "a'tital:a'sital",
+    "a'tilita:a'silita",
+    "it'atesnu:a'sultitesnu",
+    "ita'tesnen:a'sultitesnen",
+    "ita'toqs\u0268p:a'sultitoqs\u0268p",
+    "ita'taq:a'sultitaq",
+    "ita'tal:a'sultital",
+    "ita'lita:a'sultilita",
+    "ita'ten:a'sultiten"
   ],
   "1.futr.cons": [
     "tes",
@@ -461,8 +461,8 @@
   ],
   "1.ifcn.cfl.asik": [
     "a'sisoq",
-    "a'tisoq",
-    "ita'soq"
+    "a'tisoq:a'sisoq",
+    "ita'soq:a'sultisoq"
   ],
   "1.ifcn.cfl.asit": [
     "a'siyasn",
@@ -470,17 +470,17 @@
     "a'sisn",
     "a'sisn",
     "a'simk\u0268sn",
-    "a'ti'kusn",
-    "a'tiyeks\u0268pn",
-    "a'tiyoqs\u0268pn",
-    "a'ti'tisn",
-    "a'tisn",
-    "ita'yikusn",
-    "ita'yeks\u0268pn",
-    "ita'yoqs\u0268pn",
-    "ita'tisn",
-    "ita'sn",
-    "ita'mk\u0268sn"
+    "a'ti'kusn:a'si'kusn",
+    "a'tiyeks\u0268pn:a'siyeks\u0268pn",
+    "a'tiyoqs\u0268pn:a'siyoqs\u0268pn",
+    "a'ti'tisn:a'si'tisn",
+    "a'tisn:a'sisn",
+    "ita'yikusn:a'sulti'kusn",
+    "ita'yeks\u0268pn:a'sultiyeks\u0268pn",
+    "ita'yoqs\u0268pn:a'sultiyoqs\u0268pn",
+    "ita'tisn:a'sulti'tisn",
+    "ita'sn:a'sultisn",
+    "ita'mk\u0268sn:a'sultimk\u0268sn"
   ],
   "1.ifcn.cfl.cons": [
     "asn",
@@ -525,8 +525,8 @@
   ],
   "1.ifcn.cfl.neg.asik": [
     "a'sinusoq",
-    "a'tinusoq",
-    "ita'nusoq"
+    "a'tinusoq:a'sinusoq",
+    "ita'nusoq:a'sultinusoq"
   ],
   "1.ifcn.cfl.neg.asit": [
     "a'siwasn",
@@ -534,17 +534,17 @@
     "a'siwks\u0268pn",
     "a'sinusn",
     "a'simm\u0268k\u0268sn",
-    "a'tiwkusn",
-    "a'tiweks\u0268pn",
-    "a'tiwoqs\u0268pn",
-    "a'ti'tiwks\u0268pn",
-    "a'tinusn",
-    "ita'wkusn",
-    "ita'weks\u0268pn",
-    "ita'woqs\u0268pn",
-    "ita'tiwks\u0268pn",
-    "ita'nusn",
-    "ita'mm\u0268k\u0268sn"
+    "a'tiwkusn:a'siwkusn",
+    "a'tiweks\u0268pn:a'siweks\u0268pn",
+    "a'tiwoqs\u0268pn:a'siwoqs\u0268pn",
+    "a'ti'tiwks\u0268pn:a'si'tiwks\u0268pn",
+    "a'tinusn:a'sinusn",
+    "ita'wkusn:a'sultiwkusn",
+    "ita'weks\u0268pn:a'sultiweks\u0268pn",
+    "ita'woqs\u0268pn:a'sultiwoqs\u0268pn",
+    "ita'tiwks\u0268pn:a'sulti'wks\u0268pn",
+    "ita'nusn:a'sultinusn",
+    "ita'mm\u0268k\u0268sn:a'sultimm\u0268k\u0268sn"
   ],
   "1.ifcn.cfl.neg.cons": [
     "uasn",
@@ -625,8 +625,8 @@
   ],
   "1.ifcn.sup.asik": [
     "a'sis",
-    "a'tis",
-    "ita's"
+    "a'tis:a'sis",
+    "ita's:a'sultis"
   ],
   "1.ifcn.sup.asit": [
     "a'siyas",
@@ -634,17 +634,17 @@
     "a'sis",
     "a'sis",
     "a'simk\u0268s",
-    "a'ti'kus",
-    "a'tiyeks\u0268p",
-    "a'tiyoqs\u0268p",
-    "a'ti'tis",
-    "a'tis",
-    "ita'yikus",
-    "ita'yeks\u0268p",
-    "ita'yoqs\u0268p",
-    "ita'tis",
-    "ita's",
-    "ita'mk\u0268s"
+    "a'ti'kus:a'si'kus",
+    "a'tiyeks\u0268p:a'siyeks\u0268p",
+    "a'tiyoqs\u0268p:a'siyoqs\u0268p",
+    "a'ti'tis:a'si'tis",
+    "a'tis:a'sis",
+    "ita'yikus:a'sulti'kus",
+    "ita'yeks\u0268p:a'sultiyeks\u0268p",
+    "ita'yoqs\u0268p:a'sultiyoqs\u0268p",
+    "ita'tis:a'sulti'tis",
+    "ita's:a'sultis",
+    "ita'mk\u0268s:a'sultimk\u0268s"
   ],
   "1.ifcn.sup.cons": [
     "as",
@@ -689,8 +689,8 @@
   ],
   "1.ifcn.sup.neg.asik": [
     "a'sinus",
-    "a'tinus",
-    "ita'nus"
+    "a'tinus:a'sinus",
+    "ita'nus:a'sultinus"
   ],
   "1.ifcn.sup.neg.asit": [
     "a'siwas",
@@ -698,17 +698,17 @@
     "a'siwks\u0268p",
     "a'sinus",
     "a'simm\u0268k\u0268s",
-    "a'tiwkus",
-    "a'tiweks\u0268p",
-    "a'tiwoqs\u0268p",
-    "a'ti'tiwks\u0268p",
-    "a'tinus",
-    "ita'wkus",
-    "ita'weks\u0268p",
-    "ita'woqs\u0268p",
-    "ita'tiwks\u0268p",
-    "ita'nus",
-    "ita'mm\u0268k\u0268s"
+    "a'tiwkus:a'siwkus",
+    "a'tiweks\u0268p:a'siweks\u0268p",
+    "a'tiwoqs\u0268p:a'siwoqs\u0268p",
+    "a'ti'tiwks\u0268p:a'si'tiwks\u0268p",
+    "a'tinus:a'sinus",
+    "ita'wkus:a'sultiwkus",
+    "ita'weks\u0268p:a'sultiweks\u0268p",
+    "ita'woqs\u0268p:a'sultiwoqs\u0268p",
+    "ita'tiwks\u0268p:a'sultiwks\u0268p",
+    "ita'nus:a'sultinus",
+    "ita'mm\u0268k\u0268s:a'sultimm\u0268k\u0268s"
   ],
   "1.ifcn.sup.neg.cons": [
     "uas",
@@ -789,23 +789,23 @@
   ],
   "1.impe.asik": [
     "a'sij",
-    "a'tij",
-    "ita'j"
+    "a'tij:a'sij",
+    "ita'j:a'sultij"
   ],
   "1.impe.asit": [
     "a'si",
     "a'sij",
     "a'sij",
     "a'simk\u0268j",
-    "a'tinej",
-    "a'tikw",
-    "a'ti'tij",
-    "a'ti'tij",
-    "ita'nej",
-    "ita'qw",
-    "ita'tij",
-    "ita'tij",
-    "ita'mk\u0268j"
+    "a'tinej:a'sinej",
+    "a'tikw:a'sikw",
+    "a'ti'tij:a'si'tij",
+    "a'ti'tij:a'si'tij",
+    "ita'nej:a'sultinej",
+    "ita'qw:a'sulti'kw",
+    "ita'tij:a'sulti'tij",
+    "ita'tij:a'sulti'tij",
+    "ita'mk\u0268j:a'sultimk\u0268j"
   ],
   "1.impe.cons": [
     "",
@@ -844,23 +844,23 @@
   ],
   "1.impe.neg.asik": [
     "a'sinuj",
-    "a'tinuj",
-    "ita'nuj"
+    "a'tinuj:a'sinuj",
+    "ita'nuj:a'sultinuj"
   ],
   "1.impe.neg.asit": [
     "a'siw",
     "a'siwij",
     "a'sinuj",
     "a'simk\u0268j",
-    "a'tinej",
-    "a'tip",
-    "a'tiwi'tij",
-    "a'tinuj",
-    "ita'nej",
-    "ita'p",
-    "ita'witij",
-    "ita'tinuj",
-    "ita'mk\u0268j"
+    "a'tinej:a'sinej",
+    "a'tip:a'sip",
+    "a'tiwi'tij:a'siwi'tij",
+    "a'tinuj:a'sinuj",
+    "ita'nej:a'sultinej",
+    "ita'p:a'sultip",
+    "ita'witij:a'sultiwi'tij",
+    "ita'tinuj:a'sultinuj",
+    "ita'mk\u0268j:a'sultimk\u0268j"
   ],
   "1.impe.neg.cons": [
     "u",
@@ -929,8 +929,8 @@
   ],
   "1.past.def.asik": [
     "a'siks\u0268p",
-    "a'tiks\u0268pnl",
-    "it'aqs\u0268pnl"
+    "a'tiks\u0268pnl:a'siks\u0268pnl",
+    "it'aqs\u0268pnl:a'sultiks\u0268pnl"
   ],
   "1.past.def.asit": [
     "*",
@@ -938,17 +938,17 @@
     "a'sis\u0268p",
     "a'siks\u0268p",
     "a'simks\u0268p",
-    "a'ti'ks\u0268p",
-    "a'tiyeks\u0268p",
-    "a'tiyoqs\u0268p",
-    "a'tis\u0268pnik",
-    "a'tiks\u0268pnl",
-    "ita'yiks\u0268p",
-    "ita'yeks\u0268p",
-    "ita'yoqs\u0268p",
-    "ita's\u0268pnik",
-    "ita'qs\u0268pnl",
-    "ita'mks\u0268p"
+    "a'ti'ks\u0268p:a'si'ks\u0268p",
+    "a'tiyeks\u0268p:a'siyeks\u0268p",
+    "a'tiyoqs\u0268p:a'siyoqs\u0268p",
+    "a'tis\u0268pnik:a'sis\u0268pnik",
+    "a'tiks\u0268pnl:a'siks\u0268pnl",
+    "ita'yiks\u0268p:a'sulti'ks\u0268p",
+    "ita'yeks\u0268p:a'sultiyeks\u0268p",
+    "ita'yoqs\u0268p:a'sultiyoqs\u0268p",
+    "ita's\u0268pnik:a'sultis\u0268pnik",
+    "ita'qs\u0268pnl:a'sultiks\u0268pnl",
+    "ita'mks\u0268p:a'sultimks\u0268p"
   ],
   "1.past.def.cons": [
     "*",
@@ -993,8 +993,8 @@
   ],
   "1.past.def.neg.asik": [
     "a'sinuks\u0268p",
-    "a'tinuks\u0268pnl",
-    "it'anuks\u0268pnl"
+    "a'tinuks\u0268pnl:a'sinuks\u0268pnl",
+    "it'anuks\u0268pnl:a'sultinuks\u0268pnl"
   ],
   "1.past.def.neg.asit": [
     "*",
@@ -1002,17 +1002,17 @@
     "a'siws\u0268p",
     "a'sinuks\u0268p",
     "a'simm\u0268ks\u0268p",
-    "a'tiuks\u0268p",
-    "a'tiweks\u0268p",
-    "a'tiwoqs\u0268p",
-    "a'tiwks\u0268pnik",
-    "a'tinuks\u0268pnl",
-    "ita'wiks\u0268p",
-    "ita'weks\u0268p",
-    "ita'woqs\u0268p",
-    "ita'wks\u0268pnik",
-    "ita'nuks\u0268pnl",
-    "ita'mm\u0268ks\u0268p"
+    "a'tiuks\u0268p:a'siuks\u0268p",
+    "a'tiweks\u0268p:a'siweks\u0268p",
+    "a'tiwoqs\u0268p:a'siwoqs\u0268p",
+    "a'tiwks\u0268pnik:a'siwks\u0268pnik",
+    "a'tinuks\u0268pnl:a'sinuks\u0268pnl",
+    "ita'wiks\u0268p:a'sultiuks\u0268p",
+    "ita'weks\u0268p:a'sultiweks\u0268p",
+    "ita'woqs\u0268p:a'sultiwoqs\u0268p",
+    "ita'wks\u0268pnik:a'sultiwks\u0268pnik",
+    "ita'nuks\u0268pnl:a'sultinuks\u0268pnl",
+    "ita'mm\u0268ks\u0268p:a'sultimm\u0268ks\u0268p"
   ],
   "1.past.def.neg.cons": [
     "*",
@@ -1093,8 +1093,8 @@
   ],
   "1.past.dir.asik": [
     "a'sik\u0268p",
-    "a'tik\u0268pnl",
-    "it'aqapnl"
+    "a'tik\u0268pnl:a'sik\u0268pnl",
+    "it'aqapnl:a'sultik\u0268pnl"
   ],
   "1.past.dir.asit": [
     "a'siap",
@@ -1102,17 +1102,17 @@
     "a'sip",
     "a'sik\u0268p",
     "a'simk\u0268p",
-    "a'ti'kup",
-    "a'tiyek\u0268p",
-    "a'tiyoq\u0268p",
-    "a'tipnik",
-    "a'tik\u0268pnl",
-    "ita'yikup",
-    "ita'yek\u0268p",
-    "ita'yoq\u0268p",
-    "ita'pnik",
-    "ita'q\u0268pnl",
-    "ita'mk\u0268p"
+    "a'ti'kup:a'si'kup",
+    "a'tiyek\u0268p:a'siyek\u0268p",
+    "a'tiyoq\u0268p:a'siyoq\u0268p",
+    "a'tipnik:a'sipnik",
+    "a'tik\u0268pnl:a'sik\u0268pnl",
+    "ita'yikup:a'sulti'kup",
+    "ita'yek\u0268p:a'sultiyek\u0268p",
+    "ita'yoq\u0268p:a'sultiyoq\u0268p",
+    "ita'pnik:a'sultipnik",
+    "ita'q\u0268pnl:a'sultik\u0268pnl",
+    "ita'mk\u0268p:a'sultimk\u0268p"
   ],
   "1.past.dir.cons": [
     "ap",
@@ -1157,8 +1157,8 @@
   ],
   "1.past.dir.neg.asik": [
     "a'sinukup",
-    "a'tinukupnl",
-    "it'anukupnl"
+    "a'tinukupnl:a'sinukupnl",
+    "it'anukupnl:a'sultinukupnl"
   ],
   "1.past.dir.neg.asit": [
     "a'siwap",
@@ -1166,17 +1166,17 @@
     "a'siwp",
     "a'sinukup",
     "a'simm\u0268k\u0268p",
-    "a'tiukup",
-    "a'tiwek\u0268p",
-    "a'tiwoq\u0268p",
-    "a'tiwk\u0268pnik",
-    "a'tinukupnl",
-    "ita'wikup",
-    "ita'wek\u0268p",
-    "ita'woq\u0268p",
-    "ita'wk\u0268pnik",
-    "ita'nukupnl",
-    "ita'mm\u0268k\u0268p"
+    "a'tiukup:a'siukup",
+    "a'tiwek\u0268p:a'siwek\u0268p",
+    "a'tiwoq\u0268p:a'siwoq\u0268p",
+    "a'tiwk\u0268pnik:a'siwk\u0268pnik",
+    "a'tinukupnl:a'sinukupnl",
+    "ita'wikup:a'sultiukup",
+    "ita'wek\u0268p:a'sultiwek\u0268p",
+    "ita'woq\u0268p:a'sultiwoq\u0268p",
+    "ita'wk\u0268pnik:a'sultiwk\u0268pnik",
+    "ita'nukupnl:a'sultinukupnl",
+    "ita'mm\u0268k\u0268p:a'sultimm\u0268k\u0268p"
   ],
   "1.past.dir.neg.cons": [
     "uap",
@@ -1257,8 +1257,8 @@
   ],
   "1.past.sup.asik": [
     "a'sik\u0268s",
-    "a'tik\u0268snl",
-    "it'aqasnl"
+    "a'tik\u0268snl:a'sik\u0268snl",
+    "it'aqasnl:a'sultik\u0268snl"
   ],
   "1.past.sup.asit": [
     "a'sias",
@@ -1266,17 +1266,17 @@
     "a'sis",
     "a'sik\u0268s",
     "a'simk\u0268s",
-    "a'ti'kus",
-    "a'tiyek\u0268s",
-    "a'tiyoq\u0268s",
-    "a'tisnik",
-    "a'tik\u0268snl",
-    "ita'yikus",
-    "ita'yek\u0268s",
-    "ita'yoq\u0268s",
-    "ita'snik",
-    "ita'q\u0268snl",
-    "ita'mk\u0268s"
+    "a'ti'kus:a'si'kus",
+    "a'tiyek\u0268s:a'siyek\u0268s",
+    "a'tiyoq\u0268s:a'siyoq\u0268s",
+    "a'tisnik:a'sisnik",
+    "a'tik\u0268snl:a'sik\u0268snl",
+    "ita'yikus:a'sulti'kus",
+    "ita'yek\u0268s:a'sultiyek\u0268s",
+    "ita'yoq\u0268s:a'sultiyoq\u0268s",
+    "ita'snik:a'sultisnik",
+    "ita'q\u0268snl:a'sultik\u0268snl",
+    "ita'mk\u0268s:a'sultimk\u0268s"
   ],
   "1.past.sup.cons": [
     "as",
@@ -1321,8 +1321,8 @@
   ],
   "1.past.sup.neg.asik": [
     "a'sinukus",
-    "a'tinukusnl",
-    "it'anukusnl"
+    "a'tinukusnl:a'sinukusnl",
+    "it'anukusnl:a'sultinukusnl"
   ],
   "1.past.sup.neg.asit": [
     "a'siwas",
@@ -1330,17 +1330,17 @@
     "a'siws",
     "a'sinukus",
     "a'simm\u0268k\u0268s",
-    "a'tiukus",
-    "a'tiwek\u0268s",
-    "a'tiwoq\u0268s",
-    "a'tiwk\u0268snik",
-    "a'tinukusnl",
-    "ita'wikus",
-    "ita'wek\u0268s",
-    "ita'woq\u0268s",
-    "ita'wk\u0268snik",
-    "ita'nukusnl",
-    "ita'mm\u0268k\u0268s"
+    "a'tiukus:a'siukus",
+    "a'tiwek\u0268s:a'siwek\u0268s",
+    "a'tiwoq\u0268s:a'siwoq\u0268s",
+    "a'tiwk\u0268snik:a'siwk\u0268snik",
+    "a'tinukusnl:a'sinukusnl",
+    "ita'wikus:a'sultiukus",
+    "ita'wek\u0268s:a'sultiwek\u0268s",
+    "ita'woq\u0268s:a'sultiwoq\u0268s",
+    "ita'wk\u0268snik:a'sultiwk\u0268snik",
+    "ita'nukusnl:a'sultinukusnl",
+    "ita'mm\u0268k\u0268s:a'sultimm\u0268k\u0268s"
   ],
   "1.past.sup.neg.cons": [
     "uas",
@@ -1422,10 +1422,10 @@
   "1.pres.asik": [
     "a'sik",
     "a'sikek",
-    "a'tikl",
-    "a'tikekl",
-    "ita'ql",
-    "ita'qekl"
+    "a'tikl:a'sikl",
+    "a'tikekl:a'sikekl",
+    "ita'ql:a'sultikl",
+    "ita'qekl:a'sultikekl"
   ],
   "1.pres.asit": [
     "a'si",
@@ -1436,23 +1436,23 @@
     "a'sitaq",
     "a'sikek",
     "a'simk",
-    "a'ti'kw",
-    "a'tiyek",
-    "a'tiyoq",
-    "a'tijik",
-    "a'tikl",
-    "a'tiliji",
-    "a'titkik",
-    "a'tikekl",
-    "ita'yikw",
-    "ita'yek",
-    "ita'yoq",
-    "ita'jik",
-    "ita'ql",
-    "ita'liji",
-    "ita'tkik",
-    "ita'qekl",
-    "ita'mk"
+    "a'ti'kw:a'si'kw",
+    "a'tiyek:a'siyek",
+    "a'tiyoq:a'siyoq",
+    "a'tijik:a'sijik",
+    "a'tikl:a'sikl",
+    "a'tiliji:a'siliji",
+    "a'titkik:a'sitkik",
+    "a'tikekl:a'sikekl",
+    "ita'yikw:a'sulti'kw",
+    "ita'yek:a'sultiyek",
+    "ita'yoq:a'sultiyoq",
+    "ita'jik:a'sultijik",
+    "ita'ql:a'sultikl",
+    "ita'liji:a'sultiliji",
+    "ita'tkik:a'sultitkik",
+    "ita'qekl:a'sultikekl",
+    "ita'mk:a'sultimk"
   ],
   "1.pres.cons": [
     "",
@@ -1519,10 +1519,10 @@
   "1.pres.neg.asik": [
     "a'sinuk",
     "a'sinukek",
-    "a'tinukl",
-    "a'tinukekl",
-    "ita'nukl",
-    "ita'nukekl"
+    "a'tinukl:a'sinukl",
+    "a'tinukekl:a'sinukekl",
+    "ita'nukl:a'sultinukl",
+    "ita'nukekl:a'sultinukekl"
   ],
   "1.pres.neg.asit": [
     "a'siw",
@@ -1533,23 +1533,23 @@
     "a'sikwaq",
     "a'sinukwek",
     "a'simm\u0268k",
-    "a'ti'ukw",
-    "a'tiwek",
-    "a'tiwoq",
-    "a'ti'ti'wk",
-    "a'tinukl",
-    "a'tilikwi",
-    "a'ti'ti'wkwi'k",
-    "a'tinukekl",
-    "ita'wkw",
-    "ita'wek",
-    "ita'woq",
-    "ita'ti'kw",
-    "ita'nukl",
-    "ita'likwi",
-    "ita'ti'wkwi'k",
-    "ita'nukekl",
-    "ita'mm\u0268k"
+    "a'ti'ukw:a'si'ukw",
+    "a'tiwek:a'siwek",
+    "a'tiwoq:a'siwoq",
+    "a'ti'ti'wk:a'si'tiwk",
+    "a'tinukl:a'sinukl",
+    "a'tilikwi:a'silikwi",
+    "a'ti'ti'wkwi'k:a'si'ti'wkwi'k",
+    "a'tinukekl:a'sinukekl",
+    "ita'wkw:a'sulti'wkw",
+    "ita'wek:a'sultiwek",
+    "ita'woq:a'sultiwoq",
+    "ita'ti'kw:a'sulti'ti'kw",
+    "ita'nukl:a'sultinukl",
+    "ita'likwi:a'sultilikwi",
+    "ita'ti'wkwi'k:a'sulti'ti'wki'k",
+    "ita'nukekl:a'sultinukekl",
+    "ita'mm\u0268k:a'sultimm\u0268k"
   ],
   "1.pres.neg.cons": [
     "u",
@@ -1669,8 +1669,8 @@
   ],
   "1.when.prs.asik": [
     "a'sik",
-    "a'tik",
-    "ita'q"
+    "a'tik:a'sikl",
+    "ita'q:a'sultikl"
   ],
   "1.when.prs.asit": [
     "a'siyan",
@@ -1680,21 +1680,21 @@
     "a'silijl",
     "a'sitka",
     "a'simk",
-    "a'ti'kw",
-    "a'tiyek",
-    "a'tiyoq",
-    "a'ti'tij",
-    "a'tikl",
-    "a'tilijl",
-    "a'titka",
-    "ita'yikw",
-    "ita'yek",
-    "ita'yoq",
-    "ita'tij",
-    "ita'ql",
-    "ita'lijl",
-    "ita'tka",
-    "ita'mk"
+    "a'ti'kw:a'si'kw",
+    "a'tiyek:a'siyek",
+    "a'tiyoq:a'siyoq",
+    "a'ti'tij:a'si'tij",
+    "a'tikl:a'sikl",
+    "a'tilijl:a'silijl",
+    "a'titka:a'sitka",
+    "ita'yikw:a'sulti'kw",
+    "ita'yek:a'sultiyek",
+    "ita'yoq:a'sultiyoq",
+    "ita'tij:a'sulti'tij",
+    "ita'ql:a'sultikl",
+    "ita'lijl:a'sultilijl",
+    "ita'tka:a'sultitka",
+    "ita'mk:a'sultimk"
   ],
   "1.when.prs.cons": [
     "an",
@@ -1751,8 +1751,8 @@
   ],
   "1.when.prs.neg.asik": [
     "a'sinuk",
-    "a'tinuk",
-    "ita'nuk"
+    "a'tinuk:a'sinukl",
+    "ita'nuk:a'sultinukl"
   ],
   "1.when.prs.neg.asit": [
     "a'siwan",
@@ -1762,21 +1762,21 @@
     "a'silikwl",
     "a'sikwa",
     "a'simm\u0268k",
-    "a'ti'ukw",
-    "a'tiwek",
-    "a'tiwoq",
-    "a'ti'tiwk",
-    "a'tinukwl",
-    "a'tilikwl",
-    "a'tikwa",
-    "ita'wkw",
-    "ita'wek",
-    "ita'woq",
-    "ita'tiwk",
-    "ita'nukwl",
-    "ita'likwl",
-    "ita'qwa",
-    "ita'mm\u0268k"
+    "a'ti'ukw:a'si'ukw",
+    "a'tiwek:a'siwek",
+    "a'tiwoq:a'siwoq",
+    "a'ti'tiwk:a'si'tiwk",
+    "a'tinukwl:a'sinukwl",
+    "a'tilikwl:a'silikwl",
+    "a'tikwa:a'sikwa",
+    "ita'wkw:a'sulti'ukw",
+    "ita'wek:a'sultiwek",
+    "ita'woq:a'sultiwoq",
+    "ita'tiwk:a'sulti'tiwk",
+    "ita'nukwl:a'sultinukwl",
+    "ita'likwl:a'sultilikwl",
+    "ita'qwa:a'sultikwa",
+    "ita'mm\u0268k:a'sultimm\u0268k"
   ],
   "1.when.prs.neg.cons": [
     "uan",
@@ -1881,8 +1881,8 @@
   ],
   "1.when.pst.asik": [
     "a'sikek",
-    "a'tikek",
-    "ita'qek"
+    "a'tikek:a'sikek",
+    "ita'qek:a'sultikek"
   ],
   "1.when.pst.asit": [
     "a'siyanek",
@@ -1892,21 +1892,21 @@
     "a'silitek",
     "*",
     "a'simkek",
-    "a'ti'kwek",
-    "a'tiyekek",
-    "a'tiyoqek",
-    "a'ti'titek",
-    "a'tikek",
-    "a'tilitek",
+    "a'ti'kwek:a'si'kwek",
+    "a'tiyekek:a'siyekek",
+    "a'tiyoqek:a'siyoqek",
+    "a'ti'titek:a'si'titek",
+    "a'tikek:a'sikek",
+    "a'tilitek:a'silitek",
     "*",
-    "ita'yikwek",
-    "ita'yekek",
-    "ita'yoqek",
-    "ita'titek",
-    "ita'qek",
-    "ita'litek",
+    "ita'yikwek:a'sulti'kwek",
+    "ita'yekek:a'sultiyekek",
+    "ita'yoqek:a'sultiyoqek",
+    "ita'titek:a'sulti'titek",
+    "ita'qek:a'sultikek",
+    "ita'litek:a'sultilitek",
     "*",
-    "ita'mkek"
+    "ita'mkek:a'sultimkek"
   ],
   "1.when.pst.cons": [
     "anek",
@@ -1963,8 +1963,8 @@
   ],
   "1.when.pst.neg.asik": [
     "a'sinukek",
-    "a'tinukek",
-    "ita'nukek"
+    "a'tinukek:a'sinukek",
+    "ita'nukek:a'sultinukek"
   ],
   "1.when.pst.neg.asit": [
     "a'siwanek",
@@ -1974,21 +1974,21 @@
     "a'silikwek",
     "*",
     "a'simm\u0268kek",
-    "a'ti'ukwek",
-    "a'tiwekek",
-    "a'tiwoqek",
-    "a'ti'tiwkek",
-    "a'tinukwekl",
-    "a'tilikwek",
+    "a'ti'ukwek:a'si'ukwek",
+    "a'tiwekek:a'siwekek",
+    "a'tiwoqek:a'siwoqek",
+    "a'ti'tiwkek:a'si'tiwkek",
+    "a'tinukwekl:a'sinukwekl",
+    "a'tilikwek:a'silikwek",
     "*",
-    "ita'wkwek",
-    "ita'wekek",
-    "ita'woqek",
-    "ita'tiwkek",
-    "ita'nukwekl",
-    "ita'likwek",
+    "ita'wkwek:a'sulti'wkwek",
+    "ita'wekek:a'sultiwekek",
+    "ita'woqek:a'sultiwoqek",
+    "ita'tiwkek:a'sulti'tiwkek",
+    "ita'nukwekl:a'sultinukwekl",
+    "ita'likwek:a'sultilikwek",
     "*",
-    "ita'mm\u0268kek"
+    "ita'mm\u0268kek:a'sultimm\u0268kek"
   ],
   "1.when.pst.neg.cons": [
     "uanek",
@@ -2098,7 +2098,7 @@
     "aysoq",
     "aylisoq",
     "aynesoq",
-    "aykupn",
+    "ayukupn",
     "aykekpn",
     "aykoqpn",
     "aytisoq",
@@ -2145,7 +2145,7 @@
     "aysoq",
     "aylisoq",
     "aynesoq",
-    "aykupn",
+    "ayukupn",
     "aykekpn",
     "aykoqpn",
     "aytisoq",
@@ -2234,7 +2234,7 @@
     "ays",
     "aylis",
     "aynes",
-    "aykup",
+    "ayukup",
     "aykek",
     "aykoq",
     "aytis",
@@ -2453,7 +2453,7 @@
     "aysn",
     "aysn",
     "aymk\u0268sn",
-    "ayikusn",
+    "ayu'kusn",
     "ayeks\u0268pn",
     "ayoqs\u0268pn",
     "aytisn",
@@ -2494,7 +2494,7 @@
     "ayks\u0268pn",
     "aynusn",
     "aymm\u0268k\u0268sn",
-    "aywikusn",
+    "ayukusn",
     "ayweks\u0268pn",
     "aywoqs\u0268pn",
     "aytiwks\u0268pn",
@@ -2571,7 +2571,7 @@
     "ays",
     "ays",
     "aymk\u0268s",
-    "ayikus",
+    "ayu'kus",
     "ayeks\u0268p",
     "ayoqs\u0268p",
     "aytis",
@@ -2612,7 +2612,7 @@
     "ayks\u0268p",
     "aynus",
     "aymm\u0268k\u0268s",
-    "aywikus",
+    "ayukus",
     "ayweks\u0268p",
     "aywoqs\u0268p",
     "aytiwks\u0268p",
@@ -2689,7 +2689,7 @@
     "ayj",
     "aymk\u0268j",
     "aynej",
-    "aykw",
+    "ayukw",
     "aykij",
     "aykij",
     "ayultinej",
@@ -2789,7 +2789,7 @@
     "ays\u0268p",
     "ayks\u0268p",
     "aymks\u0268p",
-    "ayiks\u0268p",
+    "ayu'ks\u0268p",
     "ayeks\u0268p",
     "ayoqs\u0268p",
     "ays\u0268pnik",
@@ -2830,7 +2830,7 @@
     "ayuks\u0268p",
     "aynuks\u0268p",
     "aymm\u0268ks\u0268p",
-    "ayuks\u0268p",
+    "ayu'ks\u0268p",
     "ayweks\u0268p",
     "aywoqs\u0268p",
     "ayuks\u0268pnik",
@@ -2907,7 +2907,7 @@
     "ayp",
     "ayk\u0268p",
     "aymk\u0268p",
-    "ayikup",
+    "ayu'kup",
     "ayek\u0268p",
     "ayoq\u0268p",
     "aypnik",
@@ -2948,7 +2948,7 @@
     "ayukup",
     "aynukup",
     "aymm\u0268k\u0268p",
-    "ayukup",
+    "ayu'kup",
     "aywek\u0268p",
     "aywoq\u0268p",
     "ayukupnik",
@@ -3025,7 +3025,7 @@
     "ays",
     "ayk\u0268s",
     "aymk\u0268s",
-    "ayikus",
+    "ayu'kus",
     "ayek\u0268s",
     "ayoq\u0268s",
     "aysnik",
@@ -3066,7 +3066,7 @@
     "ayukus",
     "aynukus",
     "aymm\u0268k\u0268s",
-    "ayukus",
+    "ayu'kus",
     "aywek\u0268s",
     "aywoq\u0268s",
     "ayukusnik",
@@ -3146,7 +3146,7 @@
     "aytaq",
     "aykek",
     "aymk",
-    "ayikw",
+    "ayu'kw",
     "ayek",
     "ayoq",
     "aykik",
@@ -3208,7 +3208,7 @@
     "aykwaq",
     "aynukwek",
     "aymm\u0268k",
-    "ayiwkw",
+    "ayu'kw",
     "aywek",
     "aywoq",
     "ayti'wk",
@@ -3323,7 +3323,7 @@
     "aylijl",
     "aytka",
     "aymk",
-    "ayikw",
+    "ayu'kw",
     "ayek",
     "ayoq",
     "a'tij",
@@ -3376,7 +3376,7 @@
     "aylikwl",
     "*",
     "aymm\u0268k",
-    "ayiwkw",
+    "ayu'kw",
     "aywek",
     "aywoq",
     "aytikw",
@@ -3477,7 +3477,7 @@
     "aylitek",
     "*",
     "aymkek",
-    "ayikwek",
+    "ayukwek",
     "ayekek",
     "ayoqek",
     "a'titek",
@@ -3530,7 +3530,7 @@
     "aylikwek",
     "*",
     "aymm\u0268kek",
-    "ayiwkwek",
+    "ayu'kwek",
     "aywekek",
     "aywoqek",
     "aytikwek",
@@ -3647,7 +3647,7 @@
   "3.cond.cfl.iaq": [
     "iasoq",
     "a'tisoq:iasoq",
-    "ita'soq"
+    "ita'soq:ia'tisoq"
   ],
   "3.cond.cfl.iet": [
     "iekapn",
@@ -3662,13 +3662,13 @@
     "a'ti'tisoq:ie'tisoq",
     "iesoq",
     "ielisoq",
-    "ita'kupn",
-    "ita'kekpn",
-    "ita'koqpn",
-    "ita'tisoq",
-    "ita'soq",
-    "ita'lisoq",
-    "ita'nesoq"
+    "ita'kupn:ia'ti'kupn",
+    "ita'kekpn:ia'tikekpn",
+    "ita'koqpn:ia'tikoqpn",
+    "ita'tisoq:ia'ti'tisoq",
+    "ita'soq:ia'tisoq",
+    "ita'lisoq:ia'tilisoq",
+    "ita'nesoq:ia'tinesoq"
   ],
   "3.cond.cfl.inan": [
     "esoq",
@@ -3720,7 +3720,7 @@
   "3.cond.cfl.neg.iaq": [
     "ianusoq",
     "a'tinusoq:ianusoq",
-    "ita'nusoq"
+    "ita'nusoq:ia'tinusoq"
   ],
   "3.cond.cfl.neg.iet": [
     "iewkapn",
@@ -3735,13 +3735,13 @@
     "a'ti'tisoq:ie'tisoq",
     "iesoq",
     "ielisoq",
-    "ita'wkupn",
-    "ita'wkekpn",
-    "ita'wkoqpn",
-    "ita'tisoq",
-    "ita'soq",
-    "ita'lisoq",
-    "ita'nesoq"
+    "ita'wkupn:ia'tiwkupn",
+    "ita'wkekpn:ia'tiwkekpn",
+    "ita'wkoqpn:ia'tiwkoqpn",
+    "ita'tisoq:ia'titisoq",
+    "ita'soq:ia'tisoq",
+    "ita'lisoq:ia'tilisoq",
+    "ita'nesoq:ia'tinesoq"
   ],
   "3.cond.cfl.neg.inan": [
     "enusoq",
@@ -3755,7 +3755,7 @@
     "e'soq",
     "e'lisoq",
     "e'nesoq",
-    "e'wkupn",
+    "e'ukupn",
     "e'wkekpn",
     "e'wkoqpn",
     "e'tisoq",
@@ -3877,7 +3877,7 @@
   "3.cond.prs.iaq": [
     "ias",
     "a'tis:ias",
-    "ita's"
+    "ita's:ia'tis"
   ],
   "3.cond.prs.iet": [
     "iek",
@@ -3892,13 +3892,13 @@
     "a'ti'tis:ie'tis",
     "ies",
     "ielis",
-    "ita'kup",
-    "ita'kek",
-    "ita'koq",
-    "ita'tis",
-    "ita's",
-    "ita'lis",
-    "ita'nes"
+    "ita'kup:ia'ti'kup",
+    "ita'kek:ia'tikek",
+    "ita'koq:ia'tikoq",
+    "ita'tis:ia'ti'tis",
+    "ita's:ia'tis",
+    "ita'lis:ia'tilis",
+    "ita'nes:ia'tines"
   ],
   "3.cond.prs.inan": [
     "es",
@@ -4003,8 +4003,8 @@
     "*",
     "*",
     "*",
-    "ita'qek\u0268p",
-    "ita'qoq\u0268p",
+    "ita'qek\u0268p:ia'tikek\u0268p",
+    "ita'qoq\u0268p:ia'tikoq\u0268p",
     "*",
     "*",
     "*",
@@ -4097,7 +4097,7 @@
   "3.futr.iaq": [
     "iatew",
     "a'tital:iatal",
-    "ita'tal"
+    "ita'tal:ia'tital"
   ],
   "3.futr.iet": [
     "ia's",
@@ -4112,13 +4112,13 @@
     "a'titaq:ietaq",
     "a'tital:ietal",
     "a'tilita:ielita",
-    "ita'tesnu",
-    "ita'tesnen",
-    "ita'toqs\u0268p",
-    "ita'taq",
-    "ita'tal",
-    "ita'lita",
-    "ita'ten"
+    "ita'tesnu:ia'titesnu",
+    "ita'tesnen:ia'titesnen",
+    "ita'toqs\u0268p:ia'titoqs\u0268p",
+    "ita'taq:ia'titaq",
+    "ita'tal:ia'tital",
+    "ita'lita:ia'tilita",
+    "ita'ten:ia'titen"
   ],
   "3.futr.inan": [
     "etew:ekt\u0268tew",
@@ -4209,7 +4209,7 @@
   "3.ifcn.cfl.iaq": [
     "iasoq",
     "a'tisoq:iasoq",
-    "ita'soq"
+    "ita'soq:ia'tisoq"
   ],
   "3.ifcn.cfl.iet": [
     "ieyasn",
@@ -4222,12 +4222,12 @@
     "a'tiyoqs\u0268pn:ieyoqs\u0268pn",
     "a'ti'tisn:ie'tisn",
     "iesn",
-    "ita'kusn",
-    "ita'yeks\u0268pn",
-    "ita'yoqs\u0268pn",
-    "ita'tisn",
-    "ita'sn",
-    "ita'mk\u0268sn"
+    "ita'kusn:ia'ti'kusn",
+    "ita'yeks\u0268pn:ia'tiyeks\u0268pn",
+    "ita'yoqs\u0268pn:ia'tiyoqs\u0268pn",
+    "ita'tisn:ia'ti'tisn",
+    "ita'sn:ia'tisn",
+    "ita'mk\u0268sn:ia'timk\u0268sn"
   ],
   "3.ifcn.cfl.inan": [
     "esoq",
@@ -4240,7 +4240,7 @@
     "e'sn",
     "e'sn",
     "e'mk\u0268sn",
-    "e'yikusn",
+    "e'yu'kusn",
     "e'yeks\u0268pn",
     "e'yoqs\u0268pn",
     "e'tisn",
@@ -4273,7 +4273,7 @@
   "3.ifcn.cfl.neg.iaq": [
     "ianusoq",
     "a'tinusoq:ianusoq",
-    "ita'nusoq"
+    "ita'nusoq:ia'tinusoq"
   ],
   "3.ifcn.cfl.neg.iet": [
     "iewasn",
@@ -4286,12 +4286,12 @@
     "a'tiwoqs\u0268pn:iewoqs\u0268pn",
     "a'tiwks\u0268pn:ie'tiwks\u0268pn",
     "ienusn",
-    "ita'wkusn",
-    "ita'weks\u0268pn",
-    "ita'woqs\u0268pn",
-    "ita'tiwks\u0268pn",
-    "ita'nusn",
-    "ita'mm\u0268k\u0268sn"
+    "ita'wkusn:ia'tiwkusn",
+    "ita'weks\u0268pn:ia'tiweks\u0268pn",
+    "ita'woqs\u0268pn:ia'tiwoqs\u0268pn",
+    "ita'tiwks\u0268pn:ia'tiwks\u0268pn",
+    "ita'nusn:ia'tinusn",
+    "ita'mm\u0268k\u0268sn:ia'timm\u0268k\u0268sn"
   ],
   "3.ifcn.cfl.neg.inan": [
     "enusoq",
@@ -4304,7 +4304,7 @@
     "e'wks\u0268pn",
     "e'nusn",
     "e'mm\u0268k\u0268sn",
-    "e'wkusn",
+    "e'ukusn",
     "e'weks\u0268pn",
     "e'woqs\u0268pn",
     "e'tiwks\u0268pn",
@@ -4409,7 +4409,7 @@
   "3.ifcn.sup.iaq": [
     "ias",
     "a'tis:ias",
-    "ita's"
+    "ita's:ia'tis"
   ],
   "3.ifcn.sup.iet": [
     "ieyas",
@@ -4422,12 +4422,12 @@
     "a'tiyoqs\u0268p:ieyoqs\u0268p",
     "a'ti'tis:ie'tis",
     "ies",
-    "ita'kus",
-    "ita'yeks\u0268p",
-    "ita'yoqs\u0268p",
-    "ita'tis",
-    "ita's",
-    "ita'mk\u0268s"
+    "ita'kus:ia'ti'kus",
+    "ita'yeks\u0268p:ia'tiyeks\u0268p",
+    "ita'yoqs\u0268p:ia'tiyoqs\u0268p",
+    "ita'tis:ia'ti'tis",
+    "ita's:ia'tis",
+    "ita'mk\u0268s:ia'timk\u0268s"
   ],
   "3.ifcn.sup.inan": [
     "es",
@@ -4440,7 +4440,7 @@
     "e's",
     "e's",
     "e'mk\u0268s",
-    "e'yikus",
+    "e'yu'kus",
     "e'yeks\u0268p",
     "e'yoqs\u0268p",
     "e'tis",
@@ -4473,7 +4473,7 @@
   "3.ifcn.sup.neg.iaq": [
     "ianus",
     "a'tinus:ianus",
-    "ita'nus"
+    "ita'nus:ia'tinus"
   ],
   "3.ifcn.sup.neg.iet": [
     "iewas",
@@ -4486,12 +4486,12 @@
     "a'tiwoqs\u0268p:iewoqs\u0268p",
     "a'tiwks\u0268p:ie'tiwks\u0268p",
     "ienus",
-    "ita'wkus",
-    "ita'weks\u0268p",
-    "ita'woqs\u0268p",
-    "ita'tiwks\u0268p",
-    "ita'nus",
-    "ita'mm\u0268k\u0268s"
+    "ita'wkus:ia'tiwkus",
+    "ita'weks\u0268p:ia'tiweks\u0268p",
+    "ita'woqs\u0268p:ia'tiwoqs\u0268p",
+    "ita'tiwks\u0268p:ia'tiwks\u0268p",
+    "ita'nus:ia'tinus",
+    "ita'mm\u0268k\u0268s:ia'timm\u0268k\u0268s"
   ],
   "3.ifcn.sup.neg.inan": [
     "enus",
@@ -4504,7 +4504,7 @@
     "e'wks\u0268p",
     "e'nus",
     "e'mm\u0268k\u0268s",
-    "e'wkus",
+    "e'ukus",
     "e'weks\u0268p",
     "e'woqs\u0268p",
     "e'tiwks\u0268p",
@@ -4606,7 +4606,7 @@
   "3.impe.iaq": [
     "iaj",
     "a'tij:iaj",
-    "ita'j"
+    "ita'j:ia'tij"
   ],
   "3.impe.iet": [
     "ia",
@@ -4617,11 +4617,11 @@
     "a'tikw:iekw",
     "a'ti'tij:ie'tij",
     "a'ti'tij:ie'tij",
-    "ita'nej",
-    "ita'qw",
-    "ita'tij",
-    "ita'tij",
-    "ita'mk\u0268j"
+    "ita'nej:ia'tinej",
+    "ita'qw:ia'tikw",
+    "ita'tij:ia'ti'tij",
+    "ita'tij:ia'ti'tij",
+    "ita'mk\u0268j:ia'timk\u0268j"
   ],
   "3.impe.inan": [
     "ej",
@@ -4661,7 +4661,7 @@
   "3.impe.neg.iaq": [
     "ianuj",
     "a'tinuj:ianuj",
-    "ita'nuj"
+    "ita'nuj:ia'tinuj"
   ],
   "3.impe.neg.iet": [
     "iew",
@@ -4672,11 +4672,11 @@
     "a'tip:iep",
     "a'tiwi'tij:iewi'tij",
     "a'ti'tinuj:ietinuj",
-    "ita'nej",
-    "ita'p",
-    "ita'tij",
-    "ita'tinuj",
-    "ita'mk\u0268j"
+    "ita'nej:ia'tinej",
+    "ita'p:ia'tip",
+    "ita'tij:ia'ti'tij",
+    "ita'tinuj:ia'ti'tinuj",
+    "ita'mk\u0268j:ia'timk\u0268j"
   ],
   "3.impe.neg.inan": [
     "enuj",
@@ -4779,7 +4779,7 @@
   "3.past.def.iaq": [
     "iaqs\u0268p",
     "a'tiks\u0268pnl:iaqs\u0268pnl",
-    "ita'qs\u0268pnl"
+    "ita'qs\u0268pnl:ia'tiks\u0268pnl"
   ],
   "3.past.def.iet": [
     "*",
@@ -4792,12 +4792,12 @@
     "a'tiyoqs\u0268p:ieyoqs\u0268p",
     "a'tis\u0268pnik:ies\u0268pnik",
     "a'tiks\u0268pnl:iaqs\u0268pnl",
-    "ita'yiks\u0268p",
-    "ita'yeks\u0268p",
-    "ita'yoqs\u0268p",
-    "ita's\u0268pnik",
-    "ita'ks\u0268pnl",
-    "ita'mks\u0268p"
+    "ita'yiks\u0268p:ia'tiks\u0268p",
+    "ita'yeks\u0268p:ia'tiyeks\u0268p",
+    "ita'yoqs\u0268p:ia'tiyoqs\u0268p",
+    "ita's\u0268pnik:ia'tis\u0268pnik",
+    "ita'ks\u0268pnl:ia'tiks\u0268pnl",
+    "ita'mks\u0268p:ia'timks\u0268p"
   ],
   "3.past.def.inan": [
     "eks\u0268p",
@@ -4810,7 +4810,7 @@
     "e's\u0268p",
     "e'ks\u0268p",
     "e'mks\u0268p",
-    "e'yiks\u0268p",
+    "e'yu'ks\u0268p",
     "e'yeks\u0268p",
     "e'yoqs\u0268p",
     "e's\u0268pnik",
@@ -4843,7 +4843,7 @@
   "3.past.def.neg.iaq": [
     "ianuks\u0268p",
     "a'tinuks\u0268pnl:ianuks\u0268pnl",
-    "ita'nuks\u0268pnl"
+    "ita'nuks\u0268pnl:ia'tinuks\u0268pnl"
   ],
   "3.past.def.neg.iet": [
     "*",
@@ -4856,12 +4856,12 @@
     "a'tiwoqs\u0268p:iewoqs\u0268p",
     "a'tiwks\u0268pnik:iewks\u0268pnik",
     "a'tinuks\u0268pnl:ienuks\u0268pnl",
-    "ita'wks\u0268p",
-    "ita'weks\u0268p",
-    "ita'woqs\u0268p",
-    "ita'wks\u0268pnik",
-    "ita'nuks\u0268pnl",
-    "ita'mm\u0268ks\u0268p"
+    "ita'wks\u0268p:ia'tiwiks\u0268p",
+    "ita'weks\u0268p:ia'tiweks\u0268p",
+    "ita'woqs\u0268p:ia'tiwoqs\u0268p",
+    "ita'wks\u0268pnik:ia'tiwks\u0268pnik",
+    "ita'nuks\u0268pnl:ia'tinuks\u0268pnl",
+    "ita'mm\u0268ks\u0268p:ia'timm\u0268ks\u0268p"
   ],
   "3.past.def.neg.inan": [
     "enuks\u0268p",
@@ -4874,7 +4874,7 @@
     "e'ws\u0268p",
     "e'nuks\u0268p",
     "e'mm\u0268ks\u0268p",
-    "e'wiks\u0268p",
+    "e'uks\u0268p",
     "e'weks\u0268p",
     "e'woqs\u0268p",
     "e'wks\u0268pnik",
@@ -4979,7 +4979,7 @@
   "3.past.dir.iaq": [
     "iaqap",
     "a'tik\u0268pnl:iaqapnl",
-    "ita'qapnl"
+    "ita'qapnl:ia'tik\u0268pnl"
   ],
   "3.past.dir.iet": [
     "ia'p",
@@ -4992,12 +4992,12 @@
     "a'tiyoq\u0268p:ieyoq\u0268p",
     "a'tipnik:iepnik",
     "a'tik\u0268pnl:iaqapnl",
-    "ita'yikup",
-    "ita'yek\u0268p",
-    "ita'yoq\u0268p",
-    "ita'pnik",
-    "ita'k\u0268pnl",
-    "ita'mk\u0268p"
+    "ita'yikup:ia'tikup",
+    "ita'yek\u0268p:ia'tiyek\u0268p",
+    "ita'yoq\u0268p:ia'tiyoq\u0268p",
+    "ita'pnik:ia'tipnik",
+    "ita'k\u0268pnl:ia'tik\u0268pnl",
+    "ita'mk\u0268p:ia'timk\u0268p"
   ],
   "3.past.dir.inan": [
     "ek\u0268p",
@@ -5010,7 +5010,7 @@
     "e'p",
     "e'k\u0268p",
     "e'mk\u0268p",
-    "e'yikup",
+    "e'yu'kup",
     "e'yek\u0268p",
     "e'yoq\u0268p",
     "e'pnik",
@@ -5043,7 +5043,7 @@
   "3.past.dir.neg.iaq": [
     "ianukup",
     "a'tinukupnl:ianukupnl",
-    "ita'nukupnl"
+    "ita'nukupnl:ia'tinukupnl"
   ],
   "3.past.dir.neg.iet": [
     "iewap",
@@ -5056,12 +5056,12 @@
     "a'tiwoq\u0268p:iewoq\u0268p",
     "a'tiwk\u0268pnik:iewk\u0268pnik",
     "a'tinukupnl:ienukupnl",
-    "ita'wkup",
-    "ita'wek\u0268p",
-    "ita'woq\u0268p",
-    "ita'wk\u0268pnik",
-    "ita'nukupnl",
-    "ita'mm\u0268k\u0268p"
+    "ita'wkup:ia'tiwkup",
+    "ita'wek\u0268p:ia'tiwek\u0268p",
+    "ita'woq\u0268p:ia'tiwoq\u0268p",
+    "ita'wk\u0268pnik:ia'tiwk\u0268pnik",
+    "ita'nukupnl:ia'tinukupnl",
+    "ita'mm\u0268k\u0268p:ia'timm\u0268k\u0268p"
   ],
   "3.past.dir.neg.inan": [
     "enukup",
@@ -5074,7 +5074,7 @@
     "e'wp",
     "e'nukup",
     "e'mm\u0268k\u0268p",
-    "e'wikup",
+    "e'ukup",
     "e'wek\u0268p",
     "e'woq\u0268p",
     "e'wk\u0268pnik",
@@ -5179,7 +5179,7 @@
   "3.past.sup.iaq": [
     "iaqas",
     "a'tik\u0268snl:iaqasnl",
-    "ita'qasnl"
+    "ita'qasnl:ia'tik\u0268snl"
   ],
   "3.past.sup.iet": [
     "ia's",
@@ -5192,12 +5192,12 @@
     "a'tiyoq\u0268s:ieyoq\u0268s",
     "a'tisnik:iesnik",
     "a'tik\u0268snl:iaqasnl",
-    "ita'yikus",
-    "ita'yek\u0268s",
-    "ita'yoq\u0268s",
-    "ita'snik",
-    "ita'q\u0268snl",
-    "ita'mk\u0268s"
+    "ita'yikus:ia'tikus",
+    "ita'yek\u0268s:ia'tiyek\u0268s",
+    "ita'yoq\u0268s:ia'tiyoq\u0268s",
+    "ita'snik:ia'tisnik",
+    "ita'q\u0268snl:ia'tik\u0268snl",
+    "ita'mk\u0268s:ia'timk\u0268s"
   ],
   "3.past.sup.inan": [
     "ek\u0268s",
@@ -5210,7 +5210,7 @@
     "e's",
     "e'k\u0268s",
     "e'mk\u0268s",
-    "e'yikus",
+    "e'yu'kus",
     "e'yek\u0268s",
     "e'yoq\u0268s",
     "e'snik",
@@ -5243,7 +5243,7 @@
   "3.past.sup.neg.iaq": [
     "ianukus",
     "a'tinukusnl:ianukusnl",
-    "ita'nukusnl"
+    "ita'nukusnl:ia'tinukusnl"
   ],
   "3.past.sup.neg.iet": [
     "iewas",
@@ -5256,12 +5256,12 @@
     "a'tiwoq\u0268s:iewoq\u0268s",
     "a'tiwk\u0268snik:iewk\u0268snik",
     "a'tinukusnl:ienukusnl",
-    "ita'wkus",
-    "ita'wek\u0268s",
-    "ita'woq\u0268s",
-    "ita'wk\u0268snik",
-    "ita'nukusnl",
-    "ita'mm\u0268k\u0268s"
+    "ita'wkus:ia'tiwkus",
+    "ita'wek\u0268s:ia'tiwek\u0268s",
+    "ita'woq\u0268s:ia'tiwoq\u0268s",
+    "ita'wk\u0268snik:ia'tiwk\u0268snik",
+    "ita'nukusnl:ia'tinukusnl",
+    "ita'mm\u0268k\u0268s:ia'timm\u0268k\u0268s"
   ],
   "3.past.sup.neg.inan": [
     "enukus",
@@ -5274,7 +5274,7 @@
     "e'ws",
     "e'nukus",
     "e'mm\u0268k\u0268s",
-    "e'wikus",
+    "e'ukus",
     "e'wek\u0268s",
     "e'woq\u0268s",
     "e'wk\u0268snik",
@@ -5390,8 +5390,8 @@
     "iaqek",
     "a'tikl:iaql",
     "a'tikekl:iaqekl",
-    "ita'ql",
-    "ita'qekl"
+    "ita'ql:ia'tikl",
+    "ita'qekl:ia'tikekl"
   ],
   "3.pres.iet": [
     "iey",
@@ -5410,15 +5410,15 @@
     "a'tiliji:ieliji",
     "a'titkik:ietkik",
     "a'tikekl:iaqekl",
-    "ita'yikw",
-    "ita'yek",
-    "ita'yoq",
-    "ita'jik",
-    "ita'ql",
-    "ita'liji",
-    "ita'tkik",
-    "ita'qekl",
-    "ita'mk"
+    "ita'yikw:ia'tikw",
+    "ita'yek:ia'tiyek",
+    "ita'yoq:ia'tiyoq",
+    "ita'jik:ia'tijik",
+    "ita'ql:ia'tikl",
+    "ita'liji:ia'tiliji",
+    "ita'tkik:ia'titkik",
+    "ita'qekl:ia'tikekl",
+    "ita'mk:ia'timk"
   ],
   "3.pres.inan": [
     "ek",
@@ -5437,7 +5437,7 @@
     "e'kaq",
     "e'kek",
     "e'm\u0268k",
-    "e'yikw",
+    "e'yu'kw",
     "e'yek",
     "e'yoq",
     "e'kik",
@@ -5448,7 +5448,7 @@
     "o'lti'kw",
     "o'ltiyek",
     "o'ltiyoq",
-    "o'ltikik",
+    "o'ltijik",
     "o'ltikl",
     "o'ltiliji",
     "o'ltikkik",
@@ -5487,8 +5487,8 @@
     "ianukek",
     "a'tinukl:ianukl",
     "a'tinukekl:ianukekl",
-    "ita'nukl",
-    "ita'nukekl"
+    "ita'nukl:ia'tinukl",
+    "ita'nukekl:ia'tinukekl"
   ],
   "3.pres.neg.iet": [
     "iew",
@@ -5507,15 +5507,15 @@
     "a'tilikwi:ielikwi",
     "a'tikwik:iekwi'k",
     "a'tinukekl:ianukekl",
-    "ita'wkw",
-    "ita'wek",
-    "ita'woq",
-    "ita'tiwk",
-    "ita'nukl",
-    "ita'likwi",
-    "ita'kwik",
-    "ita'nukekl",
-    "ita'mm\u0268k"
+    "ita'wkw:ia'tiwkw",
+    "ita'wek:ia'tiwek",
+    "ita'woq:ia'tiwoq",
+    "ita'tiwk:ia'ti'tiwk",
+    "ita'nukl:ia'tinukl",
+    "ita'likwi:ia'tilikwi",
+    "ita'kwik:ia'tikwi'k",
+    "ita'nukekl:ia'tinukekl",
+    "ita'mm\u0268k:ia'timm\u0268k"
   ],
   "3.pres.neg.inan": [
     "enuk",
@@ -5534,7 +5534,7 @@
     "e'kwaq",
     "e'nukwek",
     "e'mm\u0268k",
-    "e'wkw",
+    "e'yu'kw",
     "e'wek",
     "e'woq",
     "e'tiwk",
@@ -5687,7 +5687,7 @@
   "3.when.prs.iaq": [
     "iaq",
     "a'tik:iaq",
-    "ita'q"
+    "ita'q:ia'tik"
   ],
   "3.when.prs.iet": [
     "ieyan",
@@ -5704,14 +5704,14 @@
     "a'tikl:iekl",
     "a'tilijl:ielijl",
     "a'titka:ietka",
-    "ita'yikw",
-    "ita'yek",
-    "ita'yoq",
-    "ita'tij",
-    "ita'ql",
-    "ita'lijl",
-    "ita'tka",
-    "ita'mk"
+    "ita'yikw:ia'ti'kw",
+    "ita'yek:ia'tiyek",
+    "ita'yoq:ia'tiyoq",
+    "ita'tij:ia'ti'tij",
+    "ita'ql:ia'tikl",
+    "ita'lijl:ia'tilijl",
+    "ita'tka:ia'titka",
+    "ita'mk:ia'timk"
   ],
   "3.when.prs.inan": [
     "ek",
@@ -5726,7 +5726,7 @@
     "e'lijl",
     "e'tka",
     "e'mk",
-    "e'yikw",
+    "e'yu'kw",
     "e'yek",
     "e'yoq",
     "e'tij",
@@ -5769,7 +5769,7 @@
   "3.when.prs.neg.iaq": [
     "ianuk",
     "a'tinuk:ianuk",
-    "ita'nuk"
+    "ita'nuk:ia'tinuk"
   ],
   "3.when.prs.neg.iet": [
     "iewan",
@@ -5786,14 +5786,14 @@
     "a'tinukl:ienukl",
     "a'tilikwl:ielikwl",
     "a'tikwa:iekwa",
-    "ita'wkw",
-    "ita'wek",
-    "ita'woq",
-    "ita'tiwk",
-    "ita'nukl",
-    "ita'likwl",
-    "ita'qwa",
-    "ita'mm\u0268k"
+    "ita'wkw:ia'ti'wkw",
+    "ita'wek:ia'tiwek",
+    "ita'woq:ia'tiwoq",
+    "ita'tiwk:ia'ti'tiwk",
+    "ita'nukl:ia'tinukl",
+    "ita'likwl:ia'tilikwl",
+    "ita'qwa:ia'tikwa",
+    "ita'mm\u0268k:ia'timm\u200e\u0268k"
   ],
   "3.when.prs.neg.inan": [
     "enuk",
@@ -5808,7 +5808,7 @@
     "e'likwl",
     "e'kwa",
     "e'mm\u0268k",
-    "e'wkw",
+    "e'ukw",
     "e'wek",
     "e'woq",
     "e'tiwk",
@@ -5947,7 +5947,7 @@
   "3.when.pst.iaq": [
     "iaqek",
     "a'tikek:iaqek",
-    "ita'qek"
+    "ita'qek:ia'tikek"
   ],
   "3.when.pst.iet": [
     "ieyanek",
@@ -5964,14 +5964,14 @@
     "a'tikekl:iekekl",
     "a'tilitek:ielitek",
     "*",
-    "ita'qwek",
-    "ita'yekek",
-    "ita'yoqek",
-    "ita'titek",
-    "ita'qekl",
-    "ita'litek",
+    "ita'qwek:ia'ti'kwek",
+    "ita'yekek:ia'tiyekek",
+    "ita'yoqek:ia'tiyoqek",
+    "ita'titek:ia'ti'titek",
+    "ita'qekl:ia'tikekl",
+    "ita'litek:ia'tilitek",
     "*",
-    "ita'mkek"
+    "ita'mkek:ia'timkek"
   ],
   "3.when.pst.inan": [
     "ekek",
@@ -5986,7 +5986,7 @@
     "e'litek",
     "*",
     "e'mkek",
-    "e'kwek",
+    "e'ukwek",
     "e'yekek",
     "e'yoqek",
     "e'titek",
@@ -6029,7 +6029,7 @@
   "3.when.pst.neg.iaq": [
     "ianukek",
     "a'tinukek:ianukek",
-    "ita'nukek"
+    "ita'nukek:ia'tinukek"
   ],
   "3.when.pst.neg.iet": [
     "iewanek",
@@ -6046,14 +6046,14 @@
     "a'tinukek:ienukek",
     "a'tilikwek:ielikwek",
     "*",
-    "ita'wkwek",
-    "ita'wekek",
-    "ita'woqek",
-    "ita'tiwkek",
-    "ita'nukek",
-    "ita'likwek",
+    "ita'wkwek:ia'ti'wkwek",
+    "ita'wekek:ia'tiwekek",
+    "ita'woqek:ia'tiwoqek",
+    "ita'tiwkek:ia'ti'tiwkek",
+    "ita'nukek:ia'tinukek",
+    "ita'likwek:ia'tilikwek",
     "*",
-    "ita'mm\u0268kek"
+    "ita'mm\u0268kek:ia'timm\u0268kek"
   ],
   "3.when.pst.neg.inan": [
     "enukek",
@@ -6068,7 +6068,7 @@
     "e'likwek",
     "*",
     "e'mm\u0268kek",
-    "e'wkwek",
+    "e'ukwek",
     "e'wekek",
     "e'woqek",
     "e'tiwkek",

@@ -64,6 +64,8 @@ type Locale struct { // a struct for reading the conjugation dictionary JSON
 	SourceField                 string   `json:"sourcefield"`
 	OrthographyRadioButtonTitle string   `json:"orthographyradiobuttontitle"`
 	ElietDisclaimer             string   `json:"elietdisclaimer"`
+	PejilasitDisclaimer         string   `json:"pejilasitdisclaimer"`
+	EnqasikDisclaimer           string   `json:"enqasikdisclaimer"`
 	NestikDisclaimer            string   `json:"nestikdisclaimer"`
 	NenkDisclaimer              string   `json:"nenkdisclaimer"`
 	PewaqDisclaimer             string   `json:"pewaqdisclaimer"`
@@ -178,13 +180,18 @@ func engIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 		orthographyChoice := reader.FormValue("orthographyradiobutton") // a string value correstponding to the orthography chosen by the user
 		// 0 = francis smith
 		// 1 = listuguj
+		// 2 = metallic
 		if InputStr != "" { // if the input is not empty
 			if orthographyChoice == "1" {
 				InputStr = convertListugujtoFrancisSmith(InputStr) // if the user has chosen listuguj orthography, convert it to francis smith to run the program
+			} else if orthographyChoice == "2" {
+				InputStr = convertMetallictoFrancisSmith(InputStr) // if the user has chosen metallic orthography, convert it to francis smith to run the program
 			}
 			ConjugationArray, InputVerb = readoutVerb(InputStr) // fill the conjugation array and input verb structs
 			if orthographyChoice == "1" {
 				ConjugationArray = convertFrancisSmithtoListuguj(ConjugationArray) // if the user has chosen listuguj orthography, convert all tables to listuguj
+			} else if orthographyChoice == "2" {
+				ConjugationArray = convertFrancisSmithtoMetallic(ConjugationArray) // if the user has chosen metallic orthography, convert all tables to metallic
 			}
 			// make the tables differently for each verb type (VII, VAI, VTI, VTA) — point to a different function each time to do this
 			if InputVerb.Type == VAI {
@@ -228,13 +235,18 @@ func mkwIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 		orthographyChoice := reader.FormValue("orthographyradiobutton") // a string value correstponding to the orthography chosen by the user
 		// 0 = francis smith
 		// 1 = listuguj
+		// 2 = metallic
 		if InputStr != "" { // if the input is not empty
 			if orthographyChoice == "1" {
 				InputStr = convertListugujtoFrancisSmith(InputStr) // if the user has chosen listuguj orthography, convert it to francis smith to run the program
+			} else if orthographyChoice == "2" {
+				InputStr = convertMetallictoFrancisSmith(InputStr) // if the user has chosen metallic orthography, convert it to francis smith to run the program
 			}
 			ConjugationArray, InputVerb = readoutVerb(InputStr) // fill the conjugation array and input verb structs
 			if orthographyChoice == "1" {
 				ConjugationArray = convertFrancisSmithtoListuguj(ConjugationArray) // if the user has chosen listuguj orthography, convert all tables to listuguj
+			} else if orthographyChoice == "2" {
+				ConjugationArray = convertFrancisSmithtoMetallic(ConjugationArray) // if the user has chosen metallic orthography, convert all tables to metallic
 			}
 			// make the tables differently for each verb type (VII, VAI, VTI, VTA) — point to a different function each time to do this
 			if InputVerb.Type == VAI {
@@ -278,13 +290,18 @@ func freIndexHandler(writer http.ResponseWriter, reader *http.Request) {
 		orthographyChoice := reader.FormValue("orthographyradiobutton") // a string value correstponding to the orthography chosen by the user
 		// 0 = francis smith
 		// 1 = listuguj
+		// 2 = metallic
 		if InputStr != "" { // if the input is not empty
 			if orthographyChoice == "1" {
 				InputStr = convertListugujtoFrancisSmith(InputStr) // if the user has chosen listuguj orthography, convert it to francis smith to run the program
+			} else if orthographyChoice == "2" {
+				InputStr = convertMetallictoFrancisSmith(InputStr) // if the user has chosen metallic orthography, convert it to francis smith to run the program
 			}
 			ConjugationArray, InputVerb = readoutVerb(InputStr) // fill the conjugation array and input verb structs
 			if orthographyChoice == "1" {
 				ConjugationArray = convertFrancisSmithtoListuguj(ConjugationArray) // if the user has chosen listuguj orthography, convert all tables to listuguj
+			} else if orthographyChoice == "2" {
+				ConjugationArray = convertFrancisSmithtoMetallic(ConjugationArray) // if the user has chosen metallic orthography, convert all tables to metallic
 			}
 			// make the tables differently for each verb type (VII, VAI, VTI, VTA) — point to a different function each time to do this
 			if InputVerb.Type == VAI {
@@ -324,6 +341,12 @@ func IsConsonant(category string) bool { // returns true if the passed slice is 
 		"m",
 		"n",
 		"p",
+		"b",
+		"d",
+		"g",
+		"c",
+		"$",
+		"#",
 		"q",
 		"s",
 		"t",
@@ -343,6 +366,17 @@ func IsPlosive(category string) bool { // returns true if the passed slice is in
 		"q",
 		"s",
 		"t":
+		return true
+	}
+	return false
+}
+
+func IsSonorant(category string) bool { // returns true if the passed slice is in this list
+	switch category {
+	case
+		"m",
+		"n",
+		"l":
 		return true
 	}
 	return false
@@ -370,17 +404,131 @@ func convertListugujtoFrancisSmith(InputStr string) string {
 	return OutputStr
 }
 
+// converts anything written in metallic orthography into francis-smith
+func convertMetallictoFrancisSmith(InputStr string) string {
+	OutputStr := strings.ToLower(InputStr)
+	// everything below is just replacing character combinations with others
+	// the output string is in francis-smith
+	OutputStr = strings.Replace(OutputStr, "b", "p", -1)
+	OutputStr = strings.Replace(OutputStr, "d", "t", -1)
+	OutputStr = strings.Replace(OutputStr, "ch", "j", -1)
+	OutputStr = strings.Replace(OutputStr, "g", "k", -1)
+	OutputStr = strings.Replace(OutputStr, "ê", "*", -1) // replace schwa with star
+	OutputStr = strings.Replace(OutputStr, "à", "a'", -1)
+	OutputStr = strings.Replace(OutputStr, "è", "e'", -1)
+	OutputStr = strings.Replace(OutputStr, "ì", "i'", -1)
+	OutputStr = strings.Replace(OutputStr, "ò", "o'", -1)
+	OutputStr = strings.Replace(OutputStr, "ù", "u'", -1)
+	return OutputStr
+}
+
 // converts anything written in francis-smith into listuguj
 func convertFrancisSmithtoListuguj(InputArray [][]string) [][]string {
 	for sliceIndex := range InputArray {
-		for stringIndex, string := range InputArray[sliceIndex] {
-			outputStr := string
+		for stringIndex, str := range InputArray[sliceIndex] {
+			outputStr := str
 			outputStr = strings.Replace(outputStr, "k", "g", -1)
 			outputStr = strings.Replace(outputStr, "ɨ", "'", -1)
 			outputStr = strings.Replace(outputStr, "y", "i", -1)
 			// converting "y" to "i" in strings of "yi" will lead to "ii"
 			outputStr = strings.Replace(outputStr, "ii", "i", -1)
 			InputArray[sliceIndex][stringIndex] = outputStr
+		}
+	}
+	return InputArray
+}
+
+// converts anything written in francis-smith into metallic
+func convertFrancisSmithtoMetallic(InputArray [][]string) [][]string {
+	for sliceIndex := range InputArray {
+		for stringIndex, str := range InputArray[sliceIndex] {
+			outputStr := str
+			outputStr = strings.Replace(outputStr, "kw", "$", -1)
+			outputStr = strings.Replace(outputStr, "j", "c", -1)
+			outputStr = strings.Replace(outputStr, "cc", "tc", -1)
+			outputStr = strings.Replace(outputStr, "ɨ", "ê", -1)
+			if len(outputStr) > 1 {
+				for charIndex, character := range outputStr {
+					if charIndex == 0 {
+						if !IsConsonant(string(outputStr[charIndex+1])) || IsSonorant(string(outputStr[charIndex+1])) {
+							if string(character) == "t" {
+								outputStr = fmt.Sprintf("d%s", string(outputStr[charIndex+1:]))
+							} else if string(character) == "p" {
+								outputStr = fmt.Sprintf("b%s", string(outputStr[charIndex+1:]))
+							} else if string(character) == "k" {
+								outputStr = fmt.Sprintf("g%s", string(outputStr[charIndex+1:]))
+							} else if string(character) == "$" {
+								outputStr = fmt.Sprintf("#%s", string(outputStr[charIndex+1:]))
+							} else if string(character) == "c" {
+								outputStr = fmt.Sprintf("j%s", string(outputStr[charIndex+1:]))
+							}
+						}
+					} else if charIndex != len(outputStr)-1 {
+						if string(outputStr[charIndex+1]) != "," {
+							if (!IsConsonant(string(outputStr[charIndex+1])) || IsSonorant(string(outputStr[charIndex+1]))) && !IsConsonant(string(outputStr[charIndex-1])) {
+								if string(character) == "t" {
+									outputStr = fmt.Sprintf("%sd%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+								} else if string(character) == "p" {
+									outputStr = fmt.Sprintf("%sb%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+								} else if string(character) == "k" {
+									outputStr = fmt.Sprintf("%sg%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+								} else if string(character) == "c" {
+									outputStr = fmt.Sprintf("%sj%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+								} else if string(character) == "$" {
+									outputStr = fmt.Sprintf("%s#%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+								}
+							}
+						}
+						if string(outputStr[charIndex-1]) == "'" {
+							if string(character) == "t" {
+								outputStr = fmt.Sprintf("%sd%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+							} else if string(character) == "p" {
+								outputStr = fmt.Sprintf("%sb%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+							} else if string(character) == "k" {
+								outputStr = fmt.Sprintf("%sg%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+							} else if string(character) == "c" {
+								outputStr = fmt.Sprintf("%sj%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+							} else if string(character) == "$" {
+								outputStr = fmt.Sprintf("%s#%s", string(outputStr[:charIndex]), string(outputStr[charIndex+1:]))
+							}
+						}
+					} else if charIndex == len(outputStr)-1 {
+						if string(outputStr[charIndex-1]) == "'" {
+							if string(character) == "t" {
+								outputStr = fmt.Sprintf("%sd", string(outputStr[:charIndex]))
+							} else if string(character) == "p" {
+								outputStr = fmt.Sprintf("%sb", string(outputStr[:charIndex]))
+							} else if string(character) == "k" {
+								outputStr = fmt.Sprintf("%sg", string(outputStr[:charIndex]))
+							} else if string(character) == "c" {
+								outputStr = fmt.Sprintf("%sj", string(outputStr[:charIndex]))
+							} else if string(character) == "$" {
+								outputStr = fmt.Sprintf("%s#", string(outputStr[:charIndex]))
+							}
+						}
+					}
+				}
+				if IsConsonant(string(outputStr[0])) && IsConsonant(string(outputStr[1])) && !IsSonorant(string(outputStr[1])) {
+					outputStr = fmt.Sprintf("ɨ%s", outputStr)
+				}
+				if len(outputStr) > 3 {
+					if string(outputStr[len(outputStr)-3:]) == "eyi" {
+						outputStr = fmt.Sprintf("%seyy", string(outputStr[:len(outputStr)-3]))
+					} else if string(outputStr[len(outputStr)-3:]) == "ayi" {
+						outputStr = fmt.Sprintf("%sayy", string(outputStr[:len(outputStr)-3]))
+					}
+				}
+				outputStr = strings.Replace(outputStr, "$", "kw", -1)
+				outputStr = strings.Replace(outputStr, "#", "gw", -1)
+				outputStr = strings.Replace(outputStr, "c", "ch", -1)
+				outputStr = strings.Replace(outputStr, "ɨ", "ê", -1)
+				outputStr = strings.Replace(outputStr, "a'", "à", -1)
+				outputStr = strings.Replace(outputStr, "e'", "è", -1)
+				outputStr = strings.Replace(outputStr, "i'", "ì", -1)
+				outputStr = strings.Replace(outputStr, "o'", "ò", -1)
+				outputStr = strings.Replace(outputStr, "u'", "ù", -1)
+				InputArray[sliceIndex][stringIndex] = outputStr
+			}
 		}
 	}
 	return InputArray
@@ -399,11 +547,13 @@ func localizeOutput(languageChoice string, InputVerb Verb) (string, string, Disc
 		if InputVerb.ConjugationVariant == "asit" {
 			LocalOutputConjugation = "1"
 			LocalOutputModel = "pejila'sit"
+			LocalDisclaimer.Defined = true
+			LocalDisclaimer.DisclaimerText = language.PejilasitDisclaimer // for splitting movement/non-movement verbs
 		} else if InputVerb.ConjugationVariant == "asik" {
 			LocalOutputConjugation = "1"
 			LocalOutputModel = "enqa'sik"
 			LocalDisclaimer.Defined = true
-			LocalDisclaimer.DisclaimerText = language.VIIDisclaimer // for multiple forms in the future (VII only)
+			LocalDisclaimer.DisclaimerText = language.EnqasikDisclaimer // for splitting movement/non-movement verbs and multiple future forms
 		} else if InputVerb.ConjugationVariant == "ink" || InputVerb.ConjugationVariant == "cons" {
 			LocalOutputConjugation = "1"
 			LocalOutputModel = "pekisink"
@@ -1557,7 +1707,7 @@ func parseVerb(InputStr string) (Verb, error) {
 			InputVerb.Conjugation = 6
 			InputVerb.ConjugationVariant = "istem"
 			return InputVerb, nil
-		} else if Ending == "uatl" { // i.e. "mixed" VTA verbs, -uatl (e.g. kwiluatl)
+		} else if Ending == "uatl" || Ending == "watl" { // i.e. "mixed" VTA verbs, -uatl (e.g. kwiluatl), ~ -watl (e.g. ankweyuatl ~ ankweywatl)
 			InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 			InputVerb.Conjugation = 7
 			InputVerb.ConjugationVariant = "std"
@@ -1620,7 +1770,7 @@ func parseVerb(InputStr string) (Verb, error) {
 		if Ending == "iet" { // third conjugation verbs in -iet
 			InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 			InputVerb.ConjugationVariant = "iet"
-		} else if Ending == "uet" || Ending == "wet" { // third conjugation verbs in -uet/wet
+		} else if Ending == "uet" { // third conjugation verbs in -uet
 			FinalInt = 2 // set this back to 2 to keep the -w or -u of the stem
 			InputVerb.Stem = getVerbStem(InputStr, FinalInt)
 			InputVerb.ConjugationVariant = "uet"
